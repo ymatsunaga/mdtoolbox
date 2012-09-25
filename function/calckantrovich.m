@@ -1,0 +1,6 @@
+function dmat = calckantrovich(data)
+%
+%
+
+
+ 
