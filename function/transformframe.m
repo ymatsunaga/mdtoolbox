@@ -28,12 +28,20 @@ function [emode, variances, covar, covar_atom] = transformframe(index_fixeddomai
 %                       [natom x natom double]
 %
 %% Example
-%# % frame-transformation of T4 lysozyme
-%# crd = readpdb('256l_ca.pdb');
+%# % analysis of Ca-based model of Lysozyme
+%# [pdb, crd] = readpdb('lys.pdb');
+%# index_ca = selectname(pdb.name, 'CA');
+%# pdb = substruct(pdb, index_ca);
+%# crd = crd(to3(index_ca));
+%# crd = decenter(crd);
 %# [emode, frequency, covar, covar_atom] = anm(crd, 8.0);
-%# [emode2, variances2, covar2, covar2_atom] = transformframe([1:11 77:164], emode(:,(end-5):end), covar);
+%#
+%# % transform from the Eckart frame to a non-Eckart frame
+%# index_fixeddomain = [1:11 77:164];
+%# external_mode = emode(:,(end-5):end);
+%# [emode2, variances2, covar2, covar2_atom] = transformframe(index_fixeddomain, external_mode, covar);
 %# imagesc(covar2_atom); axis xy; colorbar; xlabel('residue','FontSize',40); ylabel('residue','FontSize',40); formatplot2
-%# plot(diag(covar2_atom)); xlabel('residue','FontSize',40); ylabel('variance [a.u.]','FontSize',40); plot format
+%# plot(diag(covar2_atom)); xlabel('residue','FontSize',40); ylabel('variance [a.u.]','FontSize',40); formatplot
 % 
 %% See also
 % anm, anm_sym

@@ -37,17 +37,25 @@ function [emode, frequency, covar, covar_atom] = anm(crd, cutoff)
 %                 [natom x natom double]
 %
 %% Example
-%# pdb = readpdb('ak.pdb');
+%# % analysis of Ca-based model of Lysozyme
+%# [pdb, crd] = readpdb('lys.pdb');
 %# index_ca = selectname(pdb.name, 'CA');
-%# crd = pdb.xyz(index_ca, :)';
-%# crd = crd(:)';
-%# [emode, frequency, covar, covar_atom] = anm(crd, 10.0);
+%# pdb = substruct(pdb, index_ca);
+%# crd = crd(to3(index_ca));
+%# crd = decenter(crd);
+%# [emode, frequency, covar, covar_atom] = anm(crd, 8.0);
+%#
+%# % rmsf and covariances
 %# plot(diag(covar_atom)); xlabel('residue','fontsize',40); ylabel('variances [a.u.]','fontsize',40); formatplot
 %# imagesc(covar_atom); axis xy; xlabel('residue','fontsize',40); ylabel('residue','fontsize',40); colorbar; formatplot2
 %#
-%# >> crd2 = crd + emode(:, 2)'*300;
-%# >> pdb.xyz = reshape(crd2, 3, [])';
-%# >> writepdb('acrb2.pdb', pdb);
+%# % mode structure
+%# pdb.xyz = reshape(crd, 3, [])';
+%# writepdb('lys_ca.pdb', pdb);
+%# crd1 = crd + emode(:, 1)'*50;
+%# pdb.xyz = reshape(crd1, 3, [])';
+%# writepdb('lys_ca1.pdb', pdb);
+%# % visualize the mode structure with PyMOL and modevectors.py
 % 
 %% See also
 % anm_sym, transformframe

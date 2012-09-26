@@ -7,15 +7,14 @@ function str_sub = substruct(str, index)
 %
 %% Description
 % This code assumes that the given structure has
-% arrays of same size, and just create a subset 
-% of these arrays
+% arrays of same size, and create a subset of these arrays
 %
 % * str     - structure
 % * index   - index or logical index
 % * str_sub - structure
 %
 %% Example
-%# pdb = readpdb('ak.pdb');
+%# pdb = readpdb('lys.pdb');
 %# index_ca = selectname(pdb.name, 'CA');
 %# pdb_ca = substruct(pdb, index_ca);
 % 

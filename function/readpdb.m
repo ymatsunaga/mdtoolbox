@@ -1,9 +1,11 @@
-function pdb = readpdb(filename)
+function [pdb, crd] = readpdb(filename)
 %% readpdb
 % read Protein Data Bank (PDB) file
 %
 %% Syntax
 %# pdb = readpdb(filename);
+%# [pdb, crd] = readpdb(filename);
+%# [~, crd] = readpdb(filename);
 %
 %% Description
 % This code only reads ATOM or HETATM records of PDB file.
@@ -25,6 +27,7 @@ function pdb = readpdb(filename)
 %      tempfactor: Temperature factor. [natomx1 double]
 %         element: Element symbol, right-justified. [natomx2 char]
 %          charge: Charge on the atom. [natomx2 char]
+% * crd       - coordinates [1 x natom3 double]
 %         
 %% Example
 %# pdb = readpsf('jac.pdb');
@@ -130,5 +133,10 @@ while ~feof(fid)
     pdb.charge(natom, :)     = line(79:80);
   end
 
+end
+
+if nargout >= 2
+  crd = pdb.xyz';
+  crd = crd(:)';
 end
 
