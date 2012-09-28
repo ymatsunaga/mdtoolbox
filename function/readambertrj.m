@@ -54,6 +54,16 @@ end
 trj_buffer = zeros(nblock, numel(index3));
 
 %% open file
+filename = strtrim(filename);
+if (numel(filename) >= 3) & strncmpi(filename((end-2):end), '.gz', numel('.gz'))
+  dirname = tempdir();
+  disp(sprintf('uncompressing %s in %s', filename, dirname))
+  filename = gunzip(filename, dirname);
+  filename = filename{1};
+  disp('done')
+  cleaner_delete = onCleanup(@() delete(filename));
+end
+
 fid = fopen(filename, 'r');
 assert(fid > 0, 'Could not open file.');
 cleaner = onCleanup(@() fclose(fid));
