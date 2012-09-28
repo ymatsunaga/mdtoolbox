@@ -10,11 +10,11 @@ function [emode, frequency, covar, covar_atom] = anm(crd, cutoff)
 %# [emode, frequency, covar, covar_atom] = anm(crd, cutoff);
 %
 %% Description
-% This code makes a hessian matrix of the Anisotropic (Elastic) 
-% Network Model from the input coordinates, and diagonalize the
-% matrix to obtain the normal modes (eigenvectors) and frequencies
+% This performs a normal mode analysis of the Anisotropic (Elastic) 
+% Network Model from the input coordinates, and returns
+% the normal modes (eigenvectors) and the corresponding frequencies
 % (sqrt(eigenvalues)).
-% Also, the covariance matrix is by calculating 
+% Also, the covariance matrix is calculated from 
 % the pseudo inverse of hessian matrix. 
 % kBT = 1.0 kcal/K is assumed.
 %
@@ -37,7 +37,7 @@ function [emode, frequency, covar, covar_atom] = anm(crd, cutoff)
 %                 [natom x natom double]
 %
 %% Example
-%# % analysis of Ca-based model of Lysozyme
+%# % normal mode analysis of Ca-based model of Lysozyme
 %# [pdb, crd] = readpdb('lys.pdb');
 %# index_ca = selectname(pdb.name, 'CA');
 %# pdb = substruct(pdb, index_ca);
