@@ -60,12 +60,14 @@ box_buffer = zeros(nblock, 3);
 %% open file
 filename = strtrim(filename);
 if (numel(filename) >= 3) & strncmpi(filename((end-2):end), '.gz', numel('.gz'))
-  dirname = tempdir();
-  disp(sprintf('uncompressing %s in %s', filename, dirname))
+  dirname = tempname();
+  dirname = [dirname '/'];
+  mkdir(dirname);
+  disp(sprintf('uncompressing %s to %s', filename, dirname))
   filename = gunzip(filename, dirname);
   filename = filename{1};
   disp('done')
-  cleaner_delete = onCleanup(@() delete(filename));
+  cleaner_rmdir = onCleanup(@() rmdir(dirname, 's'));
 end
 
 fid = fopen(filename, 'r');
