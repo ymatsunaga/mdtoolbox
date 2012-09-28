@@ -9,9 +9,7 @@ function rc = writenetcdf(filename, trj, box, title)
 %# writenetcdf(filename, trj, [], title);
 %
 %% Description
-% This code puts trajectories into a dcd file. 
-% If header information is not given, 
-% default values are assumed. 
+% This code puts trajectories into a netcdf file. 
 %
 % * filename  - output dcd trajectory filename
 % * trj       - trajectory [nstep x natom3 double]
@@ -58,69 +56,190 @@ function rc = writenetcdf(filename, trj, box, title)
 %   double velocities(frame, atom, spatial) units="angstrom/picosecond"
 %                                           scale_factor=20.455f
 % 
+%% TODO
+% support for velocities
+%
 
-[nStep, nAtom3] = size(trj);
-nAtom = nAtom3 / 3;
+%% initialization
+[nstep, natom3] = size(trj);
+natom = natom3 / 3;
 
 trj = single(trj);
 trj = trj';
-trj = reshape(trj,3,nAtom,nStep);
+trj = reshape(trj, 3, natom, nstep);
 
-% create 64 bit offset netcdf file
-ncID = netcdf.create(filename, '64BIT_OFFSET');
-
-% open the file
-%ncID = netcdf.open(filename, 'NC_WRITE');
-
-% define dimensions
-%dimID_frame        = netcdf.defDim(ncID, 'frame', netcdf.getConstant('NC_UNLIMITED'));
-dimID_frame        = netcdf.defDim(ncID, 'frame', nStep);
-dimID_spatial      = netcdf.defDim(ncID, 'spatial', 3);
-dimID_atom         = netcdf.defDim(ncID, 'atom', nAtom);
-if nargin >= 3
-  dimID_cell_spatial = netcdf.defDim(ncID, 'cell_spatial', 3);
-  dimID_cell_angular = netcdf.defDim(ncID, 'cell_angular', 3);
-  dimID_label        = netcdf.defDim(ncID, 'label', 5);
+if (nargin > 2) & (size(box, 1) == 1)
+  box = repmat(box, nstep, 1);
 end
 
-% define new variables
-%varID              = netcdf.defVar(ncID,'my_var','double', dimID);
-varID_spatial      = netcdf.defVar(ncID, 'spatial', 'char', dimID_spatial);
-varID_time         = netcdf.defVar(ncID, 'time', 'float', dimID_frame);
-varID_coordinates  = netcdf.defVar(ncID, 'coordinates', 'float', [dimID_spatial dimID_atom dimID_frame]);
-if nargin >= 3
-  varID_cell_spatial = netcdf.defVar(ncID, 'cell_spatial', 'char', dimID_cell_spatial);
-  varID_cell_angular = netcdf.defVar(ncID, 'cell_angular', 'char', [dimID_label dimID_cell_angular]);
-  varID_cell_lengths = netcdf.defVar(ncID, 'cell_lengths', 'double', [dimID_spatial dimID_frame]);
-  varID_cell_angles  = netcdf.defVar(ncID, 'cell_angles', 'double', [dimID_spatial dimID_frame]);
+if nargin < 4
+  title = 'CREATED BY MATLAB';
 end
 
-% leave define mode and enter data mode to write data
-netcdf.endDef(ncID);
+%% write netcdf schema
+finfo.Name   = '/';
+finfo.Format = '64bit';
+finfo.Groups = [];
 
-% write data to variable.
-netcdf.putVar(ncID, varID_spatial, ['xyz']');
-netcdf.putVar(ncID, varID_time, 0, nStep, [1:nStep]);
-netcdf.putVar(ncID, varID_coordinates, [0 0 0], [3 nAtom nStep], trj);
-if nargin >= 3
-  netcdf.putVar(ncID, varID_cell_spatial, ['abc']');
-  netcdf.putVar(ncID, varID_cell_angular, ['alpha'; 'beta '; 'gamma']');
-  netcdf.putVar(ncID, varID_cell_lengths, [0 0], [3 nStep], box');
-  netcdf.putVar(ncID, varID_cell_angles, [0 0], [3 nStep], repmat(90,3,nStep));
+finfo.Attributes(1).Name  = 'title';
+finfo.Attributes(1).Value = title;
+
+finfo.Attributes(2).Name  = 'application';
+finfo.Attributes(2).Value = 'MATLAB';
+
+finfo.Attributes(3).Name  = 'program';
+finfo.Attributes(3).Value = 'MATLAB';
+
+finfo.Attributes(4).Name  = 'programVersion';
+finfo.Attributes(4).Value = version;
+
+finfo.Attributes(5).Name  = 'Conventions';
+finfo.Attributes(5).Value = 'AMBER';
+
+finfo.Attributes(6).Name  = 'ConventionVersion';
+finfo.Attributes(6).Value = '1.0';
+
+finfo.Dimensions(1).Name      = 'frame';
+finfo.Dimensions(1).Length    = nstep;
+finfo.Dimensions(1).Unlimited = true;
+
+finfo.Dimensions(2).Name      = 'spatial';
+finfo.Dimensions(2).Length    = 3;
+finfo.Dimensions(2).Unlimited = false;
+
+finfo.Dimensions(3).Name      = 'atom';
+finfo.Dimensions(3).Length    = natom;
+finfo.Dimensions(3).Unlimited = false;
+
+if (nargin > 2) & (size(box, 1) == nstep)
+  finfo.Dimensions(4).Name      = 'label';
+  finfo.Dimensions(4).Length    = 5;
+  finfo.Dimensions(4).Unlimited = false;
+
+  finfo.Dimensions(5).Name      = 'cell_spatial';
+  finfo.Dimensions(5).Length    = 3;
+  finfo.Dimensions(5).Unlimited = false;
+
+  finfo.Dimensions(6).Name      = 'cell_angular';
+  finfo.Dimensions(6).Length    = 3;
+  finfo.Dimensions(6).Unlimited = false;
 end
 
-% Re-enter define mode.
-netcdf.reDef(ncID);
+finfo.Variables(1).Name                 = 'spatial';
+finfo.Variables(1).Dimensions.Name      = 'spatial';
+finfo.Variables(1).Dimensions.Length    = 3;
+finfo.Variables(1).Dimensions.Unlimited = false;
+finfo.Variables(1).Size                 = 3;
+finfo.Variables(1).Datatype             = 'char';
+finfo.Variables(1).Attributes           = [];
+finfo.Variables(1).ChunkSize            = [];
+finfo.Variables(1).FillValue            = [];
+finfo.Variables(1).DeflateLevel         = [];
+finfo.Variables(1).Shuffle              = false;
 
-% Create attributes associated with the variables.
-netcdf.putAtt(ncID, netcdf.getConstant('NC_GLOBAL'), 'title', title);
-netcdf.putAtt(ncID, netcdf.getConstant('NC_GLOBAL'), 'application', 'MATLAB');
-netcdf.putAtt(ncID, netcdf.getConstant('NC_GLOBAL'), 'program', 'writenetcdf()');
-%netcdf.putAtt(ncID, netcdf.getConstant('NC_GLOBAL'), 'programVersion', '10.0');
-netcdf.putAtt(ncID, netcdf.getConstant('NC_GLOBAL'), 'programVersion', version);
-netcdf.putAtt(ncID, netcdf.getConstant('NC_GLOBAL'), 'Conventions', 'AMBER');
-netcdf.putAtt(ncID, netcdf.getConstant('NC_GLOBAL'), 'ConventionVersion', '1.0');
+finfo.Variables(2).Name                 = 'time';
+finfo.Variables(2).Dimensions.Name      = 'frame';
+finfo.Variables(2).Dimensions.Length    = nstep;
+finfo.Variables(2).Dimensions.Unlimited = true;
+finfo.Variables(2).Size                 = nstep;
+finfo.Variables(2).Datatype             = 'single';
+finfo.Variables(2).Attributes.Name      = 'units';
+finfo.Variables(2).Attributes.Value     = 'picosecond';
+finfo.Variables(2).ChunkSize            = [];
+finfo.Variables(2).FillValue            = [];
+finfo.Variables(2).DeflateLevel         = [];
+finfo.Variables(2).Shuffle              = false;
 
-netcdf.close(ncID);
+finfo.Variables(3).Name                    = 'coordinates';
+finfo.Variables(3).Dimensions(1).Name      = 'spatial';
+finfo.Variables(3).Dimensions(1).Length    = 3;
+finfo.Variables(3).Dimensions(1).Unlimited = false;
+finfo.Variables(3).Dimensions(2).Name      = 'atom';
+finfo.Variables(3).Dimensions(2).Length    = natom;
+finfo.Variables(3).Dimensions(2).Unlimited = false;
+finfo.Variables(3).Dimensions(3).Name      = 'frame';
+finfo.Variables(3).Dimensions(3).Length    = nstep;
+finfo.Variables(3).Dimensions(3).Unlimited = true;
+finfo.Variables(3).Size                    = [3 natom nstep];
+finfo.Variables(3).Datatype                = 'single';
+finfo.Variables(3).Attributes.Name         = 'units';
+finfo.Variables(3).Attributes.Value        = 'angstrom';
+finfo.Variables(3).ChunkSize               = [];
+finfo.Variables(3).FillValue               = [];
+finfo.Variables(3).DeflateLevel            = [];
+finfo.Variables(3).Shuffle                 = false;
 
+if (nargin > 2) & (size(box, 1) == nstep)
+  finfo.Variables(4).Name                 = 'cell_spatial';
+  finfo.Variables(4).Dimensions.Name      = 'cell_spatial';
+  finfo.Variables(4).Dimensions.Length    = 3;
+  finfo.Variables(4).Dimensions.Unlimited = 0;
+  finfo.Variables(4).Size                 = 3;
+  finfo.Variables(4).Datatype             = 'char';
+  finfo.Variables(4).Attributes           = [];
+  finfo.Variables(4).ChunkSize            = [];
+  finfo.Variables(4).FillValue            = [];
+  finfo.Variables(4).DeflateLevel         = [];
+  finfo.Variables(4).Shuffle              = false;
+
+  finfo.Variables(5).Name                    = 'cell_angular';
+  finfo.Variables(5).Dimensions(1).Name      = 'label';
+  finfo.Variables(5).Dimensions(1).Length    = 5;
+  finfo.Variables(5).Dimensions(1).Unlimited = false;
+  finfo.Variables(5).Dimensions(2).Name      = 'cell_angular';
+  finfo.Variables(5).Dimensions(2).Length    = 3;
+  finfo.Variables(5).Dimensions(2).Unlimited = false;
+  finfo.Variables(5).Size                    = [5 3];
+  finfo.Variables(5).Datatype                = 'char';
+  finfo.Variables(5).Attributes              = [];
+  finfo.Variables(5).ChunkSize               = [];
+  finfo.Variables(5).FillValue               = [];
+  finfo.Variables(5).DeflateLevel            = [];
+  finfo.Variables(5).Shuffle                 = false;
+
+  finfo.Variables(6).Name                    = 'cell_lengths';
+  finfo.Variables(6).Dimensions(1).Name      = 'cell_spatial';
+  finfo.Variables(6).Dimensions(1).Length    = 3;
+  finfo.Variables(6).Dimensions(1).Unlimited = false;
+  finfo.Variables(6).Dimensions(2).Name      = 'frame';
+  finfo.Variables(6).Dimensions(2).Length    = nstep;
+  finfo.Variables(6).Dimensions(2).Unlimited = true;
+  finfo.Variables(6).Size                    = [3 nstep];
+  finfo.Variables(6).Datatype                = 'double';
+  finfo.Variables(6).Attributes.Name         = 'units';
+  finfo.Variables(6).Attributes.Value        = 'angstrom';
+  finfo.Variables(6).ChunkSize               = [];
+  finfo.Variables(6).FillValue               = [];
+  finfo.Variables(6).DeflateLevel            = [];
+  finfo.Variables(6).Shuffle                 = false;
+
+  finfo.Variables(7).Name                    = 'cell_angles';
+  finfo.Variables(7).Dimensions(1).Name      = 'cell_angular';
+  finfo.Variables(7).Dimensions(1).Length    = 3;
+  finfo.Variables(7).Dimensions(1).Unlimited = false;
+  finfo.Variables(7).Dimensions(2).Name      = 'frame';
+  finfo.Variables(7).Dimensions(2).Length    = nstep;
+  finfo.Variables(7).Dimensions(2).Unlimited = true;
+  finfo.Variables(7).Size                    = [3 nstep];
+  finfo.Variables(7).Datatype                = 'double';
+  finfo.Variables(7).Attributes.Name         = 'units';
+  finfo.Variables(7).Attributes.Value        = 'degree';
+  finfo.Variables(7).ChunkSize               = [];
+  finfo.Variables(7).FillValue               = [];
+  finfo.Variables(7).DeflateLevel            = [];
+  finfo.Variables(7).Shuffle                 = false;
+end
+
+ncwriteschema(filename, finfo);
+
+%% write data
+ncwrite(filename, 'spatial', ['xyz']);
+ncwrite(filename, 'time', [1:nstep]);
+ncwrite(filename, 'coordinates', trj);
+if (nargin > 2) & (size(box, 1) == nstep)
+  ncwrite(filename, 'cell_spatial', ['abc']);
+  ncwrite(filename, 'cell_angular', ['alpha'; 'beta '; 'gamma']');
+  ncwrite(filename, 'cell_lengths', box');
+  ncwrite(filename, 'cell_angles', repmat(90, 3, nstep));
+end
 

@@ -33,6 +33,9 @@ function [trj, box, header] = readdcd(filename, index)
 % MolFile Plugin ( http://www.ks.uiuc.edu/Research/vmd/plugins/molfile/dcdplugin.html )
 % EGO_VIII Manual ( http://www.lrz.de/~heller/ego/manual/node93.html )
 %
+%% TODO
+% try-catch
+%
 
 %% initialization
 trj = [];
@@ -207,7 +210,7 @@ blocksize = fread(fid, 1, 'int32');
 z = fread(fid, blocksize/4, 'float32');
 blocksize = fread(fid, 1, 'int32');
   
-% skip charmm_4dims
+% ignore charmm 4dims extention
 if header.is_charmm_4dims
   blocksize = fread(fid, 1, 'int32');
   fseek(fid, blocksize, 0);
@@ -266,7 +269,7 @@ while 1
   z = fread(fid, blocksize/4, 'float32');
   blocksize = fread(fid, 1, 'int32');
   
-  % skip charmm_4dims
+  % ignore charmm 4dims extention
   if header.is_charmm_4dims
     blocksize = fread(fid, 1, 'int32');
     fseek(fid, blocksize, 0);

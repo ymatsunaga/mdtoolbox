@@ -43,7 +43,7 @@ if (numel(filename) >= 3) & strncmpi(filename((end-2):end), '.gz', numel('.gz'))
   dirname = tempname();
   dirname = [dirname '/'];
   mkdir(dirname);
-  disp(sprintf('uncompressing %s to %s', filename, dirname))
+  disp(sprintf('uncompressing %s into %s', filename, dirname))
   filename = gunzip(filename, dirname);
   filename = filename{1};
   disp('done')

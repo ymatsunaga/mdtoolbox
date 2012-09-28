@@ -1,12 +1,13 @@
-function [trj, box, attribute] = readnetcdf(filename, index)
+function [trj, box, attributes] = readnetcdf(filename, index_atom, index_time)
 %% readnetcdf
 % read amber netcdf file
 %
 %% Syntax
 %# trj = readnetcdf(filename);
-%# trj = readnetcdf(filename, index);
-%# [trj, box] = readnetcdf(filename, index);
-%# [trj, box, attribute] = readnetcdf(filename, index);
+%# trj = readnetcdf(filename, index_atom);
+%# trj = readnetcdf(filename, [], index_time);
+%# [trj, box] = readnetcdf(filename, index_atom, index_time);
+%# [trj, box, attributes] = readnetcdf(filename, index_atom, index_time);
 %
 %% Description
 % The XYZ coordinates of atoms are read into 'trj' variable
@@ -14,12 +15,14 @@ function [trj, box, attribute] = readnetcdf(filename, index)
 % Each row of 'trj' has the XYZ coordinates of atoms in order 
 % [x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom) y(natom) z(natom)].
 %
-% * filename  - input netcdf trajectory filename
-% * index     - index or logical index specifying atoms to be read
-% * trj       - trajectory [nstep x natom3 double]
-% * box       - box size [nstep x 3 double]
-% * attribute - attributes (like header information) of netcdf file
-%               [structure]
+% * filename   - input netcdf trajectory filename
+% * index_atom - atom index or logical index specifying atoms to be read
+% * index_time - time-step index or logical index specifying steps to be read
+%                please note that this should be a regularly-spaced index
+% * trj        - trajectory [nstep x natom3 double]
+% * box        - box size [nstep x 3 double]
+% * attributes - attributes (like header information) of netcdf file
+%                [structure]
 %
 %% Example
 %# trj = readnetcdf('ak.nc');
@@ -65,35 +68,73 @@ function [trj, box, attribute] = readnetcdf(filename, index)
 % support for reading subset snapshots
 % 
 
-% read attributes
-attribute = struct([]);
-attributeNames = {'Conventions', ...
-                   'ConventionVersion', ...
-                   'application', ...
-                   'program', ...
-                   'programVersion', ...
-                   'title'};
-for name = attributeNames
-  name = name{1};
-  attribute(1).(name) = ncreadatt(filename, '/', name);
-end
-attribute
+%% read attributes
+finfo = ncinfo(filename);
+attributes = struct;
 
+for i = 1:numel(finfo.Attributes)
+  attributes = setfield(attributes, finfo.Attributes(i).Name, finfo.Attributes(i).Value);
+end
+attributes
+
+%% read dimensions
+dimensions = struct;
+
+for i = 1:numel(finfo.Dimensions)
+  dimensions = setfield(dimensions, finfo.Dimensions(i).Name, finfo.Dimensions(i).Length);
+end
+dimensions
+
+%% initialization
+natom = dimensions.atom;
+nstep = dimensions.frame;
+
+if (nargin < 2) | (numel(index_atom) == 0)
+  index_atom = 1:natom;
+else
+  if islogical(index_atom)
+    index_atom = find(index_atom);
+  end
+  index_atom(index_atom > natom) = [];
+end
+
+if (nargin < 3) | (numel(index_time) == 0)
+  index_time = 1:nstep;
+else
+  if islogical(index_time)
+    index_time = find(index_time);
+  end
+  index_time(index_time > nstep) = [];
+end
+
+start_atom  = min(index_atom);
+count_atom  = max(index_atom) - start_atom + 1;
+stride_atom = 1;
+index_atom = index_atom - start_atom + 1;
+
+start_time  = min(index_time);
+count_time  = numel(index_time);
+stride_time = unique(diff(index_time));
+
+%% read data
 % trajectory in Angstrom
-trj = ncread(filename, 'coordinates'); 
-[nSpatial, nAtom, nStep] = size(trj);
+trj = ncread(filename, 'coordinates', [1 start_atom start_time], ...
+             [3 count_atom count_time], [1 stride_atom stride_time]); 
+[nSpatial, nAtom, nStep] = size(trj(:, index_atom, :));
 trj = reshape(trj, nSpatial*nAtom, nStep)';
 trj = double(trj);
 
 % box-size in Angstrom
-box = ncread(filename, 'cell_lengths'); 
-box = box';
+if (nargout > 1)
+  box = ncread(filename, 'cell_lengths', [1 start_time], ...
+               [3 count_time], [1 stride_time]); 
+  box = box';
+end
 
 % time in picosecond
-attribute.time = ncread(filename, 'time');
+% attribute.time = ncread(filename, 'time');
 
 % box-angle in degree
-tmp = ncread(filename, 'cell_angles');
-attribute.angular = tmp';
-
+% tmp = ncread(filename, 'cell_angles');
+% attribute.angular = tmp';
 
