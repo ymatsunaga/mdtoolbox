@@ -16,7 +16,8 @@ function [emode, frequency, covar, covar_atom] = anm(crd, cutoff)
 % (sqrt(eigenvalues)).
 % Also, the covariance matrix is calculated from 
 % the pseudo inverse of hessian matrix. 
-% kBT = 1.0 kcal/K is assumed.
+% The spring constant of 1.0 kcal/mol/A^1, and 
+% kBT = 1.0 kcal/mol/K are assumed.
 %
 % * crd         - coordinates of atoms. 
 %                 [1 x 3natom double]

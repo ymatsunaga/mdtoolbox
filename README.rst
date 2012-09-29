@@ -8,8 +8,8 @@ The functions include:
 
 * I/O for topology, coordinates, and trajectory files used for MD simulation
 * Least-squares fitting of structures
-* Calculation of PMF by using the kernel density estimators
-* Anistropic network model (Elastic network model)
+* Calculation of PMF surface from scattered data
+* Anisotropic network model (Elastic network model)
 * Other auxiliary functions... such as atom selections
 
 TODOs:
@@ -43,28 +43,29 @@ I/O
 ========================== ==================================================================================================
 name                       description
 ========================== ==================================================================================================
+readpdb                    read Protein Data Bank (PDB) file
+writepdb                   write Protein Data Bank (PDB) file
+readamberparm              read amber parameter/topology file
 readambercrd               read amber coordinate/restart file
 readamberout               read amber output file
 readambertrj               read amber ascii-format trajectory file
 readambertrjbox            read amber ascii-format trajectory file including box size
+readnetcdf                 read amber netcdf file
+writeambercrd              write amber coordinate/restart file
+writeambertrj              write amber ascii-format trajectory format file
+writenetcdf                write amber netcdf file
+readpsf                    read charmm or xplor type Protein Structure File (PSF)
 readdcd                    read xplor or charmm (namd) format dcd file
+readnamdbin                read namd restart (namdbin) file
+readnamdout                read namd output file
+writedcd                   write xplor or charmm (namd) format dcd file
+writenamdbin               write namd restart (namdbin) file
 readfloattrj               read float trajectory file
 readgenesisbin             read genesis restart (genesisbin) file
 readgenesisout             read genesis output file
 readmarblecrd              read marble coordinate/restart file
 readmarbletrj              read marble ascii-format trajectory file
-readnamdbin                read namd restart (namdbin) file
-readnamdout                read namd output file
-readnetcdf                 read amber netcdf file
-readamberparm              read amber parameter/topology file
-readpdb                    read Protein Data Bank (PDB) file
-readpsf                    read charmm or xplor type Protein Structure File (PSF)
-writeambercrd              write amber coordinate/restart file
-writeambertrj              write amber ascii-format trajectory format file
-writedcd                   write xplor or charmm (namd) format dcd file
-writenamdbin               write namd restart (namdbin) file
-writenetcdf                write amber netcdf file
-writepdb                   write Protein Data Bank (PDB) file
+writemarbletrj             write marble ascii-format trajectory file
 writexplormap              write xplor density format file
 ========================== ==================================================================================================
 
