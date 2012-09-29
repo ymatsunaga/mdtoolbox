@@ -120,8 +120,9 @@ stride_time = unique(diff(index_time));
 % trajectory in Angstrom
 trj = ncread(filename, 'coordinates', [1 start_atom start_time], ...
              [3 count_atom count_time], [1 stride_atom stride_time]); 
-[nSpatial, nAtom, nStep] = size(trj(:, index_atom, :));
-trj = reshape(trj, nSpatial*nAtom, nStep)';
+trj = trj(:, index_atom, :);
+[nspatial, natom, nstep] = size(trj);
+trj = reshape(trj, nspatial*natom, nstep)';
 trj = double(trj);
 
 % box-size in Angstrom

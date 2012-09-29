@@ -4,10 +4,10 @@ function [trj, box, header] = readdcd(filename, index)
 %
 %% Syntax
 %# trj = readdcd(filename);
-%# trj = readdcd(filename, index);
-%# [trj, box] = readdcd(filename, index);
-%# [trj, box, header] = readdcd(filename, index);
-%# [trj, ~, header] = readdcd(filename, index);
+%# trj = readdcd(filename, index_atom);
+%# [trj, box] = readdcd(filename, index_atom);
+%# [trj, box, header] = readdcd(filename, index_atom);
+%# [trj, ~, header] = readdcd(filename, index_atom);
 %
 %% Description
 % The XYZ coordinates of atoms are read into 'trj' variable
@@ -15,12 +15,12 @@ function [trj, box, header] = readdcd(filename, index)
 % Each row of 'trj' has the XYZ coordinates of atoms in order 
 % [x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom) y(natom) z(natom)].
 %
-% * filename  - input dcd trajectory filename
-% * index     - index or logical index specifying atoms to be read
-% * trj       - trajectory [nstep x natom3 double]
-% * box       - box size [nstep x 3 double]
-% * header    - structure variable, which has header information 
-%               [structure]
+% * filename   - input dcd trajectory filename
+% * index_atom - atom index or logical index specifying atoms to be read
+% * trj        - trajectory [nstep x natom3 double]
+% * box        - box size [nstep x 3 double]
+% * header     - structure variable, which has header information 
+%                [structure]
 %
 %% Example
 %# trj = readdcd('ak.dcd');
