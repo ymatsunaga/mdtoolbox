@@ -1,6 +1,6 @@
-----------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
 MD Toolbox: A MATLAB toolbox for the analysis of molecular dynamics trajectories
-----------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
 
 A collection of MATLAB functions for the analysis of MD trajectories. 
 
@@ -20,7 +20,7 @@ TODOs:
 * Some energy calc routines
 
 Installing
-----------
+-------------------------------------------------------------------------------------------
 
 Just clone this repository.
 ::
@@ -31,12 +31,12 @@ In MATLAB, invoke ``pathtool`` commmand and
 add ``mdtoolbox/function`` to the MATLAB search path. 
 
 Getting started
----------------
+-------------------------------------------------------------------------------------------
 
 See https://github.com/ymatsunaga/mdtoolbox/wiki
 
 Summary of functions
--------------------------
+-------------------------------------------------------------------------------------------
 
 I/O
 

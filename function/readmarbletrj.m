@@ -109,7 +109,7 @@ while ~feof(fid)
     crd = textscan(fid, '%f', natom3);
     xx = cell2mat(crd);
     if numel(xx) < natom3; break; end
-    trj_buffer(iblock, :) = xx';
+    trj_buffer(iblock, :) = xx(index3)';
   end
 
   if is_box
@@ -126,7 +126,7 @@ while ~feof(fid)
     crd = textscan(fid, '%f', natom3);
     xx = cell2mat(crd);
     if numel(xx) < natom3; break; end
-    vel_buffer(iblock, :) = xx';
+    vel_buffer(iblock, :) = xx(index3)';
   end
 
   iblock = iblock + 1;

@@ -65,7 +65,7 @@ function [trj, box, attributes] = readnetcdf(filename, index_atom, index_time)
 %   double velocities(frame, atom, spatial) units="angstrom/picosecond"
 %                                           scale_factor=20.455f
 %% TODO
-% support for reading subset snapshots
+% support for velocities
 % 
 
 %% read attributes
