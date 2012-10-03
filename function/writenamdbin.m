@@ -2,17 +2,26 @@ function rc = writenamdbin(filename, crd)
 %% writenamdbin
 % write namd restart (namdbin) file
 %
-% function rc = writenamdbin(filename, crd)
+%% Syntax
+%# readgenesisbin(filename, crd);
+%# readgenesisbin(filename, vel);
 %
-% input: filename ファイル名
-%        crd (1 x nAtom * 3) トラジェクトリ each row containing coordinates in the order [x1 y1 z1 x2 y2 z2 ...]
+%% Description
+% write namd restart (namdbin) file
+% either coordinates or velocities
+% are given
 %
-% output: rc
+% * filename  - filename of namd restart (namdbin) file
+% * crd       - coordinates [1 x natom3]
+% * vel       - velocities [1 x natom3]
 %
-% example:
-% writenamdbin('run.restart.coor',crd);
-% vel = vel / 20.45482706 % convert from Angstrom/ps to NAMD internal unit
-% writenamdbin('run.restart.vel',vel);
+%% Example
+%# writenamdbin('run.restart.coor',crd);
+%# vel = vel / 20.45482706 % convert from Angstrom/ps to NAMD internal unit
+%# writenamdbin('run.restart.vel',vel);
+%
+%% See also
+% readnamdbin
 %
 
 nAtom = length(crd)/3;
@@ -30,5 +39,4 @@ fwrite(fid, nAtom, 'int32');
 fwrite(fid, crd, 'double');
 
 fclose(fid);
-
 

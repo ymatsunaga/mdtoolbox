@@ -4,28 +4,28 @@ function [rmsd, trj, vel] = superimpose(ref, trj, index, mass, vel)
 %
 %% Syntax
 %# rmsd = superimpose(ref, trj);
-%# rmsd = superimpose(ref, trj, index);
-%# rmsd = superimpose(ref, trj, index, mass);
+%# rmsd = superimpose(ref, trj, index_atom);
+%# rmsd = superimpose(ref, trj, index_atom, mass);
 %# rmsd = superimpose(ref, trj, [], mass);
-%# [rmsd, trj] = superimpose(ref, trj, index, mass);
-%# [rmsd, trj, vel] = superimpose(ref, trj, index, mass, vel);
-%# [rmsd, trj, vel] = superimpose(ref, trj, index, [], vel);
+%# [rmsd, trj] = superimpose(ref, trj, index_atom, mass);
+%# [rmsd, trj, vel] = superimpose(ref, trj, index_atom, mass, vel);
+%# [rmsd, trj, vel] = superimpose(ref, trj, index_atom, [], vel);
 %# [rmsd, trj, vel] = superimpose(ref, trj, [], [], vel);
 %
 %% Description
 %
-% * ref    - reference structure
-%            [1 x natom3]
-% * trj    - trajectory
-%            [nstep x natom3]
-% * index  - index of atoms to be fitted
-%            [1 x n]
-% * mass   - mass
-%            [1 x natom]
-% * vel    - velocity
-%            [1 x natom3]
-% * rmsd   - root mean square deviations
-%            [nstep x 1]
+% * ref        - reference structure
+%                [1 x natom3]
+% * trj        - trajectory fitted to reference structure
+%                [nstep x natom3]
+% * index_atom - index of atoms to be fitted
+%                [1 x n]
+% * mass       - mass
+%                [1 x natom]
+% * vel        - velocity
+%                [1 x natom3]
+% * rmsd       - root mean square deviations
+%                [nstep x 1]
 % 
 %% Example
 %# natom = 3343;

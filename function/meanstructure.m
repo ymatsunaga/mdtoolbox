@@ -6,10 +6,10 @@ function [crd, trj, vel] = meanstructure(trj, index, tolerance, vel)
 %# crd = meanstructure(trj);
 %# crd = meanstructure(trj);
 %# [crd, trj] = meanstructure(trj);
-%# [crd, trj] = meanstructure(trj, index);
-%# [crd, trj] = meanstructure(trj, index, tolerance);
-%# [crd, trj, vel] = meanstructure(trj, index, tolerance, vel);
-%# [crd, trj, vel] = meanstructure(trj, index, [], vel);
+%# [crd, trj] = meanstructure(trj, index_atom);
+%# [crd, trj] = meanstructure(trj, index_atom, tolerance);
+%# [crd, trj, vel] = meanstructure(trj, index_atom, tolerance, vel);
+%# [crd, trj, vel] = meanstructure(trj, index_atom, [], vel);
 %# [crd, trj, vel] = meanstructure(trj, [], [], vel);
 %
 %% Description

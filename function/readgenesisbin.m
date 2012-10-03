@@ -1,18 +1,26 @@
-function [crd,vel,box] = readgenesisbin(filename, nAtomLimit)
+function [crd, vel, box] = readgenesisbin(filename)
 %% readgenesisbin
 % read genesis binary restart file
 %
-% function [crd,vel,box] = readgenesisbin(filename, nAtomLimit)
+%% Syntax
+%# crd = readgenesisbin(filename);
+%# [crd, vel] = readgenesisbin(filename);
+%# [crd, vel, box] = readgenesisbin(filename);
 %
-% input: filename ファイル名
+%% Description
+% read genesis binary restart file
 %
-% output: crd (1 x nAtom * 3) トラジェクトリ each row containing coordinates in the order [x1 y1 z1 x2 y2 z2 ...]
-%       : vel (1 x nAtom * 3) トラジェクトリ each row containing coordinates in the order [x1 y1 z1 x2 y2 z2 ...]
-%       : box (1 x 3) box-size
-% 
-% example:
-% [crd,nAtom] = readnamdbin('eq.rst');
-% 
+% * filename  - filename of genesis biary restart
+% * crd       - coordinates [1 x natom3]
+% * vel       - velocities [1 x natom3]
+% * box       - box size [1 x 3]
+%
+%% Example
+%# crd = readgenesisbin('run.rst');
+%
+%% See also
+% writegenesisbin
+%
 
 fid = fopen(filename, 'r', 'l');
 

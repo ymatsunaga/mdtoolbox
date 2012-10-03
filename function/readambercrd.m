@@ -4,23 +4,23 @@ function [crd, box, vel, title] = readambercrd(filename, index)
 %
 %% Syntax
 %# crd = readambercrd(filename);
-%# crd = readambercrd(filename, index);
-%# [crd, box] = readambercrd(filename, index);
-%# [crd, box, vel] = readambercrd(filename, index);
-%# [crd, ~, vel] = readambercrd(filename, index);
-%# [crd, box, vel, title] = readambercrd(filename, index);
+%# crd = readambercrd(filename, index_atom);
+%# [crd, box] = readambercrd(filename, index_atom);
+%# [crd, box, vel] = readambercrd(filename, index_atom);
+%# [crd, ~, vel] = readambercrd(filename, index_atom);
+%# [crd, box, vel, title] = readambercrd(filename, index_atom);
 %
 %% Description
 % The XYZ coordinates or velocities of atoms are read into 
 % 'crd' and 'vel' variables which have '3*natom' columns
 % in order [x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom) y(natom) z(natom)].
 %
-% * filename  - input amber coordinate/restart filename
-% * index     - index or logical index specifying atoms to be read
-% * crd       - coordinates [1 x natom3 double]
-% * box       - size of the periodic box [nstep x 3 double]
-% * vel       - velocities [1 x natom3 double]
-% * title    - title characters [chars]
+% * filename   - input amber coordinate/restart filename
+% * index_atom - atom index or logical index specifying atoms to be read
+% * crd        - coordinates [1 x natom3 double]
+% * box        - size of the periodic box [nstep x 3 double]
+% * vel        - velocities [1 x natom3 double]
+% * title      - title characters [chars]
 %
 %% Example
 %# crd = readambercrd('ak.crd');

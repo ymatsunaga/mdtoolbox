@@ -4,22 +4,22 @@ function [crd, box, vel, title] = readmarblecrd(filename, index)
 %
 %% Syntax
 %# crd = readmarblecrd(filename);
-%# crd = readmarblecrd(filename, index);
-%# [crd, box] = readmarblecrd(filename, index);
-%# [crd, box, vel] = readmarblecrd(filename, index);
-%# [crd, box, vel, title] = readmarblecrd(filename, index);
+%# crd = readmarblecrd(filename, index_atom);
+%# [crd, box] = readmarblecrd(filename, index_atom);
+%# [crd, box, vel] = readmarblecrd(filename, index_atom);
+%# [crd, box, vel, title] = readmarblecrd(filename, index_atom);
 %
 %% Description
 % The XYZ coordinates or velocities of atoms are read into 
 % 'crd' and 'vel' variables which have '3*natom' columns
 % in order [x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom) y(natom) z(natom)].
 %
-% * filename  - input MARBLE coordinate/restart filename
-% * index     - index or logical index specifying atoms to be read
-% * crd       - coordinates [1 x natom3 double]
-% * vel       - velocities [1 x natom3 double]
-% * box       - size of the periodic box [nstep x 3 double]
-% * title    - title characters [chars]
+% * filename   - input MARBLE coordinate/restart filename
+% * index_atom - atom index or logical index specifying atoms to be read
+% * crd        - coordinates [1 x natom3 double]
+% * vel        - velocities [1 x natom3 double]
+% * box        - size of the periodic box [nstep x 3 double]
+% * title      - title characters [chars]
 %
 %% Example
 %# crd = readmarblecrd('eq.crd');

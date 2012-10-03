@@ -1,12 +1,12 @@
-function [trj,box] = readfloattrj(natom,filename,index,isbox)
+function [trj,box] = readfloattrj(natom, filename, index, isbox)
 %% readfloattrj
 % read float trajectory file
 %
-% function [trj,box,ititle] = readambertrj(natom,filename,index,isbox)
+% function [trj, box, ititle] = readambertrj(natom, filename, index_atom, isbox)
 %
 % input: natom 原子数
 %        filename ファイル名
-%        index 読み込む原子番号のリスト(省略可。省略された時には全原子を読む)
+%        index_atom 読み込む原子番号のリスト(省略可。省略された時には全原子を読む)
 %        isbox ボックス付きのtrjファイルか否か。ブーリアン型(false or true)。(省略可。省略された時はボックスなし=false)
 %
 % output: trj (nstep x natom*3) トラジェクトリ each row containing coordinates in the order [x1 y1 z1 x2 y2 z2 ...]

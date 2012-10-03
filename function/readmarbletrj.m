@@ -1,12 +1,12 @@
-function [trj, box, vel] = readmarbletrj(filename,index)
+function [trj, box, vel] = readmarbletrj(filename, index)
 %% readmarbletrj
 % read marble ascii-format trajectory file
 %
 %% Syntax
 %# trj = readmarbletrj(filename);
-%# trj = readmarbletrj(filename, index);
-%# [trj, box] = readmarbletrj(filename, index);
-%# [trj, box, vel] = readmarbletrj(filename, index);
+%# trj = readmarbletrj(filename, index_atom);
+%# [trj, box] = readmarbletrj(filename, index_atom);
+%# [trj, box, vel] = readmarbletrj(filename, index_atom);
 %
 %% Description
 % The XYZ coordinates of atoms are read into 'trj' variable
@@ -14,11 +14,11 @@ function [trj, box, vel] = readmarbletrj(filename,index)
 % Each row of 'trj' has the XYZ coordinates of atoms in order 
 % [x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom) y(natom) z(natom)].
 %
-% * filename  - input marble trajectory filename
-% * index     - index or logical index specifying atoms to be read
-% * trj       - trajectory [nstepx3natom double]
-% * box       - box size [nstepx3 double]
-% * vel       - velocities [nstepx3natom double]
+% * filename   - input marble trajectory filename
+% * index_atom - atom index or logical index specifying atoms to be read
+% * trj        - trajectory [nstepx3natom double]
+% * box        - box size [nstepx3 double]
+% * vel        - velocities [nstepx3natom double]
 %
 %% Example
 %# trj = readmarbletrj('eq.trj');
