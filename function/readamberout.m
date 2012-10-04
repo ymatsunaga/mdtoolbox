@@ -89,6 +89,14 @@ data_each = zeros(1, numel(label));
 while ~feof(fid)
   line = strtrim(fgetl(fid));
 
+  if regexp(line, 'A V E R A G E S   O V E R')
+    break;
+  end
+
+  if regexp(line, 'R M S  F L U C T U A T I O N S')
+    break;
+  end
+
   isdata = false;
   if regexp(line, regexp_gettoken)
     for i = 1:numel(label)
