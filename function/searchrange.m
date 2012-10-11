@@ -10,8 +10,8 @@ function [pair, dist] = searchrange(a, b, rcut, box)
 %
 %% Description
 %  This code finds all the atoms in 'crd1' that are within cutoff
-%  distance 'rcut' for points in 'crd2'. 
-%  Input atom coordinates should be 3-dimensional points of vector 1 x 3natom.
+%  distance 'rcut' for atoms in 'crd2'. 
+%  Atom coordinates should be 3-dimensional points of vector 1 x 3natom.
 %  The grid-cell algorithm proposed by Heinz and Hünenberger (JCC, 2004)
 %  is used. If the cutoff distance is large compared to the system
 %  size, then the exhaustive search algorithm is used instead of
@@ -26,15 +26,29 @@ function [pair, dist] = searchrange(a, b, rcut, box)
 %          [scalar double]
 % * box  - box size. When this is given, PBC is assumed
 %          [1 x 3 double]
-% * pair - pair list. 1st column is the index of b,
-%          2nd column is the index of a,
+% * pair - pair list. 1st column is the index of crd2 atom,
+%          2nd column is the index of crd1 atom
 %          [n x 2 integer]
 % * dist - distance of the corresponding pair
 %          [n x 1 double]
 %
 %% Example
-%# crd = readpdb('ak_ca.pdb');
-%# [pair, dist] = rangesearch(crd, [2 3 5; 2 3 4], 8.0);
+%# % calculate Ca atom contact pairlist
+%# [pdb, crd] = readpdb('lys.pdb');
+%# index_ca = selectname(pdb.name, 'CA');
+%# index_ca = find(index_ca);
+%# crd = crd(to3(index_ca));
+%# crd = decenter(crd);
+%# [pair, dist] = searchrange(crd, [0.0 0.0 0.0 3.0 4.0 5.0], 12.0);
+%# 
+%# % test
+%# [pair2, dist2] = searchrange_exhaustive(crd, [0.0 0.0 0.0 3.0 4.0 5.0], 12.0);
+%# hold off;
+%# s  = sparse(pair(:, 1),  pair(:, 2),  1, 2, 164); spy(s,  'b')
+%# hold on;
+%# s2 = sparse(pair2(:, 1), pair2(:, 2), 1, 2, 164); spy(s2, 'r')
+%# all(find(s) == find(s2))
+%# all(abs(sort(dist) - sort(dist2)) < 0.00001)
 %
 %% See also
 % searchrange_exhaustive
@@ -45,9 +59,7 @@ function [pair, dist] = searchrange(a, b, rcut, box)
 % under periodic boundary conditions. 
 % J Comput Chem 25, 1474–1486 (2004). 
 %
-
 %% setup variables
-ab = [a b];
 natom = numel(b)./3;
 rcut2 = rcut^2;
 
@@ -60,18 +72,22 @@ if nargin >= 4
   b(2:3:end) = b(2:3:end) - floor(b(2:3:end)./box(2))*box(2);
   b(3:3:end) = b(3:3:end) - floor(b(3:3:end)./box(3))*box(3);
 else
-  minx = min(ab(1:3:end));
-  miny = min(ab(2:3:end));
-  minz = min(ab(3:3:end));
+  minx = min([a(1:3:end) b(1:3:end)]);
+  miny = min([a(2:3:end) b(2:3:end)]);
+  minz = min([a(3:3:end) b(3:3:end)]);
 
-  ab(1:3:end) = ab(1:3:end) - minx;
-  ab(2:3:end) = ab(2:3:end) - miny;
-  ab(3:3:end) = ab(3:3:end) - minz;
+  a(1:3:end) = a(1:3:end) - minx;
+  a(2:3:end) = a(2:3:end) - miny;
+  a(3:3:end) = a(3:3:end) - minz;
+
+  b(1:3:end) = b(1:3:end) - minx;
+  b(2:3:end) = b(2:3:end) - miny;
+  b(3:3:end) = b(3:3:end) - minz;
 
   box = zeros(1, 3);
-  box(1) = max(ab(1:3:end)) + 1.0;
-  box(2) = max(ab(2:3:end)) + 1.0;
-  box(3) = max(ab(3:3:end)) + 1.0;
+  box(1) = max([a(1:3:end) b(1:3:end)]) + 1.0;
+  box(2) = max([a(2:3:end) b(2:3:end)]) + 1.0;
+  box(3) = max([a(3:3:end) b(3:3:end)]) + 1.0;
 end
 
 if any(box < (2*rcut))
@@ -96,14 +112,14 @@ mb = ncell(1)*ncell(2)*nz + ncell(1)*ny + nx + 1;
 
 M = prod(ncell);
 
-maindex = cell(M, 1);
+maindex  = cell(M, 1);
 maindex3 = cell(M, 1);
-mbindex = cell(M, 1);
+mbindex  = cell(M, 1);
 mbindex3 = cell(M, 1);
 for i = 1:M
-  maindex{i} = find(ma == i);
+  maindex{i}  = find(ma == i);
   maindex3{i} = to3(maindex{i});
-  mbindex{i} = find(mb == i);
+  mbindex{i}  = find(mb == i);
   mbindex3{i} = to3(mbindex{i});
 end
 
@@ -139,6 +155,8 @@ mask_index = [-mask_index(end:-1:1) 0 mask_index];
 %% calculate the distances of the atoms in masked cells
 pair = zeros(natom*1000, 2);
 dist = zeros(natom*1000, 1);
+%pair = zeros(natom, 2);
+%dist = zeros(natom, 1);
 icount = 1;
 
 for m1 = 1:M

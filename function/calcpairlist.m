@@ -23,13 +23,26 @@ function [pair, dist] = calcpairlist(crd, rcut, box)
 % * box  - box size. When this is given, PBC is assumed
 %          [1 x 3 double]
 % * pair - pair list.
-%          [n x 2 integer]
+%          [npair x 2 integer]
 % * dist - distance of the corresponding pair
-%          [n x 1 double]
+%          [npair x 1 double]
 %
 %% Example
-%# crd = readpdb('ak_ca.pdb');
+%# % calculate Ca atom contact pairlist
+%# [pdb, crd] = readpdb('lys.pdb');
+%# index_ca = selectname(pdb.name, 'CA');
+%# index_ca = find(index_ca);
+%# crd = crd(to3(index_ca));
 %# [pair, dist] = calcpairlist(crd, 8.0);
+%# 
+%# % test
+%# [pair2, dist2] = calcpairlist_exhaustive(crd, 8.0);
+%# hold off;
+%# s  = sparse([pair(:,1);  pair(:,2)],  [pair(:,2);  pair(:,1)], 1, 164, 164);  spy(s,  'b')
+%# hold on;
+%# s2 = sparse([pair2(:,1); pair2(:,2)], [pair2(:,2); pair2(:,1)], 1, 164, 164); spy(s2, 'r')
+%# all(find(s) == find(s2))
+%# all(abs(sort(dist) -sort(dist2)) < 0.00001)
 %
 %% See also
 % calcpairlist_exhaustive
@@ -120,6 +133,8 @@ mask_index = find(mask);
 %% calculate the distances of the atoms in masked cells
 pair = zeros(natom*1000, 2);
 dist = zeros(natom*1000, 1);
+%pair = zeros(natom, 2);
+%dist = zeros(natom, 1);
 icount = 1;
 
 for m1 = 1:M

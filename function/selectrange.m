@@ -28,12 +28,12 @@ function logical_index = selectrange(crd, index, rcut, box)
 %# trj = readnetcdf('ak.nc');
 %#
 %# % choose CA atoms
-%# logical_index = selectname(parm.atom_name, 'CA  ');
-%# index = find(logical_index);
+%# index = selectname(parm.atom_name, 'CA  ');
+%# index = find(index);
 %#
 %# % choose all the atoms within 4 Angstrom from CA atoms of residue 1-3 at step 1
-%# logical_index = selectrange(trj(1, :), index(1:3), 4.0);
-%# index = find(logical_index);
+%# index2 = selectrange(trj(1, :), index(1:3), 4.0);
+%# index2 = find(index2);
 %
 
 %% setup
@@ -50,10 +50,10 @@ end
 
 %% get unique indices, deleting self indices
 index = pair(:, 2);
-index(dist < eps) = [];
+%index(dist < eps) = [];
 index = unique(index);
 
-logical_index = false(1, natom);
+logical_index = false(natom, 1);
 logical_index(index) = true;
 
 
