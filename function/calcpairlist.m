@@ -37,11 +37,7 @@ function [pair, dist] = calcpairlist(crd, rcut, box)
 %# 
 %# % test
 %# [pair2, dist2] = calcpairlist_exhaustive(crd, 8.0);
-%# hold off;
-%# s  = sparse([pair(:,1);  pair(:,2)],  [pair(:,2);  pair(:,1)], 1, 164, 164);  spy(s,  'b')
-%# hold on;
-%# s2 = sparse([pair2(:,1); pair2(:,2)], [pair2(:,2); pair2(:,1)], 1, 164, 164); spy(s2, 'r')
-%# all(find(s) == find(s2))
+%# setdiff(pair, pair2, 'rows')
 %# all(abs(sort(dist) -sort(dist2)) < 0.00001)
 %
 %% See also
@@ -177,14 +173,14 @@ end
 pair(icount:end, :) = [];
 dist(icount:end) = [];
 
-%% sort pair index
-% for i = 1:size(pair, 1)
-%   if pair(i, 2) > pair(i, 1)
-%     tmp = pair(i, 1);
-%     pair(i, 1) = pair(i, 2);
-%     pair(i, 2) = tmp;
-%   end
-% end
+%% sort pair index (upper triangular form)
+for i = 1:size(pair, 1)
+  if pair(i, 1) > pair(i, 2)
+    tmp = pair(i, 1);
+    pair(i, 1) = pair(i, 2);
+    pair(i, 2) = tmp;
+  end
+end
 
 function mi_n = minimum_image(n, N)
 mi_n = n - N .* sign(n) .* floor((abs(n) + 0.5*N) ./ N);

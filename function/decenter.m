@@ -40,12 +40,16 @@ natom3 = size(x, 2);
 natom = natom3/3;
 com = zeros(nstep, 3);
 
-if nargin == 1
-  mass = ones(1, natom);
+if nargin <= 1
+  index = 1:natom;
+else
+  if islogical(index)
+    index = find(index);
+  end
 end
 
 if nargin <= 2
-  index = 1:natom;
+  mass = ones(1, natom);
 end
 
 assert(isequal(size(x, 2)/3, numel(mass)), ...

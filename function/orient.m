@@ -5,8 +5,6 @@ function [crd_new] = orient(crd)
 % function [crd_new] = orient(crd,index)
 %
 % input: crd (1 x natom*3)
-%        index 
-%        mass (1 x natom)
 %
 % output: crd_new (1 x natom*3)
 %

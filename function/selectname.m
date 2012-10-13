@@ -18,8 +18,8 @@ function logical_index = selectname(namelist, varargin)
 % Blanks(whitespaces) in the front and rear of namelist and input
 % names are ignored. 
 %
-% * namelist - atom name list [natom x 4 char]
-% * name     - selection name [1 x 4 char]
+% * namelist - atom name list [natom x n char]
+% * name     - selection name [1 x m char]
 %
 %% Example
 %# % read amber parm file
@@ -54,11 +54,24 @@ for i = 1:numel(varargin)
     end
   else
     % matching without wild card
+
     for iatom = 1:natom
-      if strcmpi(strtrim(namelist(iatom, :)), query);
+      if strcmpi(strtrim(namelist(iatom, :)), query)
         logical_index(iatom) = true;
       end
     end
+    
+    % logical_index2 = strcmpi(strtrim(cellstr(namelist)), query);
+    % logical_index = logical_index | logical_index2;
+
+    % f = @trim_and_compare;
+    % logical_index2 = cellfun(f, cellstr(namelist), cellstr(repmat(query, natom, 1)));
+    % logical_index = logical_index | logical_index2;
   end
 end
+
+
+function s = trim_and_compare(name, query)
+name = strtrim(name);
+s = strcmpi(name, query);
 

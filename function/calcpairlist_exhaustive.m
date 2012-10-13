@@ -8,9 +8,10 @@ function [pair, dist] = calcpairlist_exhaustive(crd, rcut, box)
 %
 %% Description
 %  This code searches all the pairs within a cutoff distance.
-%  Since exhaustive approach (i.e., the distances between all possible
-%  pairs are calculated) is used, this code is not as fast as the
-%  grid-cell algorithgm for big data sets (see calcpairlist.m). 
+%  Since this code performs exhaustive approach (i.e., the
+%  distances between all possible pairs are calculated) is used, 
+%  the speed is not as fast as the grid-cell algorithgm especially
+%  for big data (calcpairlist.m). 
 %
 % * crd  - coordinates in 3-dimensional Cartesian space
 %          [1 x 3natom double]
@@ -24,8 +25,17 @@ function [pair, dist] = calcpairlist_exhaustive(crd, rcut, box)
 %          [n x 1 double]
 %
 %% Example
-%# crd = readpdb('ak_ca.pdb');
+%# % calculate Ca atom contact pairlist
+%# [pdb, crd] = readpdb('lys.pdb');
+%# index_ca = selectname(pdb.name, 'CA');
+%# index_ca = find(index_ca);
+%# crd = crd(to3(index_ca));
 %# [pair, dist] = calcpairlist(crd, 8.0);
+%# 
+%# % test
+%# [pair2, dist2] = calcpairlist_exhaustive(crd, 8.0);
+%# setdiff(pair, pair2, 'rows')
+%# all(abs(sort(dist) -sort(dist2)) < 0.00001)
 %
 %% See also
 % calcpairlist
@@ -44,7 +54,8 @@ end
 
 dist = sqrt(c1.^2 + c2.^2 + c3.^2);
 
-index = find(tril(dist < rcut, -1));
+%index = find(tril(dist < rcut, -1));
+index = find(triu(dist < rcut, 1));
 [pair1, pair2] = ind2sub(size(dist), index);
 pair = [pair1 pair2];
 dist = dist(index);

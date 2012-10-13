@@ -39,21 +39,29 @@ function logical_index = selectrange(crd, index, rcut, box)
 %% setup
 natom3 = numel(crd);
 natom = natom3./3;
+if islogical(index)
+  index = find(index);
+end
 index3 = to3(index);
 
 %% searches all the atoms within cutoff distance
+crd2 = crd(index3);
+crd(index3) = [];
+subindex = 1:natom;
+subindex(index) = [];
+
 if nargin >= 4
-  [pair, dist] = searchrange(crd, crd(index3), rcut, box);
+  [pair, dist] = searchrange(crd, crd2, rcut, box);
 else
-  [pair, dist] = searchrange(crd, crd(index3), rcut);
+  [pair, dist] = searchrange(crd, crd2, rcut);
 end
 
 %% get unique indices, deleting self indices
 index = pair(:, 2);
 %index(dist < eps) = [];
 index = unique(index);
+index = subindex(index);
 
 logical_index = false(natom, 1);
 logical_index(index) = true;
-
 
