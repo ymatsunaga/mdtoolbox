@@ -52,11 +52,18 @@ else
   if islogical(index)
     index = find(index);
   end
+  if iscolumn(index)
+    index = index';
+  end
 end
 index3 = to3(index);
 
 if (nargin < 4) | (numel(mass) == 0)
   mass = ones(1, natom);
+else
+  if iscolumn(mass)
+    mass = mass';
+  end
 end
 
 if (nargin < 5)

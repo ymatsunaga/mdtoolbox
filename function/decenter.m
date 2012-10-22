@@ -3,10 +3,10 @@ function [x, com] = decenter(x, index, mass)
 % remove the center of mass from coordinates or velocities
 %
 %% Syntax
-%# [x, com] = decenter(x);
-%# [x, com] = decenter(x, index);
-%# [x, com] = decenter(x, index, mass);
-%# [x, com] = decenter(x, [], mass);
+%# [trj, com] = decenter(trj);
+%# [trj, com] = decenter(trj, index);
+%# [trj, com] = decenter(trj, index, mass);
+%# [trj, com] = decenter(trj, [], mass);
 %
 %% Description
 % Calculate the center of 'mass' from given coordinates
@@ -15,15 +15,15 @@ function [x, com] = decenter(x, index, mass)
 % calculated.
 % When 'mass' is ommited, uniform weights are assumed. 
 %
-% * x          - XYZ coordinates of atoms in order
-%                (x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom))
-%                [nstep x natom3 double]
-% * index      - index of atoms from which the center of mass are
-%                calculated [1 x n integer]
-% * mass       - atom masses [1 x natom double]
-% * x (output) - XYZ coordinates of atoms where the centers of mass
-%                are removed. [nstep x natom3 double]
-% * com        - centers of mass [nstep x 3]
+% * trj         - XYZ coordinates of atoms in order
+%                 (x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom))
+%                 [nstep x natom3 double]
+% * index       - index of atoms from which the center of mass are
+%                 calculated [1 x n integer]
+% * mass        - atom masses [1 x natom double]
+% * trj(output) - XYZ coordinates of atoms where the centers of mass
+%                 are removed. [nstep x natom3 double]
+% * com         - centers of mass [nstep x 3]
 %
 %% Example
 % trj = readdcd('ak.dcd');
@@ -40,16 +40,23 @@ natom3 = size(x, 2);
 natom = natom3/3;
 com = zeros(nstep, 3);
 
-if nargin <= 1
+if (nargin < 2) | (numel(index) == 0)
   index = 1:natom;
 else
   if islogical(index)
     index = find(index);
   end
+  if iscolumn(index)
+    index = index';
+  end
 end
 
-if nargin <= 2
+if (nargin < 3) | (numel(mass) == 0)
   mass = ones(1, natom);
+else
+  if iscolumn(mass)
+    mass = mass';
+  end
 end
 
 assert(isequal(size(x, 2)/3, numel(mass)), ...
