@@ -68,5 +68,7 @@ dummy = textscan(fid, '%d', 1);
 
 box = textscan(fid, '%f', 9);
 box = cell2mat(box)';
-box = box([1 5 9]);
+if numel(box) >= 9
+  box = box([1 5 9]);
+end
 
