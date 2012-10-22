@@ -19,5 +19,5 @@ function str_sub = substruct(str, index)
 %# pdb_ca = substruct(pdb, index_ca);
 % 
 
-str_sub = structfun(@(x) x(index, :), str, 'uniformOutput', false);
+str_sub = structfun(@(x) x(index, :), str, 'UniformOutput', false);
 

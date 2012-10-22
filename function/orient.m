@@ -1,65 +1,103 @@
-function [crd_new] = orient(crd)
+function trj = orient(trj, index, mass)
 %% orient 
 % orient molecule using the principal axes of inertia
 %
-% function [crd_new] = orient(crd,index)
+%% Syntax
+% trj = orient(trj)
+% trj = orient(trj, index_atom)
+% trj = orient(trj, index_atom, mass)
+% trj = orient(trj, [], mass)
 %
-% input: crd (1 x natom*3)
+%% Description
 %
-% output: crd_new (1 x natom*3)
+% * trj         - XYZ coordinates of atoms in order
+%                 (x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom))
+%                 [nstep x natom3 double]
+% * index_atom  - index of atoms from which the center of mass are
+%                 calculated [1 x n integer]
+% * mass        - atom masses [1 x natom double]
+% * trj(output) - XYZ coordinates of atoms in the coordinates system
+%                 of the principal axes of inertia. 
+%                 [nstep x natom3 double]
 %
-% example:
-% [crd,b] = readpdb('trap11.pdb',{'CA'});
-% crd = orient(crd);
-% writepdb('orient_ca.pdb',crd,b);
+%% Example
+%# [pdb, crd] = readpdb('trap.pdb');
+%# crd = orient(crd);
+%# pdb.xyz = reshape(crd, 3, [])';
+%# writepdb('trap_orient.pdb', pdb);
+%
+%% See also
+% decenter, superimpose
 % 
 
-%% preparation
-natom3 = size(crd,2);
+%% setup
+nstep = size(trj, 1);
+natom3 = size(trj, 2);
 natom = natom3/3;
-nstep = size(crd,1);
-mass = ones(1,natom);
-index = 1:natom;
 
-crd_new = zeros(1,natom3);
-
-%% subtract by the geometric center
-crd(1,1:3:end) = crd(1,1:3:end) - mean(crd(1,1:3:end));
-crd(1,2:3:end) = crd(1,2:3:end) - mean(crd(1,2:3:end));
-crd(1,3:3:end) = crd(1,3:3:end) - mean(crd(1,3:3:end));
-
-%% calculate the principal axis of inertia
-x = crd(1,1:3:end);
-y = crd(1,2:3:end);
-z = crd(1,3:3:end);
-
-I = zeros(3,3);
-
-I(1,1) = sum(mass.*(y.^2 + z.^2));
-I(2,2) = sum(mass.*(x.^2 + z.^2));
-I(3,3) = sum(mass.*(x.^2 + y.^2));
-
-I(1,2) = - sum(mass.*(x.*y));
-I(2,1) = I(1,2);
-
-I(1,3) = - sum(mass.*(x.*z));
-I(3,1) = I(1,3);
-
-I(2,3) = - sum(mass.*(y.*z));
-I(3,2) = I(2,3);
-
-I
-[p,q,a] = svd(I); %q is already sorted by descending order
-p_axis = a(:,end:-1:1); %z-axis has the largest inertia
-
-% check reflection
-if det(p_axis) < 0
-  p_axis(:,1) = - p_axis(:,1);
+if (nargin < 2) | (numel(index) == 0)
+  index = 1:natom;
+else
+  if islogical(index)
+    index = find(index);
+  end
+  if iscolumn(index)
+    index = index';
+  end
 end
 
-%% project onto the principal axis of inertia
-proj = [x' y' z']*p_axis;
-crd_new(:,1:3:end) = proj(:,1)';
-crd_new(:,2:3:end) = proj(:,2)';
-crd_new(:,3:3:end) = proj(:,3)';
+if (nargin < 3) | (numel(mass) == 0)
+  mass = ones(1, natom);
+else
+  if iscolumn(mass)
+    mass = mass';
+  end
+end
+
+assert(isequal(natom, numel(mass)), ...
+       ['sizes of coordinates and masses are not same'])
+
+indexx = 3.*(index-1) + 1;
+indexy = 3.*(index-1) + 2;
+indexz = 3.*(index-1) + 3;
+
+%% subtract by the geometric center
+[trj, com] = decenter(trj, index, mass);
+
+%% calculate the principal axis of inertia
+for istep = 1:nstep
+  mass = mass(index);
+  x = trj(istep, indexx);
+  y = trj(istep, indexy);
+  z = trj(istep, indexz);
+  
+  I = zeros(3,3);
+  
+  I(1,1) = sum(mass.*(y.^2 + z.^2));
+  I(2,2) = sum(mass.*(x.^2 + z.^2));
+  I(3,3) = sum(mass.*(x.^2 + y.^2));
+  
+  I(1,2) = - sum(mass.*(x.*y));
+  I(2,1) = I(1,2);
+  
+  I(1,3) = - sum(mass.*(x.*z));
+  I(3,1) = I(1,3);
+  
+  I(2,3) = - sum(mass.*(y.*z));
+  I(3,2) = I(2,3);
+  
+  [p,q,a] = svd(I); %q is already sorted by descending order
+  p_axis = a(:, end:-1:1); %z-axis has the largest inertia
+  
+  % check reflection
+  if det(p_axis) < 0
+    p_axis(:,1) = - p_axis(:,1);
+  end
+  
+  %% project onto the principal axis of inertia
+  proj = reshape(trj(istep, :), 3, [])' * p_axis;
+  trj(istep, 1:3:end) = proj(:, 1)';
+  trj(istep, 2:3:end) = proj(:, 2)';
+  trj(istep, 3:3:end) = proj(:, 3)';
+end
 

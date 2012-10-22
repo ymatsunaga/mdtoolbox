@@ -1,24 +1,23 @@
 function [x, com] = decenter(x, index, mass)
-%%decenter 
+%% decenter 
 % remove the center of mass from coordinates or velocities
 %
 %% Syntax
 %# [trj, com] = decenter(trj);
-%# [trj, com] = decenter(trj, index);
-%# [trj, com] = decenter(trj, index, mass);
+%# [trj, com] = decenter(trj, index_atom);
+%# [trj, com] = decenter(trj, index_atom, mass);
 %# [trj, com] = decenter(trj, [], mass);
 %
 %% Description
 % Calculate the center of 'mass' from given coordinates
-% specified by 'index'.
-% When 'index' is omitted, the center of all the coordinates are
-% calculated.
+% specified by 'index'. When 'index' is omitted, the center 
+% of all the atoms is calculated.
 % When 'mass' is ommited, uniform weights are assumed. 
 %
 % * trj         - XYZ coordinates of atoms in order
 %                 (x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom))
 %                 [nstep x natom3 double]
-% * index       - index of atoms from which the center of mass are
+% * index_atom  - index of atoms from which the center of mass are
 %                 calculated [1 x n integer]
 % * mass        - atom masses [1 x natom double]
 % * trj(output) - XYZ coordinates of atoms where the centers of mass
@@ -26,12 +25,10 @@ function [x, com] = decenter(x, index, mass)
 % * com         - centers of mass [nstep x 3]
 %
 %% Example
-% trj = readdcd('ak.dcd');
-% 
-% 
+%# trj = readdcd('ak.dcd');
 %
-%% References
-% 
+%% See also
+% orient, superimpose
 %
 
 %% setup
@@ -59,8 +56,8 @@ else
   end
 end
 
-assert(isequal(size(x, 2)/3, numel(mass)), ...
-       ['sizes of coordinates and masses are not consistent'])
+assert(isequal(natom, numel(mass)), ...
+       ['sizes of coordinates and masses are not same'])
 
 indexx = 3.*(index-1) + 1;
 indexy = 3.*(index-1) + 2;
