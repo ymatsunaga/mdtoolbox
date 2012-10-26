@@ -220,6 +220,20 @@ while ~feof(fid)
   
 end
 
+%% convert excluded_atoms_list to a pair list (just for convenience)
+parm.excluded_pair = zeros(numel(parm.excluded_atoms_list), 2);
+istart = 0;
+for iatom = 1:parm.natom
+  num = parm.number_excluded_atoms(iatom);
+  index = (istart+1):(istart+num);
+  parm.excluded_pair(index, :) = [iatom*ones(num, 1) parm.excluded_atoms_list(index)];
+  istart = istart + num;
+end
+
+index = find(parm.excluded_pair(:,2) == 0);
+parm.excluded_pair(index, :) = [];
+
+
 %% create other elements to be consistent with psf and convenient for atom selection
 natom = numel(parm.charge);
 

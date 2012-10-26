@@ -30,6 +30,8 @@ function rc = exportas(basename, style)
 % xlabel('step', 'FontSize', 30)
 % ylabel('value', 'FontSize', 30)
 % exportas('myplot');
+% exportas('myplot_singlecolumn', 'single');
+% exportas('myplot_doublecolumn', 'double');
 %
 %% See also
 % formatplot
