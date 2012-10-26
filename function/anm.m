@@ -26,9 +26,9 @@ function [emode, frequency, covar, covar_atom] = anm(crd, cutoff)
 % * emode       - normal modes, each column vector corresponds to a mode.
 %                 1st column vector emode(:,1) is the lowest frequency mode.
 %                 The external modes (translations and rotations)
-%                 are emode(:,end-6:end) [3natom x 3natom double]
+%                 are emode(:,end-5:end) [3natom x 3natom double]
 % * frequency   - frequencies of the normal modes, given in ascending order.
-%                 frequency(end-6:end) have zero frequencies (external modes)
+%                 frequency(end-5:end) have zero frequencies (external modes)
 %                 [3natom x 1 double]
 % * covar       - covariance matrix of anisotropic fluctuations. 
 %                 covar(i,j) = <q_i q_j>

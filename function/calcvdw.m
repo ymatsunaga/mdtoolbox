@@ -8,9 +8,10 @@ function ene = calcvdw(parm, trj, cutoff, box);
 %% Description
 %
 %% Example
-%# parm = readparm('ala.parm');
-%# [trj, box] = readnetcdf('ala.nc');
-%# ene = calcvdw(parm, trj(1, :), 8.0, box(1, :))
+%# parm = readparm('data/ala.parm');
+%# [trj, box] = readnetcdf('data/ala.nc');
+%# vdw = calcvdw(parm, trj, 8.0, box)
+%# ene = readamberout('data/ala.out');
 %
 %% See alo
 % 

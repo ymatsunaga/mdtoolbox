@@ -68,7 +68,7 @@ for i=1:4:(line_size-3)
 end
 
 if ~isPSF
-  error('Error: sorry, it seems not be a PSF file')
+  error('Error: sorry, this seems not be a PSF file')
 end
 
 if isEXT
