@@ -24,7 +24,7 @@ function [rmsd, trj, vel] = superimpose(ref, trj, index, mass, vel)
 %                [1 x natom]
 % * vel        - velocity
 %                [1 x natom3]
-% * rmsd       - root mean square deviations
+% * rmsd       - root mean square deviations after fitting
 %                [nstep x 1]
 % 
 %% Example
