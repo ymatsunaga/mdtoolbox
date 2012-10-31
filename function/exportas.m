@@ -45,10 +45,11 @@ function rc = exportas(basename, style)
 ppi = 300;
 
 if nargin < 2
-  style = 'wyswig';
+  style = 'default';
 end
 
-if strncmpi(style, 'single', numel('single'))
+if strncmpi(style, 'default', numel('default'))
+elseif strncmpi(style, 'single', numel('single'))
   image_width = 8.3;
 elseif strncmpi(style, 'double', numel('double'))
   image_width = 17.35;
@@ -60,7 +61,7 @@ end
 f = [basename '.fig'];
 saveas(gcf, f);
 
-if strncmpi(style, 'default', numel('single'))
+if strncmpi(style, 'default', numel('default'))
   % WYSWIG
   set(gcf, 'PaperPositionMode', 'auto');
   
