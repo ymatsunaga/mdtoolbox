@@ -1,4 +1,4 @@
-function [crd, vel, box] = readgenesisbin(filename)
+function [crd, vel, box, header] = readgenesisbin(filename)
 %% readgenesisbin
 % read genesis binary restart file
 %
@@ -25,27 +25,27 @@ function [crd, vel, box] = readgenesisbin(filename)
 fid = fopen(filename, 'r', 'l');
 
 fseek(fid, 4, 0);
-title1 = fread(fid, 80, '*char')';
+header.title1 = fread(fid, 80, '*char')';
 fseek(fid, 4, 0);
 
 fseek(fid, 4, 0);
-title2 = fread(fid, 80, '*char')';
+header.title2 = fread(fid, 80, '*char')';
 fseek(fid, 4, 0);
 
-disp(title1);
-disp(title2);
+disp(header.title1);
+disp(header.title2);
 
 fseek(fid, 4, 0);
-nAtom = fread(fid, 1, 'int32');
-fseek(fid, 4, 0);
-
-fseek(fid, 4, 0);
-rstfile_type = fread(fid, 1, 'int32');
+header.nAtom = fread(fid, 1, 'int32');
 fseek(fid, 4, 0);
 
 fseek(fid, 4, 0);
-iseed = fread(fid, 1, 'int32');
-num_deg_freedom = fread(fid, 1, 'int32');
+header.rstfile_type = fread(fid, 1, 'int32');
+fseek(fid, 4, 0);
+
+fseek(fid, 4, 0);
+header.iseed = fread(fid, 1, 'int32');
+header.num_deg_freedom = fread(fid, 1, 'int32');
 fseek(fid, 4, 0);
 
 box = zeros(1, 3);
@@ -56,39 +56,39 @@ box(3) = fread(fid, 1, 'double');
 fseek(fid, 4, 0);
 
 fseek(fid, 4, 0);
-thermostat_friction = fread(fid, 1, 'double');
+header.thermostat_friction = fread(fid, 1, 'double');
 fseek(fid, 4, 0);
 
 fseek(fid, 4, 0);
-barostat_friction = fread(fid, 3, 'double');
+header.barostat_friction = fread(fid, 3, 'double');
 fseek(fid, 4, 0);
 
 fseek(fid, 4, 0);
-x = fread(fid, nAtom, 'double');
+x = fread(fid, header.nAtom, 'double');
 fseek(fid, 4, 0);
 
 fseek(fid, 4, 0);
-y = fread(fid, nAtom, 'double');
+y = fread(fid, header.nAtom, 'double');
 fseek(fid, 4, 0);
 
 fseek(fid, 4, 0);
-z = fread(fid, nAtom, 'double');
+z = fread(fid, header.nAtom, 'double');
 fseek(fid, 4, 0);
 
 fseek(fid, 4, 0);
-vx = fread(fid, nAtom, 'double');
+vx = fread(fid, header.nAtom, 'double');
 fseek(fid, 4, 0);
 
 fseek(fid, 4, 0);
-vy = fread(fid, nAtom, 'double');
+vy = fread(fid, header.nAtom, 'double');
 fseek(fid, 4, 0);
 
 fseek(fid, 4, 0);
-vz = fread(fid, nAtom, 'double');
+vz = fread(fid, header.nAtom, 'double');
 fseek(fid, 4, 0);
 
-crd = reshape([x'; y'; z'], 1, nAtom * 3);
-vel = reshape([vx'; vy'; vz'], 1, nAtom * 3);
+crd = reshape([x'; y'; z'], 1, header.nAtom * 3);
+vel = reshape([vx'; vy'; vz'], 1, header.nAtom * 3);
 
 fclose(fid);
 
