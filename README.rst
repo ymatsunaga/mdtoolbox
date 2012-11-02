@@ -22,13 +22,15 @@ TODOs:
 Installing
 -------------------------------------------------------------------------------------------
 
-Just clone this repository.
+Download the `zipball <https://github.com/ymatsunaga/mdtoolbox/zipball/master>`_ or 
+`tarball <https://github.com/ymatsunaga/mdtoolbox/tarball/master>`_ of the latest codes, 
+or just clone this repository.
 ::
 
  $ git clone https://github.com/ymatsunaga/mdtoolbox.git
 
-In MATLAB, invoke ``pathtool`` commmand and 
-add ``mdtoolbox/function`` to the MATLAB search path. 
+After downloading, invoke ``pathtool`` commmand in MATLAB
+and add ``mdtoolbox/function`` to your MATLAB search path. 
 
 Getting started
 -------------------------------------------------------------------------------------------
