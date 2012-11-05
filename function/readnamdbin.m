@@ -1,18 +1,29 @@
 function [crd, nAtom] = readnamdbin(filename, nAtomLimit)
+%% readnamdbin
 % read namd restart (namdbin) file
 %
-% function [crd,nAtom] = readnamdbin(filename)
+%% Syntax
+%# crd = writenamdbin(filename);
+%# [crd, natom] = writenamdbin(filename);
+%# [crd, natom] = writenamdbin(filename, natomlimit);
 %
-% input: filename ファイル名
+%% Description
+% read namd restart (namdbin) file
 %
-% output: crd (1 x nAtom * 3) トラジェクトリ each row containing coordinates in the order [x1 y1 z1 x2 y2 z2 ...]
-%       : nAtom 読み込まれた原子数
-% 
-% example:
-% [crd,nAtom] = readnamdbin('run.restart.coor');
-% [vel,nAtom] = readnamdbin('run.restart.vel');
-% vel = vel * 20.45482706 % convert to Angstrom/ps
-% 
+% * filename   - filename of namd restart (namdbin) file
+% * crd        - coordinates or velocities [double 1 x natom3]
+% * natomlimit - maximum number of atoms to be read [integer]
+% * natom      - number of atoms [integer]
+%
+%
+%% Example
+%# crd = readnamdbin('run.restart.coor');
+%# vel = readnamdbin('run.restart.vel');
+%# vel = vel * 20.45482706 % convert to Angstrom/ps
+%
+%% See also
+% writenamdbin
+%
 
 if nargin == 1
   nAtomLimit = 10^9;

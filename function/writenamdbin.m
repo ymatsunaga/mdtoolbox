@@ -3,8 +3,7 @@ function rc = writenamdbin(filename, crd)
 % write namd restart (namdbin) file
 %
 %% Syntax
-%# readgenesisbin(filename, crd);
-%# readgenesisbin(filename, vel);
+%# writenamdbin(filename, crd);
 %
 %% Description
 % write namd restart (namdbin) file
@@ -12,8 +11,8 @@ function rc = writenamdbin(filename, crd)
 % are given
 %
 % * filename  - filename of namd restart (namdbin) file
-% * crd       - coordinates [1 x natom3]
-% * vel       - velocities [1 x natom3]
+% * crd       - coordinates [double 1 x natom3]
+% * vel       - velocities [double 1 x natom3]
 %
 %% Example
 %# writenamdbin('run.restart.coor',crd);
