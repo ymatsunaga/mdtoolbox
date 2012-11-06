@@ -24,6 +24,27 @@ function writegenesisbin(filename, crd, vel, box, header)
 natom3 = numel(crd);
 natom = natom3 / 3;
 
+if (nargin < 5) | (isempty(header))
+  title1 = sprintf('REMARKS FILENAME=%s CREATED BY MATLAB', filename);
+  for i = (numel(title1)+1):80
+    title1 = [title1 ' '];
+  end
+  title1 = title1(1:80);
+  title2 = sprintf('REMARKS DATE: %s CREATED BY USER: %s', datestr(now, 'mm/dd/yy'), getenv('USER'));
+  for i = (numel(title2)+1):80
+    title2 = [title2 ' '];
+  end
+  title2 = title2(1:80);
+  header.title1 = title1;
+  header.title2 = title2;
+  header.nAtom = natom;
+  header.rstfile_type = 2;
+  header.iseed = 777;
+  header.num_deg_freedom = natom*3 - 6;
+  header.thermostat_friction = 0;
+  header.barostat_friction = [0 0 0];
+end
+
 fid = fopen(filename, 'w', 'l');
 
 fwrite(fid, 80, 'int32');
