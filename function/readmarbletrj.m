@@ -1,4 +1,4 @@
-function [trj, box, vel] = readmarbletrj(filename, index)
+function [trj, box, vel] = readmarbletrj(filename, index_atom, index_time)
 %% readmarbletrj
 % read marble ascii-format trajectory file
 %
@@ -34,8 +34,11 @@ vel = [];
 is_trj = false;
 is_box = false;
 is_vel = false;
-iblock = 1;
 is_compressed = false;
+
+if (nargin < 3) | isempty(index_time)
+  index_time = [];
+end
 
 %% open file
 filename = strtrim(filename);
@@ -73,87 +76,75 @@ if regexp(trj_type, 'V')
   is_vel = true;
 end
 
-if nargin < 2
-  index = 1:natom;
+if (nargin < 2) | isempty(index_atom)
+  index_atom = 1:natom;
 else
-  if islogical(index)
-    index = find(index);
+  if islogical(index_atom)
+    index_atom = find(index_atom);
   end
 end
-index3 = to3(index);
+index_atom3 = to3(index_atom);
 
-% buffer size is about 1 GByte
-nblock = ceil(10^9 / (8*numel(index3)));
-if nblock < 3
-  nblock = 3;
-end
-
-% allocate buffer
+%% allocation
 if is_trj
-  trj_buffer = zeros(nblock, numel(index3));
-end
-
-if is_box
-  box_buffer = zeros(nblock, 3);
+  trj = zeros(1, numel(index_atom3));
 end
 
 if is_vel
-  vel_buffer = zeros(nblock, numel(index3));
+  trj = zeros(1, numel(index_atom3));
+end
+
+if is_box
+  trj = zeros(1, 3);
 end
 
 %% parse
+istep = 0;
 while ~feof(fid)
+  istep = istep + 1;
   if is_trj
     %crd = fscanf(fid, '%f %f %f\n', [3 natom]);
-    %trj_buffer(iblock, :) = crd';
+    %trj_buffer(istep, :) = crd';
     crd = textscan(fid, '%f', natom3);
     xx = cell2mat(crd);
     if numel(xx) < natom3; break; end
-    trj_buffer(iblock, :) = xx(index3)';
+    if isempty(index_time) | ismember(istep, index_time)
+      trj(istep, :) = xx(index_atom3)';
+    end
+  end
+
+  if is_vel
+    vcrd = textscan(fid, '%f', natom3);
+    vv = cell2mat(vcrd);
+    if numel(vv) < natom3; break; end
+    if isempty(index_time) | ismember(istep, index_time)
+      vel(istep, :) = vv(index_atom3)';
+    end
   end
 
   if is_box
     %crd2 = fscanf(fid, '%f %f %f\n', [3 3]);
-    %box_buffer(iblock, :) = diag(crd2)';
-    crd2 = textscan(fid, '%f', 9);
-    bb = cell2mat(crd2);
+    %box_buffer(istep, :) = diag(crd2)';
+    bcrd = textscan(fid, '%f', 9);
+    bb = cell2mat(bcrd);
     if numel(bb) < 9; break; end
-    bb = bb([1 5 9]);
-    box_buffer(iblock, :) = bb';
+    if isempty(index_time) | ismember(istep, index_time)
+      box(istep, :) = bb([1 5 9])';
+    end
   end
 
-  if is_vel
-    crd = textscan(fid, '%f', natom3);
-    xx = cell2mat(crd);
-    if numel(xx) < natom3; break; end
-    vel_buffer(iblock, :) = xx(index3)';
+  if istep >= max(index_time)
+    break;
   end
-
-  iblock = iblock + 1;
   
-  if iblock > nblock
-    if is_trj
-      trj = [trj; trj_buffer];
-    end
-    if is_box
-      box = [box; box_buffer];
-    end
-    if is_vel
-      vel = [vel; vel_buffer];
-    end
-    iblock = 1;
-  end
-end
-
-if iblock > 1
-  if is_trj
-    trj = [trj; trj_buffer(1:(iblock-1),:)];
-  end
-  if is_box
-    box = [box; box_buffer(1:(iblock-1),:)];
-  end
-  if is_vel
-    vel = [vel; vel_buffer(1:(iblock-1),:)];
-  end
+  % if is_trj
+  %   clear crd xx;
+  % end
+  % if is_box
+  %   clear bcrd bb;
+  % end
+  % if is_vel
+  %   clear vcrd vv;
+  % end
 end
 
