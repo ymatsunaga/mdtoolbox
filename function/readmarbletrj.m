@@ -5,8 +5,9 @@ function [trj, box, vel] = readmarbletrj(filename, index_atom, index_time)
 %% Syntax
 %# trj = readmarbletrj(filename);
 %# trj = readmarbletrj(filename, index_atom);
-%# [trj, box] = readmarbletrj(filename, index_atom);
-%# [trj, box, vel] = readmarbletrj(filename, index_atom);
+%# trj = readmarbletrj(filename, index_atom, index_time);
+%# [trj, box] = readmarbletrj(filename, index_atom, index_time);
+%# [trj, box, vel] = readmarbletrj(filename, index_atom, index_time);
 %
 %% Description
 % The XYZ coordinates of atoms are read into 'trj' variable
@@ -16,6 +17,7 @@ function [trj, box, vel] = readmarbletrj(filename, index_atom, index_time)
 %
 % * filename   - input marble trajectory filename
 % * index_atom - atom index or logical index specifying atoms to be read
+% * index_time - time index or logical index specifying time steps to be read
 % * trj        - trajectory [nstepx3natom double]
 % * box        - box size [nstepx3 double]
 % * vel        - velocities [nstepx3natom double]
@@ -24,13 +26,11 @@ function [trj, box, vel] = readmarbletrj(filename, index_atom, index_time)
 %# trj = readmarbletrj('eq.trj');
 %
 %% See alo
+% readmarbletrjbin
 % readmarblecrd
 %
 
 %% initialization
-trj = [];
-box = [];
-vel = [];
 is_trj = false;
 is_box = false;
 is_vel = false;
@@ -91,60 +91,59 @@ if is_trj
 end
 
 if is_vel
-  trj = zeros(1, numel(index_atom3));
+  vel = zeros(1, numel(index_atom3));
 end
 
 if is_box
-  trj = zeros(1, 3);
+  box = zeros(1, 3);
 end
 
-%% parse
+%% read data
 istep = 0;
+idata = 0;
 while ~feof(fid)
   istep = istep + 1;
-  if is_trj
-    %crd = fscanf(fid, '%f %f %f\n', [3 natom]);
-    %trj_buffer(istep, :) = crd';
-    crd = textscan(fid, '%f', natom3);
-    xx = cell2mat(crd);
-    if numel(xx) < natom3; break; end
-    if isempty(index_time) | ismember(istep, index_time)
+  if isempty(index_time) | ismember(istep, index_time)
+    if is_trj
+      %crd = fscanf(fid, '%f %f %f\n', [3 natom]);
+      %trj_buffer(istep, :) = crd';
+      crd = textscan(fid, '%f', natom3);
+      xx = cell2mat(crd);
+      if numel(xx) < natom3; break; end
       trj(istep, :) = xx(index_atom3)';
     end
-  end
 
-  if is_vel
-    vcrd = textscan(fid, '%f', natom3);
-    vv = cell2mat(vcrd);
-    if numel(vv) < natom3; break; end
-    if isempty(index_time) | ismember(istep, index_time)
+    if is_vel
+      vcrd = textscan(fid, '%f', natom3);
+      vv = cell2mat(vcrd);
+      if numel(vv) < natom3; break; end
       vel(istep, :) = vv(index_atom3)';
     end
-  end
 
-  if is_box
-    %crd2 = fscanf(fid, '%f %f %f\n', [3 3]);
-    %box_buffer(istep, :) = diag(crd2)';
-    bcrd = textscan(fid, '%f', 9);
-    bb = cell2mat(bcrd);
-    if numel(bb) < 9; break; end
-    if isempty(index_time) | ismember(istep, index_time)
+    if is_box
+      %crd2 = fscanf(fid, '%f %f %f\n', [3 3]);
+      %box_buffer(istep, :) = diag(crd2)';
+      bcrd = textscan(fid, '%f', 9);
+      bb = cell2mat(bcrd);
+      if numel(bb) < 9; break; end
       box(istep, :) = bb([1 5 9])';
     end
-  end
+  else
+    if is_trj
+      crd = textscan(fid, '%f', natom3);
+    end
 
-  if istep >= max(index_time)
+    if is_vel
+      vcrd = textscan(fid, '%f', natom3);
+    end
+    
+    if is_box
+      bcrd = textscan(fid, '%f', 9);
+    end
+  end
+   
+  if (~isempty(index_time)) & (istep >= max(index_time))
     break;
   end
-  
-  % if is_trj
-  %   clear crd xx;
-  % end
-  % if is_box
-  %   clear bcrd bb;
-  % end
-  % if is_vel
-  %   clear vcrd vv;
-  % end
 end
 
