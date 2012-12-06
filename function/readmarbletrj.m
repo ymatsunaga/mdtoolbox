@@ -104,29 +104,30 @@ idata = 0;
 while ~feof(fid)
   istep = istep + 1;
   if isempty(index_time) | ismember(istep, index_time)
+    idata = idata + 1
     if is_trj
       %crd = fscanf(fid, '%f %f %f\n', [3 natom]);
-      %trj_buffer(istep, :) = crd';
+      %trj_buffer(idata, :) = crd';
       crd = textscan(fid, '%f', natom3);
       xx = cell2mat(crd);
       if numel(xx) < natom3; break; end
-      trj(istep, :) = xx(index_atom3)';
+      trj(idata, :) = xx(index_atom3)';
     end
 
     if is_vel
       vcrd = textscan(fid, '%f', natom3);
       vv = cell2mat(vcrd);
       if numel(vv) < natom3; break; end
-      vel(istep, :) = vv(index_atom3)';
+      vel(idata, :) = vv(index_atom3)';
     end
 
     if is_box
       %crd2 = fscanf(fid, '%f %f %f\n', [3 3]);
-      %box_buffer(istep, :) = diag(crd2)';
+      %box_buffer(idata, :) = diag(crd2)';
       bcrd = textscan(fid, '%f', 9);
       bb = cell2mat(bcrd);
       if numel(bb) < 9; break; end
-      box(istep, :) = bb([1 5 9])';
+      box(idata, :) = bb([1 5 9])';
     end
   else
     if is_trj
