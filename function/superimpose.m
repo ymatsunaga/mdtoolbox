@@ -1,4 +1,4 @@
-function [rmsd, trj, vel] = superimpose(ref, trj, index, mass, vel)
+function [rmsd, trj, vel, Ucell] = superimpose(ref, trj, index, mass, vel)
 %% superimpose
 % least-squares fitting of structures by Kabsch's method
 %
@@ -97,6 +97,9 @@ for istep = 1:nstep
   end
   rmsd(istep) = rmsd(istep) - sum(D);
   U = V*W';
+  if nargout >= 4
+    Ucell{istep} = U;
+  end
 
   % rotate molecule
   x = reshape(trj(istep, :), 3, natom);
