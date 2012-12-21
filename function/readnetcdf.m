@@ -164,7 +164,7 @@ if is_box
                [3 count_time], [1 stride_time]); 
   box = box';
 else
-  box = []
+  box = [];
 end
 
 % velocities in Angstrom/picosecond
