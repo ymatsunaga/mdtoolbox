@@ -104,7 +104,7 @@ idata = 0;
 while ~feof(fid)
   istep = istep + 1;
   if isempty(index_time) | ismember(istep, index_time)
-    idata = idata + 1
+    idata = idata + 1;
     if is_trj
       %crd = fscanf(fid, '%f %f %f\n', [3 natom]);
       %trj_buffer(idata, :) = crd';

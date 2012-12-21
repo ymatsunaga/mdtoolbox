@@ -55,29 +55,51 @@ trj_flag    = fread(fid, 1, 'int');
 natom       = fread(fid, 1, 'int');
 natom3      = natom*3;
 
-trj = zeros(1, natom3);
-vel = zeros(1, natom3);
-box = zeros(1, 9);
+if (nargin < 2) | isempty(index_atom)
+  index_atom = 1:natom;
+else
+  if islogical(index_atom)
+    index_atom = find(index_atom);
+  end
+end
+index_atom3 = to3(index_atom);
 
-istep = 1;
-idata = 1;
+%% allocation
+trj = zeros(1, numel(index_atom3));
+vel = zeros(1, numel(index_atom3));
+box = zeros(1, 3);
+
+%% read data
+istep = 0;
+idata = 0;
+crd  = zeros(1, natom3);
+vcrd = zeros(1, natom3);
+bcrd = zeros(1, 9);
 while 1
   cof = ftell(fid);
   if eof == cof
     break;
   end
 
-  crd  = fread(fid, natom3, 'float64');
-  vcrd = fread(fid, natom3, 'float64');
-  bcrd = fread(fid, 9, 'float64');
-
+  istep = istep + 1;
   if isempty(index_time) | ismember(istep, index_time)
-    trj(idata, :) = crd;
-    vel(idata, :) = vcrd;
-    box(idata, :) = bcrd;
+    istep
     idata = idata + 1;
+    crd  = fread(fid, natom3, 'float64');
+    vcrd = fread(fid, natom3, 'float64');
+    bcrd = fread(fid, 9, 'float64');
+    trj(idata, :) = crd(index_atom3);
+    vel(idata, :) = vcrd(index_atom3);
+    box(idata, :) = bcrd([1 5 9])';
+  else
+    fseek(fid, 8*natom3, 0);
+    fseek(fid, 8*natom3, 0);
+    fseek(fid, 8*9, 0);
   end
-  istep = istep + 1
+
+  if (~isempty(index_time)) & (istep >= max(index_time))
+    break;
+  end
 end
 
 
