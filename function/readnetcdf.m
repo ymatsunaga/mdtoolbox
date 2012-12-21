@@ -1,4 +1,4 @@
-function [trj, box, attributes] = readnetcdf(filename, index_atom, index_time)
+function [trj, box, vel, attributes] = readnetcdf(filename, index_atom, index_time)
 %% readnetcdf
 % read amber netcdf file
 %
@@ -7,7 +7,8 @@ function [trj, box, attributes] = readnetcdf(filename, index_atom, index_time)
 %# trj = readnetcdf(filename, index_atom);
 %# trj = readnetcdf(filename, [], index_time);
 %# [trj, box] = readnetcdf(filename, index_atom, index_time);
-%# [trj, box, attributes] = readnetcdf(filename, index_atom, index_time);
+%# [trj, box, vel] = readnetcdf(filename, index_atom, index_time);
+%# [trj, box, vel, attributes] = readnetcdf(filename, index_atom, index_time);
 %
 %% Description
 % The XYZ coordinates of atoms are read into 'trj' variable
@@ -19,8 +20,9 @@ function [trj, box, attributes] = readnetcdf(filename, index_atom, index_time)
 % * index_atom - atom index or logical index specifying atoms to be read
 % * index_time - time-step index or logical index specifying steps to be read
 %                please note that this should be a regularly-spaced index
-% * trj        - trajectory [nstep x natom3 double]
-% * box        - box size [nstep x 3 double]
+% * trj        - trajectory in units of angstrom [nstep x natom3 double]
+% * vel        - velocity in units of  angstrom/picosecond [nstep x natom3 double]
+% * box        - box size in units of angstrom [nstep x 3 double]
 % * attributes - attributes (like header information) of netcdf file
 %                [structure]
 %
@@ -60,13 +62,16 @@ function [trj, box, attributes] = readnetcdf(filename, index_atom, index_time)
 %   data variables:
 %   float time(frame) units="picosecond"
 %   float coordinates(frame, atom, spatial) units="angstrom"
-%   double cell_length(frame, cell_spatial) units="angstrom"
+%   double cell_lengths(frame, cell_spatial) units="angstrom"
 %   double cell_angles(frame, cell_angular) units="degree"
-%   double velocities(frame, atom, spatial) units="angstrom/picosecond"
+%   float velocities(frame, atom, spatial) units="angstrom/picosecond"
 %                                           scale_factor=20.455f
 %% TODO
 % support for velocities
 % 
+
+%% displays groups, dimensions, variable definitions, and all attributes in the NetCDF data
+ncdisp(filename);
 
 %% read attributes
 finfo = ncinfo(filename);
@@ -75,7 +80,6 @@ attributes = struct;
 for i = 1:numel(finfo.Attributes)
   attributes = setfield(attributes, finfo.Attributes(i).Name, finfo.Attributes(i).Value);
 end
-attributes
 
 %% read dimensions
 dimensions = struct;
@@ -83,7 +87,32 @@ dimensions = struct;
 for i = 1:numel(finfo.Dimensions)
   dimensions = setfield(dimensions, finfo.Dimensions(i).Name, finfo.Dimensions(i).Length);
 end
-dimensions
+
+%% determine flags
+is_trj = false;
+is_box = false;
+is_vel = false;
+
+for i = 1:numel(finfo.Variables)
+  varname = finfo.Variables(i).Name;
+  if strncmpi(varname, 'coordinates', numel('coordinates'))
+    is_trj = true;
+  end
+  if strncmpi(varname, 'cell_lengths', numel('cell_lengths'))
+    is_box = true;
+  end
+  if strncmpi(varname, 'velocities', numel('velocities'))
+    is_vel = true;
+  end
+end
+
+if nargout < 2
+  is_box = false;
+end
+
+if nargout < 3
+  is_vel = false;
+end
 
 %% initialization
 natom = dimensions.atom;
@@ -118,18 +147,37 @@ stride_time = unique(diff(index_time));
 
 %% read data
 % trajectory in Angstrom
-trj = ncread(filename, 'coordinates', [1 start_atom start_time], ...
-             [3 count_atom count_time], [1 stride_atom stride_time]); 
-trj = trj(:, index_atom, :);
-[nspatial, natom, nstep] = size(trj);
-trj = reshape(trj, nspatial*natom, nstep)';
-trj = double(trj);
+if is_trj
+  trj = ncread(filename, 'coordinates', [1 start_atom start_time], ...
+               [3 count_atom count_time], [1 stride_atom stride_time]); 
+  trj = trj(:, index_atom, :);
+  [nspatial, natom, nstep] = size(trj);
+  trj = reshape(trj, nspatial*natom, nstep)';
+  trj = double(trj);
+else
+  trj = [];
+end
 
 % box-size in Angstrom
-if (nargout > 1)
+if is_box
   box = ncread(filename, 'cell_lengths', [1 start_time], ...
                [3 count_time], [1 stride_time]); 
   box = box';
+else
+  box = []
+end
+
+% velocities in Angstrom/picosecond
+if is_vel
+  vel = ncread(filename, 'velocities', [1 start_atom start_time], ...
+               [3 count_atom count_time], [1 stride_atom stride_time]); 
+  vel = vel(:, index_atom, :);
+  [nspatial, natom, nstep] = size(vel);
+  vel = reshape(vel, nspatial*natom, nstep)';
+  vel = double(vel);
+  vel = 20.455*vel;
+else
+  vel = [];
 end
 
 % time in picosecond
