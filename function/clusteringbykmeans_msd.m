@@ -1,7 +1,8 @@
 function [indexOfCluster, centroid, sumd] = clusteringbykmeans_msd(trj, kcluster, mass)
-%kmeans2 
-% function [indexOfCluster, centroid, sumd] = kmeans_msd(trj, kcluster, mass)
-% k-means clustering by using rmsd
+%% clusteringbykmeans_msd
+% K-means clustering by using rmsd measure
+%
+% [indexOfCluster, centroid, sumd] = clusteringbykmeans_msd(trj, kcluster, mass)
 %
 % input 
 % trj (nstep x natom*3): trajectory
@@ -55,4 +56,5 @@ sumd = zeros(kcluster, 1);
 for icluster = 1:kcluster
   sumd(icluster) = sum(distanceFromCentroid(indexOfCluster == icluster, icluster));
 end
+
 
