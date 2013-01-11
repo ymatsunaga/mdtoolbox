@@ -83,7 +83,7 @@ if header.blocksize1 ~= 84
 end
 
 if header.blocksize1 ~= 84
-  error('filen may not be a dcd file.');
+  error('file may not be a dcd file.');
 end
 
 % header (4 chars) either "CORD" or "VELD" (seek=4)

@@ -1,49 +1,41 @@
-function [bin_n, dmin_n] = assignvoronoi(ref, data_n)
+function [index, dmin] = assignvoronoi(ref, data)
 %% assignvoronoi
+% assign Voronoi cell indices to the elements of data by checking the distances between ref and data
 %
 %% Syntax
-%#
+%# index = assignvoronoi(ref, data)
+%# [index, dmin] = assignvoronoi(ref, data)
 %
 %% Description
+% * ref      - generating points of Voronoi cells [n x ndim double]
+% * data     - some trajectory or data set to be assigned [nstep x ndim double]
+% * index    - indices of Voronoi cell. indices correspond to the rows of ref [nstep double]
+% * box      - distance between the data to the nearest generating point [nstep double]
 %
 %% Example
-%#
+%# ref  = randn(100, 1);
+%# data = randn(10000, 1);
+%# [index, dmin] = assignvoronoi(ref, data);
 % 
 %% See also
+% assign1dbins, assign2dbins, 
 %
-%% References
-%
 
-[ncell,ndim1] = size(ref);
-[nstep,ndim2] = size(data_n);
+%% setup
+[ncell, ndim1] = size(ref);
+[nstep, ndim2] = size(data);
+assert(ndim1 == ndim2, 'dimensions of ref and data do not match...');
 
-if ndim1 ~= ndim2
-  error('ndim1 and ndim2 is not equal...');
-end
-ndim = ndim1;
+%% calculation
+index = zeros(nstep, 1);
+dmin = zeros(nstep, 1);
 
-bin_n = zeros(nstep,1);
-dmin_n = zeros(nstep,1);
 for istep = 1:nstep
-  tdiff = bsxfun(@minus,ref,data_n(istep,:));
-  d = sum(tdiff.^2,2);
-  [dmin,bin] = min(d);
-  bin_n(istep) = bin;
-  dmin_n(istep) = sqrt(dmin);
+  dev = bsxfun(@minus, ref, data(istep, :));
+  dist = sum(dev.^2,2);
+  [dmin_each, index_each] = min(dist);
+  index(istep) = index_each;
+  dmin(istep) = sqrt(dmin_each);
 end
-
-% for i = 1:nstep
-%   d_min = -1.0;
-%   icell = 0;
-%   for j = 1:ncell
-%     d = sum((data_n(i,:) - ref(j,:)).^2);
-%     if (d < d_min) || (icell == 0)
-%       d_min = d;
-%       icell = j;
-%     end
-%   end
-%   bin_n(i) = icell;
-%   dmin_n(i) = sqrt(d_min);
-% end
 
 
