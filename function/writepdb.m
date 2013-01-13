@@ -62,6 +62,13 @@ function rc = writepdb(filename, pdb, index, format_type)
 % 77 - 78        LString(2)    element      Element symbol, right-justified.
 % 79 - 80        LString(2)    charge       Charge on the atom.
 
+%% check existing file
+if exist(filename, 'file')
+  filename_old = sprintf('%s.old', filename);
+  display(sprintf('existing file %s is moved to %s', filename, filename_old));
+  movefile(filename, filename_old);
+end
+
 %% preparatin
 natom = size(pdb.record, 1);
 

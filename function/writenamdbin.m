@@ -23,8 +23,17 @@ function rc = writenamdbin(filename, crd)
 % readnamdbin
 %
 
+%% check existing file
+if exist(filename, 'file')
+  filename_old = sprintf('%s.old', filename);
+  display(sprintf('existing file %s is moved to %s', filename, filename_old));
+  movefile(filename, filename_old);
+end
+
+%% initialization
 nAtom = length(crd)/3;
 
+%% write
 disp('use little-endian')
 fid = fopen(filename, 'w', 'l');
 

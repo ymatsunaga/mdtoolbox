@@ -18,7 +18,14 @@ function rc = writexplormap(filename,map,box)
 % writexplormap('tmp.xplor',map,box);
 % 
 
-% set parameters
+%% check existing file
+if exist(filename, 'file')
+  filename_old = sprintf('%s.old', filename);
+  display(sprintf('existing file %s is moved to %s', filename, filename_old));
+  movefile(filename, filename_old);
+end
+
+%% set parameters
 ang = 90;
 [na,nb,nc] = size(map);
 
@@ -41,6 +48,7 @@ map_std = std(map(:));
 
 fid = fopen(filename,'w');
 
+%% write 
 % write header
 fprintf(fid,'\n');
 fprintf(fid,'      1 !NTITLE\n');

@@ -1,12 +1,17 @@
-function rc = writevmdvector(filename,crd,pcs,scale,resolution,radius)
+function rc = writevmdvector(basename, crd, pcs, scale, resolution, radius)
 %% writevmdvector
 % output tcl scripts for drawing vectors in VMD
 % 
-% function rc = writevmdvector(filename,crd,pcs)
+% writevmdvector(basename, crd, pcs, scale, resolution, radius)
 % 
+% >> load calc_pca.mat pmode ref b_index_ca;
+% >> ca_ref = ref(:, to3(b_index_ca));
+% >> writevmdvector('positive', ca_ref, pmode(:,1:10));
+% >> writevmdvector('negative', ca_ref, -pmode(:,1:10));
 %
 
-if nargin == 3
+%% initialization
+if nargin < 4
 % for bpti ca
 %  scale = 15.0;
 %  resolution = 100;
@@ -28,9 +33,11 @@ if nargin == 3
 %  radius = 0.06;
 end
 
+%% write vectors
 nmode = size(pcs,2);
 for i=1:nmode
-  outfilename = [filename,int2str(i),'.tcl'];
+  %outfilename = [filename,int2str(i),'.tcl'];
+  outfilename = sprintf('%s%d.tcl', basename, i);
   fid = fopen(outfilename,'w');
   
   fprintf(fid,'# define vector drawing function.\n');

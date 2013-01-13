@@ -33,6 +33,13 @@ function writedcd(filename, trj, box, header)
 % EGO_VIII Manual ( http://www.lrz.de/~heller/ego/manual/node93.html )
 %
 
+%% check existing file
+if exist(filename, 'file')
+  filename_old = sprintf('%s.old', filename);
+  display(sprintf('existing file %s is moved to %s', filename, filename_old));
+  movefile(filename, filename_old);
+end
+
 %% initialization
 [nstep, natom3] = size(trj);
 natom = natom3 / 3;

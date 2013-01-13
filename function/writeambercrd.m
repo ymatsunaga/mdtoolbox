@@ -34,6 +34,13 @@ function writeambercrd(filename, crd, box, vel, title)
 % http://ambermd.org/formats.html#restart
 % 
 
+%% check existing file
+if exist(filename, 'file')
+  filename_old = sprintf('%s.old', filename);
+  display(sprintf('existing file %s is moved to %s', filename, filename_old));
+  movefile(filename, filename_old);
+end
+
 %% initialization
 natom3 = size(crd, 2);
 natom = natom3 / 3;

@@ -60,6 +60,13 @@ function rc = writenetcdf(filename, trj, box, title)
 % support for velocities
 %
 
+%% check existing file
+if exist(filename, 'file')
+  filename_old = sprintf('%s.old', filename);
+  display(sprintf('existing file %s is moved to %s', filename, filename_old));
+  movefile(filename, filename_old);
+end
+
 %% initialization
 [nstep, natom3] = size(trj);
 natom = natom3 / 3;
