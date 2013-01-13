@@ -8,10 +8,6 @@ function [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, kcluster, ma
 %# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, kcluster, mass)
 %
 %% Description
-% The XYZ coordinates of atoms are read into 'trj' variable
-% which has 'nstep' rows and '3*natom' columns.
-% Each row of 'trj' has the XYZ coordinates of atoms in order 
-% [x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom) y(natom) z(natom)].
 %
 % * trj            - trajectory [nstep x natom3 double]
 % * kcluster       - clusters [scalar integer]
@@ -32,8 +28,23 @@ function [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, kcluster, ma
 
 %% preparation
 nstep = size(trj, 1);
+natom3 = size(trj, 2);
+natom = natom3/3;
+
+if (nargin < 3) | (numel(mass) == 0)
+  mass = ones(1, natom);
+else
+  if iscolumn(mass)
+    mass = mass';
+  end
+end
+
+%% clustering
+% create the centroid of the 1st cluster
 indexOfCenter(1) = randi([1 nstep]);
+% at first, all points belong to the 1st cluster
 indexOfCluster = ones(nstep, 1);
+% distance between the points and the 1st centroid
 distPointCenter = superimpose(trj(indexOfCenter(1), :), trj, [], mass);
 
 for i = 2:kcluster
@@ -41,6 +52,7 @@ for i = 2:kcluster
   dist = superimpose(trj(indexOfCenter(i), :), trj, [], mass);
   index = dist < distPointCenter;
   if numel(index) > 0
+    % updated if the dist to a new cluster is smaller than the previous one
     distPointCenter(index) = dist(index);
     indexOfCluster(index) = i;
   end

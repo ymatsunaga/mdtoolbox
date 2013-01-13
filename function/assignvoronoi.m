@@ -1,6 +1,6 @@
 function [index, dmin] = assignvoronoi(ref, data)
 %% assignvoronoi
-% assign Voronoi cell indices to the elements of data by checking the distances between ref and data
+% assign Voronoi cell indices data by checking the distances between ref and data
 %
 %% Syntax
 %# index = assignvoronoi(ref, data)
@@ -39,9 +39,10 @@ dmin = zeros(nstep, 1);
 
 for istep = 1:nstep
   dev = bsxfun(@minus, ref, data(istep, :));
-  dist = sum(dev.^2,2);
+  dist = sum(dev.^2, 2);
   [dmin_each, index_each] = min(dist);
   index(istep) = index_each;
   dmin(istep) = sqrt(dmin_each);
 end
+
 

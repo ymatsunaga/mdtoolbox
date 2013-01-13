@@ -28,12 +28,22 @@ function [indexOfCluster, centroid, sumd] = clusteringbykmeans(trj, kcluster, ma
 
 %% preparation
 nstep = size(trj, 1);
+natom3 = size(trj, 2);
+natom = natom3/3;
 
+if (nargin < 3) | (numel(mass) == 0)
+  mass = ones(1, natom);
+else
+  if iscolumn(mass)
+    mass = mass';
+  end
+end
+
+%% clustering by iteration
 % create centroid by randomly drawn from input
 indexOfCentroid = randperm(nstep, kcluster);
 centroid = trj(indexOfCentroid, :);
 
-%% iteration
 indexOfCluster = zeros(nstep, 1);
 while true
 

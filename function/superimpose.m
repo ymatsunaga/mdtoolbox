@@ -28,11 +28,13 @@ function [rmsd, trj, vel, Ucell] = superimpose(ref, trj, index, mass, vel)
 %                [nstep x 1]
 % 
 %% Example
-%# natom = 3343;
-%# trj = readambertrj(natom, '4ake.trj');
+%# trj = readnetcdf('ak.nc');
 %# ref = trj(1,:);
 %# [rmsd, trj] = superimpose(ref, trj);
 %# plot(rmsd)
+%
+%% See also
+% meanstructure
 %
 %% References
 % W. Kabsch, "A solution for the best rotation to relate two sets of vectors." 
@@ -119,4 +121,5 @@ for istep = 1:nstep
 end
 
 rmsd = sqrt(2.0*abs(rmsd)./sum(mass));
+
 
