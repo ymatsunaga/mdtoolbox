@@ -13,14 +13,14 @@ function [crd, trj, vel] = meanstructure(trj, index, mass, tolerance, vel)
 %# [crd, trj, vel] = meanstructure(trj, [], [], [], vel);
 %
 %% Description
-% This routine calculates the average structure of given
+% This routine calculates the average structure from given
 % trajectory. The algorithm superimpose the trajectories to a
-% plausible average structure, and update the average structrue.
-% This step is repeated until some convergence in rmsd is
-% achieved. 
+% plausible average structure, then updates the average structrue.
+% This step is repeated until some convergence is achieved in rmsd.
 % The total translational and rotational motions are removed in the
-% output trajectory. So, this routine may be called before calling
-% structure-analysis routines, such as PCA. 
+% output trajectory. So, this routine may be useful as a preprocess
+% for the subsequent structure-analysis routines, such as Principal
+% Component Analysis. 
 %
 %% Example
 %# trj = readnetcdf('ak.nc');
@@ -37,11 +37,7 @@ natom = natom3/3;
 rmsd = realmax;
 
 if (nargin < 2) | (numel(index) == 0)
-  index = 1:natom;
-else
-  if islogical(index)
-    index = find(index);
-  end
+  index = [];
 end
   
 if (nargin < 3) | (numel(mass) == 0)

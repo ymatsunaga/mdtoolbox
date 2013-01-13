@@ -21,6 +21,9 @@ function [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, kcluster, ma
 %# index = find(selectid(parm.residue_id, 1:3) & ~selectname(parm.atom_name, 'H*'))
 %# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj(:, to3(index)), 4, parm.mass(index));
 % 
+%% See also
+% clusteringbykmeans, clusteringbyinformation
+%
 %% References
 % S. Dasgupta and P. M. Long, J. Comput. Syst. Sci. 70, 555 (2005).
 % J. Sun, Y. Yao, X. Huang, V. Pande, G. Carlsson, and L. J. Guibas, Learning 24, 2 (2009).

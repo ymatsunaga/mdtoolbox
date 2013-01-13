@@ -23,6 +23,9 @@ function [indexOfCluster, centroid, sumd] = clusteringbykmeans(trj, kcluster, ma
 %# index = find(selectid(parm.residue_id, 1:3) & ~selectname(parm.atom_name, 'H*'))
 %# [indexOfCluster, centroid, sumd] = clusteringbykmeans(trj(:, to3(index)), 4, parm.mass(index));
 % 
+%% See also
+% clusteringbykcenter, clusteringbyinformation
+%
 %% References
 % 
 
@@ -32,11 +35,7 @@ natom3 = size(trj, 2);
 natom = natom3/3;
 
 if (nargin < 3) | (numel(mass) == 0)
-  mass = ones(1, natom);
-else
-  if iscolumn(mass)
-    mass = mass';
-  end
+  mass = [];
 end
 
 %% clustering by iteration
@@ -52,14 +51,14 @@ while true
   % calc distance and assign cluster-index
   distanceFromCentroid = zeros(nstep, kcluster);
   for icluster = 1:kcluster
-    rmsd = superimpose(centroid(icluster, :), trj);
+    rmsd = superimpose(centroid(icluster, :), trj, [], mass);
     distanceFromCentroid(:, icluster) = rmsd;
   end
   [~, indexOfCluster] = min(distanceFromCentroid, [], 2);
 
   % calc centroid of each cluster
   for icluster = 1:kcluster
-    crd = meanstructure(trj(indexOfCluster == icluster, :));
+    crd = meanstructure(trj(indexOfCluster == icluster, :), [], mass);
     centroid(icluster, :) = crd;
   end
 
