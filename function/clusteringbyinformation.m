@@ -13,11 +13,11 @@ function [p_ci2, values] = clusteringbyinformation(x, temperature, nc, nReplicat
 %# scatter(q(:, 1), q(:, 2), 50, p_ci, 'fill')
 %
 %% See alao
-% clusteringbykmeans_msd
+% clusteringbykmeans, clusteringbykcenter
 %
 %% References
 % Slonim, N., Atwal, G. S., Tkačik, G. & Bialek, W. 
-% Information-based clustering. PNAS 102, 18297–18302 (2005).
+% "Information-based clustering." PNAS 102, 18297–18302 (2005).
 %
 %% TODO
 % support for p(i) ~= 1/N

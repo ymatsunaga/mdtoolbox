@@ -1,6 +1,6 @@
 function trj = wrap(trj, box, resname)
 %% wrap
-% wrap waters and ions into the primary box under Periodic Boundary Conditions (PBC)
+% wrap waters and ions into the primary box under Periodic Boundary Conditions (PBCs)
 %
 %% Syntax
 %# trj = wrap(trj, box);        % ignore residue-information

@@ -10,8 +10,8 @@ function [indexOfCluster, centroid, sumd] = clusteringbykmeans(trj, kcluster, ma
 %
 %% Description
 %
-% * trj            - trajectory [nstep x natom3 double]
-% * kcluster       - clusters [scalar integer]
+% * trj            - trajectory to be clustered [nstep x natom3 double]
+% * kcluster       - the number of clusters [scalar integer]
 % * mass           - masses used for the calculation of rmsd [natom double]
 % * indexOfCluster - cluster index from 1 to kcluster [nstep integer]
 % * centroid       - centroids of clusters [[kcluster x natom3 double]
@@ -20,7 +20,7 @@ function [indexOfCluster, centroid, sumd] = clusteringbykmeans(trj, kcluster, ma
 %% Example
 %# parm = readparm('ala.parm');
 %# trj = readnetcdf('ala.nc');
-%# index = find(selectid(parm.residue_id, 1:3) & ~selectname(parm.atom_name, 'H*'))
+%# index = find(selectid(parm.residue_id, 1:3) & ~selectname(parm.atom_name, 'H*'));
 %# [indexOfCluster, centroid, sumd] = clusteringbykmeans(trj(:, to3(index)), 4, parm.mass(index));
 % 
 %% See also
