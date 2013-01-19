@@ -1,6 +1,6 @@
-function plotcolor(x, y, c, varargin)
+function rgb = plotcolor(x, y, c, varargin)
 %% plotcolor
-% plot colored lines according to the input values
+% plot colored lines according to the input vector c
 %
 %% Syntax
 %# plotcolor(x, y, c)
