@@ -36,7 +36,7 @@ set(gca,'GridLineStyle',':')
 set(gca,'LineWidth',1)
 set(gca,'FontSize',25)
 % set(gca,'LineStyleOrder','k-o|k-x|k-+|k-*|k-s|k-d|k-v|k-^|k-<|k->|k-p|k-h')
-set(gca,'LineStyleOrder','-o|-x|-+|-*|-s|-d|-v|-^|-<|->|-p|-h')
+set(gca,'LineStyleOrder','-|-o|-x|-+|-*|-s|-d|-v|-^|-<|->|-p|-h')
 % set(gca,'LineWidth',2)
 %set(gca,'FontName','Helvetica')
 % h = get(gca,'children');
