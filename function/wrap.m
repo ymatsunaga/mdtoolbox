@@ -64,7 +64,10 @@ else
   end
   trj(:, to3(index)) = trj_sub;
   % wrap ions
-  index = find(selectname(resname, 'SOD') | selectname(resname, 'CL')); %TODO
+  index = find(selectname(resname, 'SOD') | selectname(resname, 'CL') ...
+             | selectname(resname, 'CLA') | selectname(resname, 'MG') ...
+             | selectname(resname, 'POT') | selectname(resname, 'CES') ...
+             | selectname(resname, 'CAL')  | selectname(resname, 'ZN2'));
   trj_sub = trj(:, to3(index));
   for istep = 1:nstep
     trj_sub(istep, 1:3:end) = trj_sub(istep, 1:3:end) + box(istep, 1)*0.5;
