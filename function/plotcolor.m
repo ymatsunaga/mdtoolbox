@@ -53,7 +53,6 @@ rgb(rgb > 1) = 1;
 %% plot lines
 if numel(varargin) < 2
   for i = 2:nstep
-    rgb(i-1, :)
     line([x(i-1) x(i)], [y(i-1) y(i)], 'Color', rgb(i-1, :));
   end
 else

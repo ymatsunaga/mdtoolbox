@@ -65,8 +65,8 @@ if strncmpi(style, 'default', numel('default'))
   % WYSWIG
   set(gcf, 'PaperPositionMode', 'auto');
   
-  f = [basename '.eps'];
-  print('-depsc', f);
+  %f = [basename '.eps'];
+  %print('-depsc', f);
   
   f = [basename '.png'];
   print('-dpng', f);

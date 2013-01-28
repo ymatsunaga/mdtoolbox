@@ -1,6 +1,6 @@
 function ene = calcvdw(parm, trj, cutoff, box);
 %% calcvdw
-% calculate vdw energy
+% calculate vdw energy from input coordinates or trajectory
 %
 %% Syntax
 %# ene = calcvdw(parm, trj, cutoff);
@@ -20,18 +20,25 @@ function ene = calcvdw(parm, trj, cutoff, box);
 %% setup
 % total number of atoms
 natom  = parm.natom;
+
 % total number of distinct atom types;
 ntypes = parm.ntypes;
+
 %index for the atom types involved in Lennard Jones (6-12)
 iac    = parm.atom_type_index;
+
 % index to the nonbon parameter arrays CN1, CN2 and ASOL, BSOL indexed by iac
 ico    = parm.nonbonded_parm_index;
+
 % Lennard Jones r**12 coefficients for all possible atom type interactions indexed by ico and iac
 cn1    = parm.lennard_jones_acoef;
+
 % Lennard Jones r**6  coefficients for all possible atom type interactions indexed by ico and iac
 cn2    = parm.lennard_jones_bcoef;
+
 % r**12 coefficients for hydrogen bonds of all
 asol   = parm.hbond_acoef;
+
 % r**10 coefficients for hydrogen bonds of all
 bsol   = parm.hbond_bcoef;
 
