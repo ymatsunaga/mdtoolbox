@@ -44,7 +44,7 @@ function psf = readpsf(filename)
 %# psf = readpsf('jac_xplor.psf');
 %
 %% See also
-% readamberparm
+% readcharmmparam
 % 
 
 %% open file
@@ -68,7 +68,7 @@ for i=1:4:(line_size-3)
 end
 
 if ~isPSF
-  error('Error: sorry, this seems not be a PSF file')
+  error('Sorry, this seems not be a PSF file')
 end
 
 if isEXT

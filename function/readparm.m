@@ -220,6 +220,7 @@ while ~feof(fid)
   
 end
 
+
 %% convert excluded_atoms_list to a pair list (just for convenience)
 parm.excluded_pair = zeros(numel(parm.excluded_atoms_list), 2);
 istart = 0;
