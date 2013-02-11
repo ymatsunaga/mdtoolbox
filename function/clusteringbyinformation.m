@@ -1,4 +1,4 @@
-function [p_ci2, values] = clusteringbyinformation(x, temperature, nc, nReplicates)
+function [p_ci_best, values] = clusteringbyinformation(x, temperature, nc, nReplicates)
 %% clusteringbyinformation
 % clusterize samples according to an information-based criterion
 %
@@ -9,6 +9,7 @@ function [p_ci2, values] = clusteringbyinformation(x, temperature, nc, nReplicat
 % assuming p(i) = 1/N;
 %
 %% Example
+%# 
 %# [p_ci, s] = clusteringbyinformation(q, 1/30, 3, 10);
 %# scatter(q(:, 1), q(:, 2), 50, p_ci, 'fill')
 %
@@ -43,40 +44,39 @@ if nargin < 4
 end
 
 %% clustering
-values.f = -inf;
-values.similarity = 0;
+values.f           = -inf;
+values.similarity  = 0;
 values.compression = 0;
-p_ci2 = zeros(nstep, nc);
-tmp = zeros(nstep, nc);
-p_ci_old = zeros(nstep, nc);
+
+p_ci_best = zeros(nstep, nc);
+p_ci_old  = zeros(nstep, nc);
+work      = zeros(nstep, nc);
 
 for ireplica = 1:nReplicates
   % initialize
   p_ci = rand(nstep, nc);
   p_ci = bsxfun(@rdivide, p_ci, sum(p_ci, 2));
-  p_c = sum(p_ci) ./ nstep;
+  p_c  = sum(p_ci) ./ nstep;
   
   % calc similarities s(c) and s(C; i)
-  s_c = zeros(1, nc);
+  s_c  = zeros(1, nc);
   s_ci = zeros(nstep, nc);
   for i = 1:nstep
     similarity_i = calcsimilarity(x(i,:), x);
-    s_ci(i, :) = similarity_i * p_ci;
+    s_ci(i, :)   = similarity_i * p_ci;
   end
-  % for i = 1:1000:nstep
-  %   similarity_i = calcsimilarity(x(i:min(i+999,nstep), :), x);
-  %   s_ci(i:min(i+999,nstep), :) = similarity_i * p_ci;
   % end
-  s_c = sum(p_ci .* s_ci);
+  s_c  = sum(p_ci .* s_ci);
   s_ci = bsxfun(@rdivide, s_ci, p_c) ./ nstep;
-  s_c = s_c .* (1./nstep.^2) .* (1./p_c.^2);
+  s_c  = s_c .* (1./nstep.^2) .* (1./p_c.^2);
   
   % solve self-consistent equation
-  f = -inf;
-  delta = inf;
-  similarity = 0;
+  f           = -inf;
+  delta       = inf;
+  similarity  = 0;
   compression = 0;
-  icount = 1;
+  icount      = 1;
+
   while delta > tolerance
     % update p_ci
     p_ci_old = p_ci;
@@ -85,26 +85,22 @@ for ireplica = 1:nReplicates
     p_ci = exp(p_ci);
     p_ci = bsxfun(@times, p_c, p_ci);
     p_ci = bsxfun(@rdivide, p_ci, sum(p_ci, 2));
-    p_c = sum(p_ci) ./ nstep;
+    p_c  = sum(p_ci) ./ nstep;
 
     % calc similarity <s>
     for i = 1:nstep
       similarity_i = calcsimilarity(x(i,:), x);
-      s_ci(i, :) = similarity_i * p_ci;
+      s_ci(i, :)   = similarity_i * p_ci;
     end
-    % for i = 1:1000:nstep
-    %   similarity_i = calcsimilarity(x(i:min(i+999,nstep), :), x);
-    %   s_ci(i:min(i+999,nstep), :) = similarity_i * p_ci;
-    % end
-    s_c = sum(p_ci .* s_ci);
+    s_c  = sum(p_ci .* s_ci);
     s_ci = bsxfun(@rdivide, s_ci, p_c) ./ nstep;
-    s_c = s_c .* (1./nstep.^2) .* (1./p_c.^2);
+    s_c  = s_c .* (1./nstep.^2) .* (1./p_c.^2);
     similarity = sum(p_c .* s_c);
 
     % calc compression I
-    tmp = bsxfun(@rdivide, p_ci, p_c);
-    tmp(tmp <= eps) = 1.0;
-    compression = sum(sum( p_ci .* log2(tmp) ));
+    work = bsxfun(@rdivide, p_ci, p_c);
+    work(work <= eps) = 1.0;
+    compression = sum(sum( p_ci .* log2(work) ));
     compression = compression ./ nstep;
 
     % calc free energy f
@@ -117,14 +113,13 @@ for ireplica = 1:nReplicates
       disp(sprintf('maximum number (= %d) of iteration is reached', maxIteration));
       break
     end
-    
   end
 
   if f > values.f
-    values.f = f;
-    values.similarity = similarity;
+    values.f           = f;
+    values.similarity  = similarity;
     values.compression = compression;
-    p_ci2 = p_ci;
+    p_ci_best          = p_ci;
   end
   
   disp(sprintf('%d iteration, f = %f', ireplica, values.f));
@@ -165,8 +160,8 @@ end
 
 
 function ss = calcsimilarity(xi, x)
-  x = bsxfun(@minus, x, xi);
-  ss = sum(x.^2, 2);
+  dx = bsxfun(@minus, x, xi);
+  ss = sum(dx.^2, 2);
   ss = -sqrt(ss');
 
 
