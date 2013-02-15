@@ -45,8 +45,8 @@ function [rmsd, trj, vel, Ucell] = superimpose(ref, trj, index, mass, vel)
 
 %% preparation
 natom3 = size(ref, 2);
-natom = natom3/3;
-nstep = size(trj, 1);
+natom  = natom3/3;
+nstep  = size(trj, 1);
 
 if (nargin < 3) | (numel(index) == 0)
   index = 1:natom;
@@ -72,7 +72,7 @@ if (nargin < 5)
   vel = [];
 end
 
-%% remove center of mass
+%% remove the center of mass
 trj = decenter(trj, index, mass);
 [ref, comy] = decenter(ref, index, mass);
 if numel(vel) ~= 0
@@ -81,45 +81,54 @@ end
 
 mass = mass(index);
 massxyz = repmat(mass, 3, 1);
-y = reshape(ref(1, index3), 3, length(index));
+y = reshape(ref(1, index3), 3, numel(index));
+x_trj = reshape(trj(:, index3)', 3, numel(index), nstep);
 rmsd = zeros(nstep, 1);
 
 %% superimpose
 for istep = 1:nstep
-  % calculate rotation matrix
-  x = reshape(trj(istep, index3), 3, length(index));
+  % calculate R matrix
+  x = x_trj(:, :, istep);
+  % x = reshape(trj(istep, index3), 3, numel(index));
+  % x = squeeze(x_trj(:, :, istep));
   rmsd(istep) = 0.5 * sum(mass.*sum(x.^2 + y.^2));
   R = (massxyz.*y) * x';
   [V, D, W] = svd(R);
   D = diag(D);
+
+  % check reflection
   is_reflection = det(V)*det(W');
   if(is_reflection < 0) 
     D(3) = -D(3);
     V(:, 3) = -V(:, 3);
   end
   rmsd(istep) = rmsd(istep) - sum(D);
-  U = V*W';
-  if nargout >= 4
-    Ucell{istep} = U;
-  end
 
-  % rotate molecule
-  x = reshape(trj(istep, :), 3, natom);
-  x = U*x;
-  % restore the original center of mass
-  x(1, :) = x(1, :) + comy(1);
-  x(2, :) = x(2, :) + comy(2);
-  x(3, :) = x(3, :) + comy(3);
-  trj(istep, :) = reshape(x, 1, natom3);
+  if nargout >= 2
+    % calculate rotation matrix
+    U = V*W';
+    if nargout >= 4
+      Ucell{istep} = U;
+    end
+
+    % rotate molecule
+    x = reshape(trj(istep, :), 3, natom);
+    x = U*x;
+
+    % restore the original center of mass
+    x(1, :) = x(1, :) + comy(1);
+    x(2, :) = x(2, :) + comy(2);
+    x(3, :) = x(3, :) + comy(3);
+    trj(istep, :) = reshape(x, 1, natom3);
   
-  if numel(vel) ~= 0
-    % rotate velocity
-    v = reshape(vel(istep, :), 3, natom);
-    v = U*v;
-    vel(istep, :) = reshape(v, 1, natom3);
+    if numel(vel) ~= 0
+      % rotate velocity
+      v = reshape(vel(istep, :), 3, natom);
+      v = U*v;
+      vel(istep, :) = reshape(v, 1, natom3);
+    end
   end
 end
 
 rmsd = sqrt(2.0*abs(rmsd)./sum(mass));
-
 
