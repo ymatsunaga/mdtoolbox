@@ -48,27 +48,38 @@ else
   end
 end
 
-if (nargin < 3) | (numel(mass) == 0)
-  mass = ones(1, natom);
-else
-  if iscolumn(mass)
-    mass = mass';
-  end
+if (nargin < 3)
+  mass = [];
 end
 
-assert(isequal(natom, numel(mass)), ...
-       ['sizes of coordinates and masses are not same'])
-
+%% calculate the center of mass
 indexx = 3.*(index-1) + 1;
 indexy = 3.*(index-1) + 2;
 indexz = 3.*(index-1) + 3;
 
-totalMass = sum(mass(index));
+if numel(mass) == 0
 
-%% calculate the center of mass
-com(:, 1) = sum(bsxfun(@times, mass(index), x(:, indexx)), 2) ./ totalMass;
-com(:, 2) = sum(bsxfun(@times, mass(index), x(:, indexy)), 2) ./ totalMass;
-com(:, 3) = sum(bsxfun(@times, mass(index), x(:, indexz)), 2) ./ totalMass;
+  totalMass = numel(index);
+  com(:, 1) = sum(x(:, indexx), 2) ./ totalMass;
+  com(:, 2) = sum(x(:, indexy), 2) ./ totalMass;
+  com(:, 3) = sum(x(:, indexz), 2) ./ totalMass;
+
+else
+
+  assert(isequal(natom, numel(mass)), ...
+         ['sizes of coordinates and masses are not same'])
+
+  if iscolumn(mass)
+    mass = mass';
+  end
+
+  mass = mass(index);
+  totalMass = sum(mass);
+  com(:, 1) = sum(bsxfun(@times, mass, x(:, indexx)), 2) ./ totalMass;
+  com(:, 2) = sum(bsxfun(@times, mass, x(:, indexy)), 2) ./ totalMass;
+  com(:, 3) = sum(bsxfun(@times, mass, x(:, indexz)), 2) ./ totalMass;
+
+end
 
 %% subtract the center of mass
 x(:, 1:3:end) = bsxfun(@minus, x(:, 1:3:end), com(:, 1));

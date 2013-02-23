@@ -3,8 +3,8 @@ function [indexOfCluster_out, indexOfCenter_out, distPointCenter_out] = clusteri
 % K-center clustering by using rmsd measure
 %
 %% Syntax
-%# ndexOfCenter = clusteringbykcenter(trj, kcluster)
-%# ndexOfCenter = clusteringbykcenter(trj, kcluster, mass)
+%# indexOfCluster = clusteringbykcenter(trj, kcluster)
+%# indexOfCluster = clusteringbykcenter(trj, kcluster, mass)
 %# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, kcluster, mass)
 %# [indexOfCluster, indexOfCenter, distPointCenter] = clusteringbykcenter(trj, kcluster, mass)
 %
@@ -20,7 +20,7 @@ function [indexOfCluster_out, indexOfCenter_out, distPointCenter_out] = clusteri
 %% Example
 %# parm = readparm('ala.parm');
 %# trj = readnetcdf('ala.nc');
-%# index = find(selectid(parm.residue_id, 1:3) & ~selectname(parm.atom_name, 'H*'));
+%# index = find(selectid(parm.residue_id, 1:3) & ~selectname(parm.atom_name, 'H*'));w
 %# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj(:, to3(index)), 4, parm.mass(index));
 % 
 %% See also
@@ -36,17 +36,20 @@ nstep = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 
-if (nargin < 3) | (numel(mass) == 0)
-  mass = ones(1, natom);
+if (nargin < 3)
+  mass = [];
 else
   if iscolumn(mass)
     mass = mass';
   end
 end
 
-if nargin < 4
+if (nargin < 4)
     nReplicates = 10;
 end
+
+%% remove the centers of mass of the structres
+trj = decenter(trj, [], mass);
 
 %% clustering
 for ireplica = 1:nReplicates
@@ -55,11 +58,12 @@ for ireplica = 1:nReplicates
   % at first, all points belong to the 1st cluster
   indexOfCluster = ones(nstep, 1);
   % distance between the points and the 1st centroid
-  distPointCenter = superimpose(trj(indexOfCenter(1), :), trj, [], mass);
+  distPointCenter = superimpose(trj(indexOfCenter(1), :), trj, [], mass, [], true);
 
   for i = 2:kcluster
     [~, indexOfCenter(i)] = max(distPointCenter);
-    dist = superimpose(trj(indexOfCenter(i), :), trj, [], mass);
+    ref = trj(indexOfCenter(i), :);
+    dist = superimpose(ref, trj, [], mass, [], true);
     index = dist < distPointCenter;
     if numel(index) > 0
       % updated if the dist to a new cluster is smaller than the previous one

@@ -1,4 +1,4 @@
-function [rmsd, trj, vel, Ucell] = superimpose(ref, trj, index, mass, vel)
+function [rmsd, trj, vel, Ucell] = superimpose(ref, trj, index, mass, vel, isdecentered)
 %% superimpose
 % least-squares fitting of structures by Kabsch's method
 %
@@ -73,24 +73,25 @@ if (nargin < 5)
 end
 
 %% remove the center of mass
-trj = decenter(trj, index, mass);
-[ref, comy] = decenter(ref, index, mass);
-if numel(vel) ~= 0
-  vel = decenter(vel, index, mass);
+if (nargin < 6) | (~isdecentered)
+  trj = decenter(trj, index, mass);
+  [ref, comy] = decenter(ref, index, mass);
+  if numel(vel) ~= 0
+    vel = decenter(vel, index, mass);
+  end
+else
+  comy = [0 0 0];
 end
 
 mass = mass(index);
 massxyz = repmat(mass, 3, 1);
 y = reshape(ref(1, index3), 3, numel(index));
-x_trj = reshape(trj(:, index3)', 3, numel(index), nstep);
 rmsd = zeros(nstep, 1);
 
 %% superimpose
 for istep = 1:nstep
   % calculate R matrix
-  x = x_trj(:, :, istep);
-  % x = reshape(trj(istep, index3), 3, numel(index));
-  % x = squeeze(x_trj(:, :, istep));
+  x = reshape(trj(istep, index3), 3, numel(index));
   rmsd(istep) = 0.5 * sum(mass.*sum(x.^2 + y.^2));
   R = (massxyz.*y) * x';
   [V, D, W] = svd(R);

@@ -36,11 +36,11 @@ natom3 = numel(ref);
 natom = natom3/3;
 rmsd = realmax;
 
-if (nargin < 2) | (numel(index) == 0)
+if (nargin < 2)
   index = [];
 end
   
-if (nargin < 3) | (numel(mass) == 0)
+if (nargin < 3)
   mass = [];
 end
 
@@ -48,16 +48,24 @@ if (nargin < 4) | (numel(tolerance) == 0)
   tolerance = 10^(-6);
 end
 
-if nargin < 5
+if (nargin < 5)
   vel = [];
 end
 
 %% iterative superimpose
+ref = decenter(ref, index, mass);
+trj = decenter(trj, index, mass);
+if numel(vel) ~= 0
+  vel = decenter(vel, index, mass);
+end
+
 while rmsd > tolerance
   ref_old = ref;
-  [~, trj] = superimpose(ref, trj, index, mass, vel);
+  [~, trj, vel] = superimpose(ref, trj, index, mass, vel, true);
   ref = mean(trj);
-  rmsd = superimpose(ref_old, ref, index, mass)
+  ref = decenter(ref, index, mass);
+  rmsd = superimpose(ref_old, ref, index, mass, [], true);
+  fprintf('rmsd from the previous mean structure: %f A\n', rmsd);
 end
 
 crd = ref;

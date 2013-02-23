@@ -34,9 +34,16 @@ nstep = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 
-if (nargin < 3) | (numel(mass) == 0)
+if (nargin < 3)
   mass = [];
+else
+  if iscolumn(mass)
+    mass = mass';
+  end
 end
+
+%% remove the centers of mass of the structres
+trj = decenter(trj, [], mass);
 
 %% clustering by iteration
 % create centroid by randomly drawn from input
@@ -51,7 +58,7 @@ while true
   % calc distance and assign cluster-index
   distanceFromCentroid = zeros(nstep, kcluster);
   for icluster = 1:kcluster
-    rmsd = superimpose(centroid(icluster, :), trj, [], mass);
+    rmsd = superimpose(centroid(icluster, :), trj, [], mass, [], true);
     distanceFromCentroid(:, icluster) = rmsd;
   end
   [~, indexOfCluster] = min(distanceFromCentroid, [], 2);
@@ -61,9 +68,11 @@ while true
     crd = meanstructure(trj(indexOfCluster == icluster, :), [], mass);
     centroid(icluster, :) = crd;
   end
+  [~,com] = decenter(centroid, [], mass);
 
   % check convergence (normalized Hamming distance of indices)
-  hammingDistance = double(sum(indexOfCluster ~= indexOfClusterOld))./nstep
+  hammingDistance = double(sum(indexOfCluster ~= indexOfClusterOld))./nstep;
+  fprintf(['normalized hamming distance from the previous cluster assingments: %d\n'], hammingDistance);
   if hammingDistance < 10^(-6)
     break;
   end
