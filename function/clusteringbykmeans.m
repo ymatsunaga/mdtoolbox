@@ -10,12 +10,18 @@ function [indexOfCluster, centroid, sumd] = clusteringbykmeans(trj, kcluster, ma
 %
 %% Description
 %
-% * trj            - trajectory to be clustered [nstep x natom3 double]
-% * kcluster       - the number of clusters [scalar integer]
-% * mass           - masses used for the calculation of rmsd [natom double]
-% * indexOfCluster - cluster index from 1 to kcluster [nstep integer]
-% * centroid       - centroids of clusters [[kcluster x natom3 double]
+% * trj            - trajectory to be clustered 
+%                    [double nstep x natom3]
+% * kcluster       - the number of clusters 
+%                    [integer 1]
+% * mass           - masses used for the calculation of rmsd 
+%                    [double natom]
+% * indexOfCluster - cluster index from 1 to kcluster 
+%                    [integer nstep]
+% * centroid       - centroids of clusters
+%                    [double kcluster x natom3]
 % * sumd           - sum of RMSDs from the centroid in each cluster
+%                    [double nstep]
 % 
 %% Example
 %# parm = readparm('ala.parm');
@@ -24,10 +30,11 @@ function [indexOfCluster, centroid, sumd] = clusteringbykmeans(trj, kcluster, ma
 %# [indexOfCluster, centroid, sumd] = clusteringbykmeans(trj(:, to3(index)), 4, parm.mass(index));
 % 
 %% See also
-% clusteringbykcenter, clusteringbyinformation
+% clusteringbykcenter
 %
 %% References
-% 
+%
+%
 
 %% preparation
 nstep = size(trj, 1);

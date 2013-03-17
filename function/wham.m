@@ -46,10 +46,10 @@ function [f_k, prob_m, center_m, h_km, bias_km, N_m] = wham(edge_m, fhandle_k, d
 % windows and columns are bins. 
 
 %% preparation
-% number of windows
+% K: number of umbrella windows
 K = numel(data_k); 
 assert(K == numel(fhandle_k), 'the numbers of windows in data and fhandle do not match...');
-% number of bins
+% M: number of bins
 M = numel(edge_m) - 1;
 % calc the centers of bins
 center_m = edge_m + 0.5*(edge_m(2) - edge_m(1));
@@ -86,14 +86,14 @@ check_convergence = inf;
 
 count_iteration = 0;
 while check_convergence > tolerance
-  x_inv   = exp(beta_k*bsxfun(@minus, f_k, bias_km));
-  x_inv   = sum(bsxfun(@times, N_m, x_inv));
-  prob_m  = sum(h_km)./x_inv;
+  eq1_inv   = exp(beta_k*bsxfun(@minus, f_k, bias_km));
+  eq1_inv   = sum(bsxfun(@times, N_m, eq1_inv));
+  prob_m  = sum(h_km)./eq1_inv;
   f_k_new = - kbt_k*logsumexp2(-beta_k*bias_km' + repmat(log(prob_m'), 1, K));
   %f_k_new = sum(exp(-beta_k*bias_km').*repmat(log(prob_m'), 1, K));
   %f_k_new = - kbt_k*log(f_k_new);
-  f_k_new = f_k_new - f_k(1);
   f_k_new = f_k_new';
+  f_k_new = f_k_new - f_k_new(1);
   check_convergence = max(abs(f_k_new - f_k))./std(f_k_new);
   f_k = f_k_new;
 
@@ -114,14 +114,14 @@ f_k_error = 0;
 prob_m_error = 0;
 
 
-%% logsumexp
+%% logsumexp (input should be vector)
 function s = logsumexp(x)
 max_x = max(x);
 exp_x = exp(x - max_x);
 s = log(sum(exp_x)) + max_x;
 
     
-%% logsumexp2 (a bit faster than logsumexp)
+%% logsumexp2 (input should be array. sum over rows)
 function s = logsumexp2(x)
 [K, M] = size(x);
 max_x = max(x);
