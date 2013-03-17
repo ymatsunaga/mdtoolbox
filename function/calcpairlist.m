@@ -45,8 +45,8 @@ function [pair, dist] = calcpairlist(crd, rcut, box)
 %
 %% References
 % Heinz, T.N. & Hünenberger, P.H.
-% A fast pairlist-construction algorithm for molecular simulations
-% under periodic boundary conditions. 
+% "A fast pairlist-construction algorithm for molecular simulations
+% under periodic boundary conditions."
 % J Comput Chem 25, 1474–1486 (2004). 
 %
 
@@ -55,7 +55,7 @@ natom = numel(crd)./3;
 rcut2 = rcut^2;
 
 %% setup cell
-if nargin >= 3
+if (nargin >= 3)
   crd(1:3:end) = crd(1:3:end) - floor(crd(1:3:end)./box(1))*box(1);
   crd(2:3:end) = crd(2:3:end) - floor(crd(2:3:end)./box(2))*box(2);
   crd(3:3:end) = crd(3:3:end) - floor(crd(3:3:end)./box(3))*box(3);

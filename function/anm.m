@@ -10,32 +10,34 @@ function [emode, frequency, covar, covar_atom] = anm(crd, cutoff)
 %# [emode, frequency, covar, covar_atom] = anm(crd, cutoff);
 %
 %% Description
-% This performs a normal mode analysis of the Anisotropic (Elastic) 
-% Network Model from the input coordinates, and returns
+% This routine performs a normal mode analysis of the Anisotropic 
+% (Elastic) Network Model from the input coordinates, and returns
 % the normal modes (eigenvectors) and the corresponding frequencies
 % (sqrt(eigenvalues)).
-% Also, the covariance matrix is calculated from 
-% the pseudo inverse of hessian matrix. 
-% The spring constant of 1.0 kcal/mol/A^1, and 
-% kBT = 1.0 kcal/mol/K are assumed.
+%
+% Also, the covariance matrix of the Cartesian xyz coordinates is
+% calculated from the pseudo inverse of hessian matrix. 
+% In the calculation, the spring constant of 1.0 kcal/mol/A^1, 
+% and kBT = 1.0 kcal/mol/K are assumed.
 %
 % * crd         - coordinates of atoms. 
-%                 [1 x 3natom double]
+%                 [double natom3]
 % * cutoff      - cutoff distance of the model. default is 10 angstrom. 
-%                 [scalar]
+%                 [double scalar]
 % * emode       - normal modes, each column vector corresponds to a mode.
 %                 1st column vector emode(:,1) is the lowest frequency mode.
 %                 The external modes (translations and rotations)
-%                 are emode(:,end-5:end) [3natom x 3natom double]
+%                 are emode(:,end-5:end) 
+%                 [double natom3 x natom3]
 % * frequency   - frequencies of the normal modes, given in ascending order.
 %                 frequency(end-5:end) have zero frequencies (external modes)
-%                 [3natom x 1 double]
+%                 [double natom3]
 % * covar       - covariance matrix of anisotropic fluctuations. 
 %                 covar(i,j) = <q_i q_j>
-%                 [3natom x 3natom double]
+%                 [double natom3 x natom3]
 % * covar_atom  - covariance matrix of isotropic fluctuations. 
 %                 covar_atom(i,j) = <x_i x_j + y_i y_j + z_i z_j>
-%                 [natom x natom double]
+%                 [double natom x natom]
 %
 %% Example
 %# % normal mode analysis of Ca-based model of Lysozyme
@@ -59,7 +61,7 @@ function [emode, frequency, covar, covar_atom] = anm(crd, cutoff)
 %# % visualize the mode structure with PyMOL and modevectors.py
 % 
 %% See also
-% anm_sym, transformframe
+% anm_sym, transformframe, writevmdvector
 %
 %% References
 % A.R. Atilgan, et al., Biophys. J. 80, 505-515 (2001). 

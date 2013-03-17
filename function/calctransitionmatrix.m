@@ -1,11 +1,11 @@
-function [t, x] = calctransitionmatrix(indexOfCluster, tau, prior)
+function [t, eq, x] = calctransitionmatrix(indexOfCluster, tau, prior)
 %% calctransitionmatrix
 % calculate transition probability matrix
 %
 %% Syntax
 %# t = calctransitionmatrix(indexOfCluster, tau)
 %# t = calctransitionmatrix(indexOfCluster, tau, prior)
-%# [t, x] = calctransitionmatrix(indexOfCluster, tau, prior)
+%# [t, eq, x] = calctransitionmatrix(indexOfCluster, tau, prior)
 %
 %% Description
 % calculate the transition probability matrix T_ij that transition
@@ -17,9 +17,9 @@ function [t, x] = calctransitionmatrix(indexOfCluster, tau, prior)
 %% See also
 %
 %% References
-% K. A. Beauchamp, G. R. Bowman, T. J. Lane, L. Maibaum,
-% I. S. Haque, and V. S. Pande, 
-% J. Chem. Theory Comput. 7, 3412 (2011).
+% [1] K. A. Beauchamp, G. R. Bowman, T. J. Lane, 
+%     L. Maibaum, I. S. Haque, and V. S. Pande, 
+%     J. Chem. Theory Comput. 7, 3412 (2011).
 % 
 
 %% setup
@@ -70,13 +70,15 @@ while true
   end
 end
 
-%% normalize the count matrix
+%% normalize the count matrix [x]
 x = x ./ sum(x(:));
 
-%% estimate transition probability matrix
+%% calc equilibrium probability [eq]
+eq = full(sum(x, 2));
+
+%% estimate transition probability matrix [t]
 t = x;
-x_sum = sum(x, 2);
 for i = 1:nstate
-  t(i, :) = x(i, :)./x_sum(i);
+  t(i, :) = x(i, :)./eq(i);
 end
 

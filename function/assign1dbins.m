@@ -1,10 +1,13 @@
-function [index, center, edge] = assign1dbins(nbin, data)
+function [index, center, edge] = assign1dbins(data, nbin)
 %% assign1dbins
 % assign bin indices to the given data by binning their values
 %
 %% Syntax
-%# index = assign1dbins(nbin, data)
+%# index = assign1dbins(data, nbin);
 %# [index, center, edge] = assign1dbins(nbin, data)
+%#
+%# index = assign1dbins(data, edge);
+%# [index, center] = assign1dbins(nbin, edge)
 %
 %% Description
 % This routine assigns bin indices to the given data by binning
@@ -36,10 +39,19 @@ if isrow(data)
   data = data';
 end
 
-data_min = min(data(:, 1));
-data_max = max(data(:, 1));
-edge = linspace(data_min, data_max, nbin+1);
-edge(end) = edge(end) + eps;
+if (nargin < 2) | (numel(nbin) == 0)
+  nbin = 100;
+end
+
+if numel(nbin) == 1
+  data_min = min(data(:, 1));
+  data_max = max(data(:, 1));
+  edge = linspace(data_min, data_max + nbin*eps, nbin+1);
+else
+  edge = nbin;
+end
+clear nbin;
+
 [~, index] = histc(data, edge);
 center = edge + 0.5*(edge(2) - edge(1));
 center(end) = [];
