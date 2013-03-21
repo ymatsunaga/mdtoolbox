@@ -14,18 +14,18 @@ function [rmsd, trj, vel, Ucell] = superimpose(ref, trj, index, mass, vel, isdec
 %
 %% Description
 %
-% * ref        - reference structure
-%                [1 x natom3]
-% * trj        - trajectory fitted to reference structure
-%                [nstep x natom3]
-% * index_atom - index of atoms to be fitted
-%                [1 x n]
+% * ref        - reference structure 
+%                [double natom3]
+% * trj        - trajectory fitted to the reference structure
+%                [double nstep x natom3]
+% * index_atom - index of atoms used in the calculation of fitting
+%                [integer n]
 % * mass       - mass
-%                [1 x natom]
+%                [double natom]
 % * vel        - velocity
-%                [1 x natom3]
+%                [double nstep x natom3]
 % * rmsd       - root mean square deviations after fitting
-%                [nstep x 1]
+%                [double nstep]
 % 
 %% Example
 %# trj = readnetcdf('ak.nc');
@@ -38,10 +38,13 @@ function [rmsd, trj, vel, Ucell] = superimpose(ref, trj, index, mass, vel, isdec
 %
 %% References
 % W. Kabsch, "A solution for the best rotation to relate two sets of vectors." 
-% Acta Cryst A32: 922-923 (1976)
+% Acta Cryst A32, 922-923 (1976)
 % W. Kabsch, "A discussion of the solution for the best rotation to relate two sets of vectors." 
-% Acta Cryst A34: 827-828 (1978)
+% Acta Cryst A34, 827-828 (1978)
 % 
+%% TODO
+% implementation of the Quaternion Characteristic Polynomial method
+%
 
 %% preparation
 natom3 = size(ref, 2);
