@@ -1,8 +1,13 @@
+%% usage:
+%% >> test = testsuperimpose;
+%% >> result = run(test)
+%%
+
 classdef testsuperimpose < matlab.unittest.TestCase
 
   methods(Test)
       
-    function SameCrdShouldBeZero(testCase)
+    function RMSDOfSameCrdShouldBeZero(testCase)
       natom = 100;
       ref = randn(1, natom*3);
       crd = ref;
@@ -10,9 +15,12 @@ classdef testsuperimpose < matlab.unittest.TestCase
       testCase.verifyEqual(rmsd, 0, 'AbsTol', 10^(-7));
     end
     
-    function SameCrdRotatedShouldBeZero(testCase)
+    function RMSDOfSameCrdButRotatedShouldBeZero(testCase)
       natom = 100;
-      ref = decenter(randn(1, natom*3));
+      ref = randn(1, natom*3);
+      ref(1:3:end) = ref(1:3:end) - mean(ref(1:3:end));
+      ref(2:3:end) = ref(2:3:end) - mean(ref(2:3:end));
+      ref(3:3:end) = ref(3:3:end) - mean(ref(3:3:end));
       theta = rand(1);
       rot = [1 0 0; 0 cos(theta) -sin(theta); 0 sin(theta) cos(theta)];
       crd = zeros(1, natom*3);
@@ -36,5 +44,4 @@ classdef testsuperimpose < matlab.unittest.TestCase
   end
   
 end
-
 
