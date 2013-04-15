@@ -1,18 +1,26 @@
-function interarrival_time = simulatepoisson(time_width, rate)
+function [event_time, interarrival_time] = simulatepoisson(time_width, rate)
 %% simulatepoisson
-% simulates inter-arrival times of the Poisson process within the given time-width and rate
+% simulates event- and inter-arrival times of the Poisson process within the given time-width and rate
+%
+%% References
+% Simulation, New York, Academic Press.
+% Sheldon M. Ross, Chapter 5.
 %
 
 %% simulation
-t_cumsum = 0;
-interarrival_time = [];
+event_time = 0;
+t = 0;
 
 while true
-  t = - (1./rate) * log(rand);
-  t_cumsum = t_cumsum + t;
-  if t_cumsum > time_width
+  t = t - (1./rate) * log(rand);
+  if t > time_width
     break
   end
-  interarrival_time = [interarrival_time; t];
+  event_time = [event_time; t];
 end
+
+interarrival_time = diff(event_time);
+
+% delete t=0 from event_time
+event_time(1) = [];
 
