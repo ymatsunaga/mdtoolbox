@@ -1,0 +1,6 @@
+harmonic restraint changing spring constant
+ &rst
+   iat=9,15,17,19,
+   r0=105.000000, k0=200.0,
+ /
+

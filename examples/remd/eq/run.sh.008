@@ -1,0 +1,11 @@
+#!/bin/bash
+
+NPROC=2
+mpirun -np $NPROC sander.MPI -O \
+ -p parm \
+ -i run.in.008 \
+ -c ../init/ala.crd \
+ -o run.out.008 \
+ -r run.rst.008 \
+ -x run.nc.008
+

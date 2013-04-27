@@ -1,0 +1,1503 @@
+
+          -------------------------------------------------------
+          Amber 12 SANDER                              2012
+          -------------------------------------------------------
+
+| Run on 04/27/2013 at 20:31:41
+  [-O]verwriting output
+
+File Assignments:
+|  MDIN: run_156.in                                                            
+| MDOUT: run_156.out                                                           
+|INPCRD: ../eq2/run_156.rst                                                    
+|  PARM: parm                                                                  
+|RESTRT: run_156.rst                                                           
+|  REFC: refc                                                                  
+| MDVEL: mdvel                                                                 
+|  MDEN: mden                                                                  
+| MDCRD: run_156.nc                                                            
+|MDINFO: mdinfo                                                                
+|  MTMD: mtmd                                                                  
+|INPDIP: inpdip                                                                
+|RSTDIP: rstdip                                                                
+
+|INPTRA: inptraj                                                               
+|
+ 
+ Here is the input file:
+ 
+equilibration with restraint                                                   
+ &cntrl                                                                        
+   ig=494532,                                                                  
+   irest=1, ntx=5,                                                             
+   igb=8, gbsa=1,                                                              
+   cut=9999.0, rgbmax=9998.0,                                                  
+   ntc=2, ntf=1, tol=0.000001,                                                 
+   ntt=3, gamma_ln=2.0, tempi=0.1,                                             
+   ntb=0, nscm=10000,                                                          
+   ioutfm=1,                                                                   
+   nstlim=500000, dt=0.002,                                                    
+   ntpr=5000, ntwx=5000, ntwv=0, ntwr=500000,                                  
+   nmropt=1,                                                                   
+ /                                                                             
+ &wt                                                                           
+  type='DUMPFREQ', istep1=5000,                                                
+ /                                                                             
+ &wt                                                                           
+  type='END',                                                                  
+ /                                                                             
+DISANG=run_156.disang                                                          
+DUMPAVE=run_156.dat                                                            
+                                                                               
+
+--------------------------------------------------------------------------------
+   1.  RESOURCE   USE: 
+--------------------------------------------------------------------------------
+
+| Flags: MPI                                                                    
+| New format PARM file being parsed.
+| Version =    1.000 Date = 04/27/13 Time = 01:42:54
+ NATOM  =      32 NTYPES =       7 NBONH =      17 MBONA  =      14
+ NTHETH =      36 MTHETA =      18 NPHIH =      64 MPHIA  =      45
+ NHPARM =       0 NPARM  =       0 NNB   =     152 NRES   =       4
+ NBONA  =      14 NTHETA =      18 NPHIA =      45 NUMBND =      11
+ NUMANG =      21 NPTRA  =      20 NATYP =       8 NPHB   =       0
+ IFBOX  =       0 NMXRS  =      10 IFCAP =       0 NEXTRA =       0
+ NCOPY  =       0
+
+ Implicit solvent radii are ArgH and AspGluO modified Bondi2 radii (mbondi3)                                
+ Replacing prmtop screening parameters with GBn2 (igb=8) values
+
+|     Memory Use     Allocated
+|     Real                2310
+|     Hollerith            102
+|     Integer            23012
+|     Max Pairs              1
+|     nblistReal             0
+|     nblist Int             0
+|       Total              108 kbytes
+
+| Note: 1-4 EEL scale factors are being read from the topology file.
+
+| Note: 1-4 VDW scale factors are being read from the topology file.
+| Duplicated    0 dihedrals
+| Duplicated    0 dihedrals
+
+--------------------------------------------------------------------------------
+   2.  CONTROL  DATA  FOR  THE  RUN
+--------------------------------------------------------------------------------
+
+ACE                                                                             
+
+General flags:
+     imin    =       0, nmropt  =       1
+
+Nature and format of input:
+     ntx     =       5, irest   =       1, ntrx    =       1
+
+Nature and format of output:
+     ntxo    =       1, ntpr    =    5000, ntrx    =       1, ntwr    =  500000
+     iwrap   =       0, ntwx    =    5000, ntwv    =       0, ntwe    =       0
+     ioutfm  =       1, ntwprt  =       0, idecomp =       0, rbornstat=      0
+
+Potential function:
+     ntf     =       1, ntb     =       0, igb     =       8, nsnb    =      25
+     ipol    =       0, gbsa    =       1, iesp    =       0
+     dielc   =   1.00000, cut     =9999.00000, intdiel =   1.00000
+     saltcon =   0.00000, offset  =   0.19514, surften =   0.00500
+     rdt     =   0.00000, rgbmax  =9998.00000  extdiel =  78.50000
+     alpb  =        0
+     gbalphaH  =   0.78844, gbbetaH   =   0.79870,  gbgammaH  =    0.43733
+     gbalphaC  =   0.73376, gbbetaC   =   0.50638,  gbgammaC  =    0.20584
+     gbalphaN  =   0.50336, gbbetaN   =   0.31683,  gbgammaN  =    0.19292
+     gbalphaOS =   0.86781, gbbetaOS  =   0.87664,  gbgammaOS =    0.38788
+     gbalphaP  =   1.00000, gbbetaP   =   0.80000,  gbgammaP  =    4.85100
+
+Frozen or restrained atoms:
+     ibelly  =       0, ntr     =       0
+
+Molecular dynamics:
+     nstlim  =    500000, nscm    =     10000, nrespa  =         1
+     t       =   0.00000, dt      =   0.00200, vlimit  =  20.00000
+
+Langevin dynamics temperature regulation:
+     ig      =  494532
+     temp0   = 300.00000, tempi   =   0.10000, gamma_ln=   2.00000
+
+SHAKE:
+     ntc     =       2, jfastw  =       0
+     tol     =   0.00000
+
+NMR refinement options:
+     iscale  =       0, noeskp  =       1, ipnlty  =       1, mxsub   =       1
+     scalm   = 100.00000, pencut  =   0.10000, tausw   =   0.10000
+
+| MPI Timing options:
+|      profile_mpi =        0
+|  INFO: Old style inpcrd file read
+
+
+--------------------------------------------------------------------------------
+   3.  ATOMIC COORDINATES AND VELOCITIES
+--------------------------------------------------------------------------------
+
+ACE                                                                             
+ begin time read from input coords =  2000.000 ps
+
+
+
+           Begin reading energy term weight changes/NMR restraints
+ WEIGHT CHANGES:
+ DUMPFREQ   5000      0    0.000000    0.000000      0      0
+                         ** No weight changes given **
+
+ RESTRAINTS:
+ Requested file redirections:
+  DISANG    = run_156.disang
+  DUMPAVE   = run_156.dat
+ Restraints will be read from file: run_156.disang
+Here are comments from the DISANG input file:
+
+                       Number of restraints read =     1
+
+                  Done reading weight changes/NMR restraints
+
+
+ Number of triangulated 3-point waters found:        0
+|  Atom division among processors:
+|         0      16      32
+|  Running AMBER/MPI version on    2 nodes
+
+
+--------------------------------------------------------------------------------
+   4.  RESULTS
+--------------------------------------------------------------------------------
+
+|  # of SOLUTE  degrees of freedom (RNDFP):      79.
+|  # of SOLVENT degrees of freedom (RNDFS):       0.
+|  NDFMIN =      79.     NUM_NOSHAKE =      0     CORRECTED RNDFP =      79.
+|  TOTAL # of degrees of freedom (RNDF) =      79.
+
+ NSTEP =     5000   TIME(PS) =    2010.000  TEMP(K) =   274.39  PRESS =     0.0
+ Etot   =         8.3117  EKtot   =        21.5384  EPtot      =       -13.2267
+ BOND   =         5.7161  ANGLE   =        13.0163  DIHED      =        20.4100
+ 1-4 NB =         4.8326  1-4 EEL =       116.2167  VDWAALS    =        -3.5921
+ EELEC  =      -146.8153  EGB     =       -25.4039  RESTRAINT  =         0.3867
+ ESURF=         2.0062
+ EAMBER (non-restraint)  =       -13.6134
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.387
+===============================================================================
+| RE_POSITION Moving by  -2.826696  8.665474  2.786741
+
+ NSTEP =    10000   TIME(PS) =    2020.000  TEMP(K) =   322.71  PRESS =     0.0
+ Etot   =        15.1656  EKtot   =        25.3309  EPtot      =       -10.1653
+ BOND   =         6.4472  ANGLE   =        17.4255  DIHED      =        17.1459
+ 1-4 NB =         5.4526  1-4 EEL =       115.0823  VDWAALS    =        -2.8795
+ EELEC  =      -148.9667  EGB     =       -21.8940  RESTRAINT  =         0.1441
+ ESURF=         1.8773
+ EAMBER (non-restraint)  =       -10.3094
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.144
+===============================================================================
+
+ NSTEP =    15000   TIME(PS) =    2030.000  TEMP(K) =   320.39  PRESS =     0.0
+ Etot   =        10.9711  EKtot   =        25.1489  EPtot      =       -14.1779
+ BOND   =         4.4385  ANGLE   =        14.0284  DIHED      =        20.3084
+ 1-4 NB =         4.7339  1-4 EEL =       116.4693  VDWAALS    =        -4.3988
+ EELEC  =      -148.4478  EGB     =       -23.5505  RESTRAINT  =         0.3206
+ ESURF=         1.9201
+ EAMBER (non-restraint)  =       -14.4985
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.321
+===============================================================================
+| RE_POSITION Moving by  -0.956565 -3.572926  0.589962
+
+ NSTEP =    20000   TIME(PS) =    2040.000  TEMP(K) =   305.56  PRESS =     0.0
+ Etot   =        12.7720  EKtot   =        23.9846  EPtot      =       -11.2127
+ BOND   =         4.4983  ANGLE   =        15.9423  DIHED      =        20.0683
+ 1-4 NB =         5.0268  1-4 EEL =       112.0242  VDWAALS    =        -3.4745
+ EELEC  =      -147.6949  EGB     =       -21.0417  RESTRAINT  =         1.4796
+ ESURF=         1.9589
+ EAMBER (non-restraint)  =       -12.6923
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     1.480
+===============================================================================
+
+ NSTEP =    25000   TIME(PS) =    2050.000  TEMP(K) =   277.09  PRESS =     0.0
+ Etot   =         8.4558  EKtot   =        21.7501  EPtot      =       -13.2943
+ BOND   =         2.2766  ANGLE   =        14.9495  DIHED      =        19.0805
+ 1-4 NB =         7.2742  1-4 EEL =       117.1266  VDWAALS    =        -3.9268
+ EELEC  =      -149.5812  EGB     =       -22.5210  RESTRAINT  =         0.1653
+ ESURF=         1.8619
+ EAMBER (non-restraint)  =       -13.4596
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.165
+===============================================================================
+| RE_POSITION Moving by  -4.988670  0.951161  8.172095
+
+ NSTEP =    30000   TIME(PS) =    2060.000  TEMP(K) =   287.61  PRESS =     0.0
+ Etot   =         7.0743  EKtot   =        22.5753  EPtot      =       -15.5011
+ BOND   =         4.4959  ANGLE   =        14.6772  DIHED      =        19.5349
+ 1-4 NB =         3.9831  1-4 EEL =       117.3832  VDWAALS    =        -3.3942
+ EELEC  =      -149.1748  EGB     =       -24.9900  RESTRAINT  =         0.0169
+ ESURF=         1.9668
+ EAMBER (non-restraint)  =       -15.5179
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.017
+===============================================================================
+
+ NSTEP =    35000   TIME(PS) =    2070.000  TEMP(K) =   269.16  PRESS =     0.0
+ Etot   =         9.5811  EKtot   =        21.1275  EPtot      =       -11.5463
+ BOND   =         3.6435  ANGLE   =        13.1811  DIHED      =        22.8337
+ 1-4 NB =         5.0543  1-4 EEL =       120.2038  VDWAALS    =        -3.1790
+ EELEC  =      -153.0552  EGB     =       -22.4705  RESTRAINT  =         0.2742
+ ESURF=         1.9678
+ EAMBER (non-restraint)  =       -11.8205
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.274
+===============================================================================
+| RE_POSITION Moving by  -1.049182  3.290984-13.333271
+
+ NSTEP =    40000   TIME(PS) =    2080.000  TEMP(K) =   268.92  PRESS =     0.0
+ Etot   =         7.3406  EKtot   =        21.1083  EPtot      =       -13.7677
+ BOND   =         4.4362  ANGLE   =        14.1838  DIHED      =        20.2472
+ 1-4 NB =         4.6879  1-4 EEL =       114.1319  VDWAALS    =        -3.1136
+ EELEC  =      -144.7382  EGB     =       -25.6328  RESTRAINT  =         0.0516
+ ESURF=         1.9783
+ EAMBER (non-restraint)  =       -13.8194
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.052
+===============================================================================
+
+ NSTEP =    45000   TIME(PS) =    2090.000  TEMP(K) =   264.37  PRESS =     0.0
+ Etot   =         6.9498  EKtot   =        20.7516  EPtot      =       -13.8017
+ BOND   =         1.3385  ANGLE   =        11.9148  DIHED      =        20.8698
+ 1-4 NB =         4.5239  1-4 EEL =       118.7284  VDWAALS    =        -2.5671
+ EELEC  =      -147.3398  EGB     =       -25.6618  RESTRAINT  =         2.4148
+ ESURF=         1.9766
+ EAMBER (non-restraint)  =       -16.2166
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     2.415
+===============================================================================
+| RE_POSITION Moving by   0.443278 -3.147446  9.074859
+
+ NSTEP =    50000   TIME(PS) =    2100.000  TEMP(K) =   362.26  PRESS =     0.0
+ Etot   =        19.9643  EKtot   =        28.4350  EPtot      =        -8.4707
+ BOND   =         2.2046  ANGLE   =        12.9417  DIHED      =        25.2549
+ 1-4 NB =         4.5742  1-4 EEL =       121.0942  VDWAALS    =        -3.4287
+ EELEC  =      -150.4251  EGB     =       -22.7969  RESTRAINT  =         0.1304
+ ESURF=         1.9801
+ EAMBER (non-restraint)  =        -8.6010
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.130
+===============================================================================
+
+ NSTEP =    55000   TIME(PS) =    2110.000  TEMP(K) =   337.37  PRESS =     0.0
+ Etot   =        13.4544  EKtot   =        26.4814  EPtot      =       -13.0269
+ BOND   =         4.7641  ANGLE   =         9.1977  DIHED      =        21.5862
+ 1-4 NB =         5.6029  1-4 EEL =       120.8090  VDWAALS    =        -4.5388
+ EELEC  =      -149.4557  EGB     =       -24.6221  RESTRAINT  =         1.7047
+ ESURF=         1.9251
+ EAMBER (non-restraint)  =       -14.7316
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     1.705
+===============================================================================
+| RE_POSITION Moving by   2.064961  4.454701  0.216864
+
+ NSTEP =    60000   TIME(PS) =    2120.000  TEMP(K) =   240.97  PRESS =     0.0
+ Etot   =         9.1834  EKtot   =        18.9145  EPtot      =        -9.7311
+ BOND   =         4.3032  ANGLE   =        16.8245  DIHED      =        21.7353
+ 1-4 NB =         4.5682  1-4 EEL =       114.1794  VDWAALS    =        -3.6197
+ EELEC  =      -143.8399  EGB     =       -25.9096  RESTRAINT  =         0.0352
+ ESURF=         1.9924
+ EAMBER (non-restraint)  =        -9.7663
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.035
+===============================================================================
+
+ NSTEP =    65000   TIME(PS) =    2130.000  TEMP(K) =   314.97  PRESS =     0.0
+ Etot   =        12.4736  EKtot   =        24.7236  EPtot      =       -12.2500
+ BOND   =         6.2965  ANGLE   =        12.4285  DIHED      =        21.2210
+ 1-4 NB =         4.9096  1-4 EEL =       121.1441  VDWAALS    =        -4.8926
+ EELEC  =      -150.2523  EGB     =       -25.2977  RESTRAINT  =         0.2944
+ ESURF=         1.8985
+ EAMBER (non-restraint)  =       -12.5444
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.294
+===============================================================================
+| RE_POSITION Moving by  -5.541180 -1.023878  6.168059
+
+ NSTEP =    70000   TIME(PS) =    2140.000  TEMP(K) =   245.95  PRESS =     0.0
+ Etot   =         4.7064  EKtot   =        19.3053  EPtot      =       -14.5989
+ BOND   =         3.4913  ANGLE   =        14.3557  DIHED      =        19.4219
+ 1-4 NB =         5.4604  1-4 EEL =       117.7352  VDWAALS    =        -3.4376
+ EELEC  =      -148.2302  EGB     =       -25.4554  RESTRAINT  =         0.0970
+ ESURF=         1.9627
+ EAMBER (non-restraint)  =       -14.6960
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.097
+===============================================================================
+
+ NSTEP =    75000   TIME(PS) =    2150.000  TEMP(K) =   182.07  PRESS =     0.0
+ Etot   =         0.9077  EKtot   =        14.2910  EPtot      =       -13.3833
+ BOND   =         4.4052  ANGLE   =        12.4667  DIHED      =        22.0044
+ 1-4 NB =         4.1791  1-4 EEL =       120.4536  VDWAALS    =        -3.8701
+ EELEC  =      -151.5196  EGB     =       -23.4968  RESTRAINT  =         0.0133
+ ESURF=         1.9807
+ EAMBER (non-restraint)  =       -13.3967
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.013
+===============================================================================
+| RE_POSITION Moving by  -2.469178  3.499492 -3.706671
+
+ NSTEP =    80000   TIME(PS) =    2160.000  TEMP(K) =   287.06  PRESS =     0.0
+ Etot   =        12.8641  EKtot   =        22.5325  EPtot      =        -9.6684
+ BOND   =         5.5002  ANGLE   =        13.2522  DIHED      =        23.9099
+ 1-4 NB =         4.3399  1-4 EEL =       121.8749  VDWAALS    =        -3.5740
+ EELEC  =      -151.6685  EGB     =       -25.2718  RESTRAINT  =         0.0036
+ ESURF=         1.9651
+ EAMBER (non-restraint)  =        -9.6721
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.004
+===============================================================================
+
+ NSTEP =    85000   TIME(PS) =    2170.000  TEMP(K) =   274.64  PRESS =     0.0
+ Etot   =        11.5904  EKtot   =        21.5575  EPtot      =        -9.9671
+ BOND   =         5.3905  ANGLE   =        12.8864  DIHED      =        23.6353
+ 1-4 NB =         4.0326  1-4 EEL =       118.7272  VDWAALS    =        -3.3710
+ EELEC  =      -147.1696  EGB     =       -26.1735  RESTRAINT  =         0.1250
+ ESURF=         1.9498
+ EAMBER (non-restraint)  =       -10.0922
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.125
+===============================================================================
+| RE_POSITION Moving by  -5.957686  1.015424 -5.324910
+
+ NSTEP =    90000   TIME(PS) =    2180.000  TEMP(K) =   270.91  PRESS =     0.0
+ Etot   =        10.2152  EKtot   =        21.2646  EPtot      =       -11.0494
+ BOND   =         6.0057  ANGLE   =        14.0610  DIHED      =        21.2846
+ 1-4 NB =         4.5588  1-4 EEL =       116.1429  VDWAALS    =        -4.2601
+ EELEC  =      -146.7606  EGB     =       -24.3608  RESTRAINT  =         0.3115
+ ESURF=         1.9675
+ EAMBER (non-restraint)  =       -11.3609
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.311
+===============================================================================
+
+ NSTEP =    95000   TIME(PS) =    2190.000  TEMP(K) =   268.24  PRESS =     0.0
+ Etot   =        11.2658  EKtot   =        21.0553  EPtot      =        -9.7895
+ BOND   =         5.4344  ANGLE   =        14.6400  DIHED      =        21.2121
+ 1-4 NB =         4.6215  1-4 EEL =       119.3104  VDWAALS    =        -3.1009
+ EELEC  =      -149.7611  EGB     =       -24.5426  RESTRAINT  =         0.4021
+ ESURF=         1.9946
+ EAMBER (non-restraint)  =       -10.1916
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.402
+===============================================================================
+| RE_POSITION Moving by  -6.130118  1.149811  1.889102
+
+ NSTEP =   100000   TIME(PS) =    2200.000  TEMP(K) =   369.61  PRESS =     0.0
+ Etot   =        17.1045  EKtot   =        29.0121  EPtot      =       -11.9076
+ BOND   =         5.8088  ANGLE   =        11.2367  DIHED      =        20.2140
+ 1-4 NB =         6.6823  1-4 EEL =       124.6789  VDWAALS    =        -3.4464
+ EELEC  =      -154.8591  EGB     =       -24.2185  RESTRAINT  =         0.0552
+ ESURF=         1.9406
+ EAMBER (non-restraint)  =       -11.9628
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.055
+===============================================================================
+
+ NSTEP =   105000   TIME(PS) =    2210.000  TEMP(K) =   339.76  PRESS =     0.0
+ Etot   =        20.8177  EKtot   =        26.6689  EPtot      =        -5.8512
+ BOND   =         8.1013  ANGLE   =        14.9890  DIHED      =        22.2611
+ 1-4 NB =         5.2693  1-4 EEL =       117.5414  VDWAALS    =        -2.5395
+ EELEC  =      -149.2310  EGB     =       -24.2629  RESTRAINT  =         0.0034
+ ESURF=         2.0167
+ EAMBER (non-restraint)  =        -5.8546
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.003
+===============================================================================
+| RE_POSITION Moving by   2.076611 -2.607655  0.388644
+
+ NSTEP =   110000   TIME(PS) =    2220.000  TEMP(K) =   277.70  PRESS =     0.0
+ Etot   =        13.1660  EKtot   =        21.7977  EPtot      =        -8.6317
+ BOND   =         2.6800  ANGLE   =        19.7341  DIHED      =        20.7563
+ 1-4 NB =         3.5410  1-4 EEL =       119.4063  VDWAALS    =        -3.5208
+ EELEC  =      -147.5139  EGB     =       -26.2434  RESTRAINT  =         0.5564
+ ESURF=         1.9723
+ EAMBER (non-restraint)  =        -9.1881
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.556
+===============================================================================
+
+ NSTEP =   115000   TIME(PS) =    2230.000  TEMP(K) =   347.98  PRESS =     0.0
+ Etot   =        16.9716  EKtot   =        27.3147  EPtot      =       -10.3431
+ BOND   =         6.3044  ANGLE   =        10.0015  DIHED      =        21.1677
+ 1-4 NB =         5.7799  1-4 EEL =       121.8459  VDWAALS    =        -3.0920
+ EELEC  =      -153.4686  EGB     =       -21.7499  RESTRAINT  =         0.8361
+ ESURF=         2.0318
+ EAMBER (non-restraint)  =       -11.1793
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.836
+===============================================================================
+| RE_POSITION Moving by  -8.574824  7.508882  2.730357
+
+ NSTEP =   120000   TIME(PS) =    2240.000  TEMP(K) =   230.78  PRESS =     0.0
+ Etot   =         4.3637  EKtot   =        18.1152  EPtot      =       -13.7515
+ BOND   =         2.5217  ANGLE   =        13.2308  DIHED      =        21.3628
+ 1-4 NB =         4.7907  1-4 EEL =       122.4385  VDWAALS    =        -2.9850
+ EELEC  =      -155.2339  EGB     =       -21.8932  RESTRAINT  =         0.0003
+ ESURF=         2.0158
+ EAMBER (non-restraint)  =       -13.7518
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.000
+===============================================================================
+
+ NSTEP =   125000   TIME(PS) =    2250.000  TEMP(K) =   323.45  PRESS =     0.0
+ Etot   =        18.9132  EKtot   =        25.3890  EPtot      =        -6.4758
+ BOND   =         5.7361  ANGLE   =        11.0486  DIHED      =        21.8908
+ 1-4 NB =         6.3944  1-4 EEL =       124.9658  VDWAALS    =        -2.4574
+ EELEC  =      -151.8964  EGB     =       -24.2030  RESTRAINT  =         0.0603
+ ESURF=         1.9851
+ EAMBER (non-restraint)  =        -6.5361
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.060
+===============================================================================
+| RE_POSITION Moving by  -2.277899 -4.393611 -0.655562
+
+ NSTEP =   130000   TIME(PS) =    2260.000  TEMP(K) =   366.54  PRESS =     0.0
+ Etot   =        22.1366  EKtot   =        28.7713  EPtot      =        -6.6347
+ BOND   =         4.9878  ANGLE   =        18.4979  DIHED      =        20.3516
+ 1-4 NB =         6.2161  1-4 EEL =       118.7713  VDWAALS    =        -2.5803
+ EELEC  =      -144.6789  EGB     =       -30.2080  RESTRAINT  =         0.0609
+ ESURF=         1.9468
+ EAMBER (non-restraint)  =        -6.6957
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.061
+===============================================================================
+
+ NSTEP =   135000   TIME(PS) =    2270.000  TEMP(K) =   280.38  PRESS =     0.0
+ Etot   =        12.0154  EKtot   =        22.0083  EPtot      =        -9.9928
+ BOND   =         3.6569  ANGLE   =        17.4143  DIHED      =        21.2370
+ 1-4 NB =         6.1114  1-4 EEL =       116.6661  VDWAALS    =        -4.8447
+ EELEC  =      -146.2870  EGB     =       -25.9145  RESTRAINT  =         0.0522
+ ESURF=         1.9153
+ EAMBER (non-restraint)  =       -10.0451
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.052
+===============================================================================
+| RE_POSITION Moving by   3.164291 -0.200743  5.532756
+
+ NSTEP =   140000   TIME(PS) =    2280.000  TEMP(K) =   305.07  PRESS =     0.0
+ Etot   =        16.9204  EKtot   =        23.9461  EPtot      =        -7.0257
+ BOND   =         7.1691  ANGLE   =        13.4656  DIHED      =        23.9962
+ 1-4 NB =         5.3557  1-4 EEL =       113.4239  VDWAALS    =        -4.1564
+ EELEC  =      -146.0605  EGB     =       -22.1800  RESTRAINT  =         0.0480
+ ESURF=         1.9128
+ EAMBER (non-restraint)  =        -7.0737
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.048
+===============================================================================
+
+ NSTEP =   145000   TIME(PS) =    2290.000  TEMP(K) =   277.54  PRESS =     0.0
+ Etot   =        10.9737  EKtot   =        21.7852  EPtot      =       -10.8115
+ BOND   =         5.2857  ANGLE   =        11.6835  DIHED      =        22.3596
+ 1-4 NB =         5.9874  1-4 EEL =       122.4325  VDWAALS    =        -3.3917
+ EELEC  =      -152.4391  EGB     =       -24.7072  RESTRAINT  =         0.0120
+ ESURF=         1.9657
+ EAMBER (non-restraint)  =       -10.8236
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.012
+===============================================================================
+| RE_POSITION Moving by  -0.558274  0.394973 -0.393271
+
+ NSTEP =   150000   TIME(PS) =    2300.000  TEMP(K) =   281.92  PRESS =     0.0
+ Etot   =        14.5481  EKtot   =        22.1293  EPtot      =        -7.5811
+ BOND   =         4.7106  ANGLE   =        15.9504  DIHED      =        19.8609
+ 1-4 NB =         6.4608  1-4 EEL =       117.7483  VDWAALS    =        -2.1945
+ EELEC  =      -148.4860  EGB     =       -24.3005  RESTRAINT  =         0.6630
+ ESURF=         2.0058
+ EAMBER (non-restraint)  =        -8.2441
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.663
+===============================================================================
+
+ NSTEP =   155000   TIME(PS) =    2310.000  TEMP(K) =   364.15  PRESS =     0.0
+ Etot   =        18.6279  EKtot   =        28.5839  EPtot      =        -9.9560
+ BOND   =         7.2413  ANGLE   =        15.6926  DIHED      =        21.1593
+ 1-4 NB =         4.4421  1-4 EEL =       118.6183  VDWAALS    =        -4.1770
+ EELEC  =      -149.9579  EGB     =       -24.9815  RESTRAINT  =         0.0505
+ ESURF=         1.9563
+ EAMBER (non-restraint)  =       -10.0065
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.051
+===============================================================================
+| RE_POSITION Moving by  -2.367617  2.138401  2.775296
+
+ NSTEP =   160000   TIME(PS) =    2320.000  TEMP(K) =   359.44  PRESS =     0.0
+ Etot   =        16.4640  EKtot   =        28.2139  EPtot      =       -11.7499
+ BOND   =         4.1571  ANGLE   =        11.9457  DIHED      =        22.6927
+ 1-4 NB =         4.6037  1-4 EEL =       121.0369  VDWAALS    =        -3.2249
+ EELEC  =      -149.5748  EGB     =       -25.3780  RESTRAINT  =         0.0019
+ ESURF=         1.9898
+ EAMBER (non-restraint)  =       -11.7518
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.002
+===============================================================================
+
+ NSTEP =   165000   TIME(PS) =    2330.000  TEMP(K) =   315.11  PRESS =     0.0
+ Etot   =        14.7796  EKtot   =        24.7339  EPtot      =        -9.9544
+ BOND   =         3.0644  ANGLE   =        17.0339  DIHED      =        22.2880
+ 1-4 NB =         4.4560  1-4 EEL =       118.6958  VDWAALS    =        -3.8711
+ EELEC  =      -149.1992  EGB     =       -24.4378  RESTRAINT  =         0.0614
+ ESURF=         1.9543
+ EAMBER (non-restraint)  =       -10.0158
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.061
+===============================================================================
+| RE_POSITION Moving by  -4.275484 -1.579734 -1.469483
+
+ NSTEP =   170000   TIME(PS) =    2340.000  TEMP(K) =   258.90  PRESS =     0.0
+ Etot   =         3.1575  EKtot   =        20.3224  EPtot      =       -17.1649
+ BOND   =         2.2245  ANGLE   =        12.0878  DIHED      =        20.1614
+ 1-4 NB =         4.5187  1-4 EEL =       119.1915  VDWAALS    =        -3.5859
+ EELEC  =      -150.6599  EGB     =       -23.4252  RESTRAINT  =         0.3284
+ ESURF=         1.9937
+ EAMBER (non-restraint)  =       -17.4934
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.328
+===============================================================================
+
+ NSTEP =   175000   TIME(PS) =    2350.000  TEMP(K) =   303.60  PRESS =     0.0
+ Etot   =        11.6004  EKtot   =        23.8307  EPtot      =       -12.2303
+ BOND   =         7.4546  ANGLE   =         9.6405  DIHED      =        20.5010
+ 1-4 NB =         3.8130  1-4 EEL =       121.4641  VDWAALS    =        -3.1309
+ EELEC  =      -150.1850  EGB     =       -25.1784  RESTRAINT  =         1.3694
+ ESURF=         2.0214
+ EAMBER (non-restraint)  =       -13.5997
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     1.369
+===============================================================================
+| RE_POSITION Moving by  -1.074629  7.945274 -0.395875
+
+ NSTEP =   180000   TIME(PS) =    2360.000  TEMP(K) =   292.36  PRESS =     0.0
+ Etot   =         8.5235  EKtot   =        22.9486  EPtot      =       -14.4250
+ BOND   =         3.4666  ANGLE   =        12.8015  DIHED      =        20.4353
+ 1-4 NB =         5.3573  1-4 EEL =       117.5854  VDWAALS    =        -3.4712
+ EELEC  =      -146.1211  EGB     =       -26.4643  RESTRAINT  =         0.0089
+ ESURF=         1.9766
+ EAMBER (non-restraint)  =       -14.4340
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.009
+===============================================================================
+
+ NSTEP =   185000   TIME(PS) =    2370.000  TEMP(K) =   277.60  PRESS =     0.0
+ Etot   =         6.8868  EKtot   =        21.7901  EPtot      =       -14.9033
+ BOND   =         3.3488  ANGLE   =        12.0076  DIHED      =        20.8213
+ 1-4 NB =         5.3091  1-4 EEL =       117.6073  VDWAALS    =        -3.4208
+ EELEC  =      -147.9815  EGB     =       -24.6087  RESTRAINT  =         0.0169
+ ESURF=         1.9967
+ EAMBER (non-restraint)  =       -14.9202
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.017
+===============================================================================
+| RE_POSITION Moving by   3.272640  4.500035  2.367337
+
+ NSTEP =   190000   TIME(PS) =    2380.000  TEMP(K) =   278.24  PRESS =     0.0
+ Etot   =         6.1154  EKtot   =        21.8403  EPtot      =       -15.7248
+ BOND   =         4.5175  ANGLE   =        10.5589  DIHED      =        21.2635
+ 1-4 NB =         3.8167  1-4 EEL =       117.4982  VDWAALS    =        -3.6320
+ EELEC  =      -148.0773  EGB     =       -23.6735  RESTRAINT  =         0.0179
+ ESURF=         1.9854
+ EAMBER (non-restraint)  =       -15.7427
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.018
+===============================================================================
+
+ NSTEP =   195000   TIME(PS) =    2390.000  TEMP(K) =   231.32  PRESS =     0.0
+ Etot   =        10.0027  EKtot   =        18.1572  EPtot      =        -8.1545
+ BOND   =         5.5376  ANGLE   =        12.4654  DIHED      =        21.8604
+ 1-4 NB =         5.2100  1-4 EEL =       119.3557  VDWAALS    =        -2.9013
+ EELEC  =      -150.5918  EGB     =       -22.6847  RESTRAINT  =         1.5895
+ ESURF=         2.0048
+ EAMBER (non-restraint)  =        -9.7440
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     1.590
+===============================================================================
+| RE_POSITION Moving by  -0.189340  0.007024 -7.509759
+
+ NSTEP =   200000   TIME(PS) =    2400.000  TEMP(K) =   312.17  PRESS =     0.0
+ Etot   =        12.1675  EKtot   =        24.5032  EPtot      =       -12.3357
+ BOND   =         3.3332  ANGLE   =        13.7025  DIHED      =        21.6708
+ 1-4 NB =         5.3373  1-4 EEL =       116.9792  VDWAALS    =        -3.5056
+ EELEC  =      -148.2353  EGB     =       -23.6640  RESTRAINT  =         0.0489
+ ESURF=         1.9974
+ EAMBER (non-restraint)  =       -12.3846
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.049
+===============================================================================
+
+ NSTEP =   205000   TIME(PS) =    2410.000  TEMP(K) =   233.59  PRESS =     0.0
+ Etot   =         2.5011  EKtot   =        18.3354  EPtot      =       -15.8342
+ BOND   =         4.3327  ANGLE   =        11.4372  DIHED      =        19.0567
+ 1-4 NB =         5.3240  1-4 EEL =       118.4911  VDWAALS    =        -3.5483
+ EELEC  =      -150.2767  EGB     =       -22.9756  RESTRAINT  =         0.3398
+ ESURF=         1.9849
+ EAMBER (non-restraint)  =       -16.1740
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.340
+===============================================================================
+| RE_POSITION Moving by  -4.128170  2.833521 -1.577640
+
+ NSTEP =   210000   TIME(PS) =    2420.000  TEMP(K) =   299.93  PRESS =     0.0
+ Etot   =        12.6157  EKtot   =        23.5426  EPtot      =       -10.9269
+ BOND   =         8.8653  ANGLE   =        14.4609  DIHED      =        19.8220
+ 1-4 NB =         4.8940  1-4 EEL =       117.9386  VDWAALS    =        -3.8126
+ EELEC  =      -149.7676  EGB     =       -25.4369  RESTRAINT  =         0.1589
+ ESURF=         1.9504
+ EAMBER (non-restraint)  =       -11.0859
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.159
+===============================================================================
+
+ NSTEP =   215000   TIME(PS) =    2430.000  TEMP(K) =   279.89  PRESS =     0.0
+ Etot   =         7.0674  EKtot   =        21.9699  EPtot      =       -14.9024
+ BOND   =         2.4234  ANGLE   =        14.2501  DIHED      =        19.3648
+ 1-4 NB =         5.1018  1-4 EEL =       123.2260  VDWAALS    =        -3.6463
+ EELEC  =      -155.6395  EGB     =       -22.3355  RESTRAINT  =         0.3831
+ ESURF=         1.9696
+ EAMBER (non-restraint)  =       -15.2855
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.383
+===============================================================================
+| RE_POSITION Moving by  -0.949833 -0.455816 -7.007211
+
+ NSTEP =   220000   TIME(PS) =    2440.000  TEMP(K) =   284.30  PRESS =     0.0
+ Etot   =         6.5530  EKtot   =        22.3159  EPtot      =       -15.7629
+ BOND   =         5.3814  ANGLE   =        10.1000  DIHED      =        18.7976
+ 1-4 NB =         5.9309  1-4 EEL =       118.2480  VDWAALS    =        -3.0101
+ EELEC  =      -150.4659  EGB     =       -23.0150  RESTRAINT  =         0.3093
+ ESURF=         1.9609
+ EAMBER (non-restraint)  =       -16.0722
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.309
+===============================================================================
+
+ NSTEP =   225000   TIME(PS) =    2450.000  TEMP(K) =   339.69  PRESS =     0.0
+ Etot   =        13.4316  EKtot   =        26.6637  EPtot      =       -13.2320
+ BOND   =         5.0107  ANGLE   =        13.7132  DIHED      =        19.9193
+ 1-4 NB =         5.9753  1-4 EEL =       114.9660  VDWAALS    =        -4.1661
+ EELEC  =      -143.5747  EGB     =       -27.1771  RESTRAINT  =         0.1667
+ ESURF=         1.9347
+ EAMBER (non-restraint)  =       -13.3987
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.167
+===============================================================================
+| RE_POSITION Moving by  -2.904380-12.423607  0.063532
+
+ NSTEP =   230000   TIME(PS) =    2460.000  TEMP(K) =   318.57  PRESS =     0.0
+ Etot   =        11.3819  EKtot   =        25.0061  EPtot      =       -13.6242
+ BOND   =         5.5596  ANGLE   =        10.7187  DIHED      =        18.8027
+ 1-4 NB =         5.7493  1-4 EEL =       124.4252  VDWAALS    =        -2.7651
+ EELEC  =      -152.1494  EGB     =       -26.5415  RESTRAINT  =         0.6484
+ ESURF=         1.9279
+ EAMBER (non-restraint)  =       -14.2726
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.648
+===============================================================================
+
+ NSTEP =   235000   TIME(PS) =    2470.000  TEMP(K) =   314.65  PRESS =     0.0
+ Etot   =        17.2523  EKtot   =        24.6983  EPtot      =        -7.4460
+ BOND   =         5.4525  ANGLE   =        18.2848  DIHED      =        21.3385
+ 1-4 NB =         4.5971  1-4 EEL =       115.3516  VDWAALS    =        -3.6963
+ EELEC  =      -145.7948  EGB     =       -24.9276  RESTRAINT  =         0.0053
+ ESURF=         1.9428
+ EAMBER (non-restraint)  =        -7.4514
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.005
+===============================================================================
+| RE_POSITION Moving by  -9.223762  2.323460 -3.651668
+
+ NSTEP =   240000   TIME(PS) =    2480.000  TEMP(K) =   381.03  PRESS =     0.0
+ Etot   =        19.7454  EKtot   =        29.9083  EPtot      =       -10.1630
+ BOND   =         5.4475  ANGLE   =        11.6062  DIHED      =        21.0278
+ 1-4 NB =         5.8152  1-4 EEL =       123.0193  VDWAALS    =        -2.8420
+ EELEC  =      -153.9469  EGB     =       -22.3915  RESTRAINT  =         0.1268
+ ESURF=         1.9747
+ EAMBER (non-restraint)  =       -10.2898
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.127
+===============================================================================
+
+ NSTEP =   245000   TIME(PS) =    2490.000  TEMP(K) =   378.80  PRESS =     0.0
+ Etot   =        21.7186  EKtot   =        29.7333  EPtot      =        -8.0147
+ BOND   =         5.1699  ANGLE   =        21.7335  DIHED      =        19.6446
+ 1-4 NB =         5.5094  1-4 EEL =       112.1162  VDWAALS    =        -3.6177
+ EELEC  =      -149.2584  EGB     =       -21.2590  RESTRAINT  =         0.0599
+ ESURF=         1.8870
+ EAMBER (non-restraint)  =        -8.0745
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.060
+===============================================================================
+| RE_POSITION Moving by   0.101808 -2.257938 -0.771462
+
+ NSTEP =   250000   TIME(PS) =    2500.000  TEMP(K) =   331.64  PRESS =     0.0
+ Etot   =        20.4669  EKtot   =        26.0319  EPtot      =        -5.5649
+ BOND   =         4.5964  ANGLE   =        19.5187  DIHED      =        22.9382
+ 1-4 NB =         4.1038  1-4 EEL =       115.0885  VDWAALS    =        -5.3610
+ EELEC  =      -138.7569  EGB     =       -29.5662  RESTRAINT  =         0.0024
+ ESURF=         1.8713
+ EAMBER (non-restraint)  =        -5.5673
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.002
+===============================================================================
+
+ NSTEP =   255000   TIME(PS) =    2510.000  TEMP(K) =   318.12  PRESS =     0.0
+ Etot   =         7.7853  EKtot   =        24.9707  EPtot      =       -17.1855
+ BOND   =         8.1715  ANGLE   =        12.0352  DIHED      =        18.2253
+ 1-4 NB =         3.9717  1-4 EEL =       111.5060  VDWAALS    =        -4.0927
+ EELEC  =      -146.7770  EGB     =       -22.4098  RESTRAINT  =         0.2608
+ ESURF=         1.9234
+ EAMBER (non-restraint)  =       -17.4463
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.261
+===============================================================================
+| RE_POSITION Moving by   6.387071 -5.364387 -2.970632
+
+ NSTEP =   260000   TIME(PS) =    2520.000  TEMP(K) =   355.69  PRESS =     0.0
+ Etot   =        11.7905  EKtot   =        27.9199  EPtot      =       -16.1294
+ BOND   =         5.4331  ANGLE   =        11.3132  DIHED      =        20.7728
+ 1-4 NB =         4.8205  1-4 EEL =       115.8296  VDWAALS    =        -4.0566
+ EELEC  =      -149.5595  EGB     =       -22.7304  RESTRAINT  =         0.1201
+ ESURF=         1.9280
+ EAMBER (non-restraint)  =       -16.2494
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.120
+===============================================================================
+
+ NSTEP =   265000   TIME(PS) =    2530.000  TEMP(K) =   268.54  PRESS =     0.0
+ Etot   =        15.2515  EKtot   =        21.0791  EPtot      =        -5.8277
+ BOND   =         7.4619  ANGLE   =        16.5243  DIHED      =        23.4026
+ 1-4 NB =         4.3292  1-4 EEL =       115.4260  VDWAALS    =        -3.7983
+ EELEC  =      -145.5668  EGB     =       -25.6803  RESTRAINT  =         0.1742
+ ESURF=         1.8997
+ EAMBER (non-restraint)  =        -6.0018
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.174
+===============================================================================
+| RE_POSITION Moving by   3.097415 -2.459958-12.580239
+
+ NSTEP =   270000   TIME(PS) =    2540.000  TEMP(K) =   333.15  PRESS =     0.0
+ Etot   =        14.5450  EKtot   =        26.1505  EPtot      =       -11.6055
+ BOND   =         3.2494  ANGLE   =        17.2926  DIHED      =        19.4783
+ 1-4 NB =         5.6280  1-4 EEL =       112.3528  VDWAALS    =        -3.2970
+ EELEC  =      -146.2427  EGB     =       -22.0638  RESTRAINT  =         0.0822
+ ESURF=         1.9147
+ EAMBER (non-restraint)  =       -11.6876
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.082
+===============================================================================
+
+ NSTEP =   275000   TIME(PS) =    2550.000  TEMP(K) =   228.32  PRESS =     0.0
+ Etot   =         7.3901  EKtot   =        17.9221  EPtot      =       -10.5320
+ BOND   =         3.4581  ANGLE   =        15.5593  DIHED      =        22.5291
+ 1-4 NB =         5.6199  1-4 EEL =       118.0659  VDWAALS    =        -4.2095
+ EELEC  =      -151.2051  EGB     =       -22.3888  RESTRAINT  =         0.1887
+ ESURF=         1.8503
+ EAMBER (non-restraint)  =       -10.7207
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.189
+===============================================================================
+| RE_POSITION Moving by   0.658267 -2.073652  3.751370
+
+ NSTEP =   280000   TIME(PS) =    2560.000  TEMP(K) =   288.43  PRESS =     0.0
+ Etot   =        12.7407  EKtot   =        22.6397  EPtot      =        -9.8990
+ BOND   =         1.4318  ANGLE   =        13.1567  DIHED      =        23.5882
+ 1-4 NB =         7.2636  1-4 EEL =       119.7726  VDWAALS    =        -4.2198
+ EELEC  =      -149.6990  EGB     =       -23.4861  RESTRAINT  =         0.4188
+ ESURF=         1.8741
+ EAMBER (non-restraint)  =       -10.3178
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.419
+===============================================================================
+
+ NSTEP =   285000   TIME(PS) =    2570.000  TEMP(K) =   282.30  PRESS =     0.0
+ Etot   =        12.6665  EKtot   =        22.1586  EPtot      =        -9.4921
+ BOND   =         8.1680  ANGLE   =        15.0930  DIHED      =        18.6507
+ 1-4 NB =         6.7111  1-4 EEL =       114.7207  VDWAALS    =        -4.3692
+ EELEC  =      -147.8272  EGB     =       -22.7839  RESTRAINT  =         0.2780
+ ESURF=         1.8666
+ EAMBER (non-restraint)  =        -9.7701
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.278
+===============================================================================
+| RE_POSITION Moving by  -2.281891 -0.433284  0.087807
+
+ NSTEP =   290000   TIME(PS) =    2580.000  TEMP(K) =   275.25  PRESS =     0.0
+ Etot   =        18.7831  EKtot   =        21.6057  EPtot      =        -2.8226
+ BOND   =         6.1616  ANGLE   =        19.5697  DIHED      =        23.5592
+ 1-4 NB =         3.9295  1-4 EEL =       116.8515  VDWAALS    =        -4.6534
+ EELEC  =      -143.1477  EGB     =       -27.5231  RESTRAINT  =         0.5078
+ ESURF=         1.9223
+ EAMBER (non-restraint)  =        -3.3304
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.508
+===============================================================================
+
+ NSTEP =   295000   TIME(PS) =    2590.000  TEMP(K) =   277.22  PRESS =     0.0
+ Etot   =        15.6607  EKtot   =        21.7602  EPtot      =        -6.0996
+ BOND   =         7.5660  ANGLE   =        17.9930  DIHED      =        20.9691
+ 1-4 NB =         4.3942  1-4 EEL =       115.6263  VDWAALS    =        -3.6002
+ EELEC  =      -143.9434  EGB     =       -27.2202  RESTRAINT  =         0.1324
+ ESURF=         1.9833
+ EAMBER (non-restraint)  =        -6.2320
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.132
+===============================================================================
+| RE_POSITION Moving by  -4.932031  7.285682 -2.485394
+
+ NSTEP =   300000   TIME(PS) =    2600.000  TEMP(K) =   352.21  PRESS =     0.0
+ Etot   =        19.5221  EKtot   =        27.6466  EPtot      =        -8.1244
+ BOND   =         6.1460  ANGLE   =        18.1575  DIHED      =        20.3243
+ 1-4 NB =         5.1183  1-4 EEL =       117.3419  VDWAALS    =        -4.3439
+ EELEC  =      -150.0231  EGB     =       -22.9071  RESTRAINT  =         0.1057
+ ESURF=         1.9559
+ EAMBER (non-restraint)  =        -8.2302
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.106
+===============================================================================
+
+ NSTEP =   305000   TIME(PS) =    2610.000  TEMP(K) =   215.13  PRESS =     0.0
+ Etot   =         4.7521  EKtot   =        16.8861  EPtot      =       -12.1341
+ BOND   =         5.3984  ANGLE   =        12.6810  DIHED      =        19.5347
+ 1-4 NB =         5.5264  1-4 EEL =       118.6375  VDWAALS    =        -3.9426
+ EELEC  =      -143.6656  EGB     =       -28.2407  RESTRAINT  =         0.0006
+ ESURF=         1.9363
+ EAMBER (non-restraint)  =       -12.1346
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.001
+===============================================================================
+| RE_POSITION Moving by -10.398913  0.463806 -7.579126
+
+ NSTEP =   310000   TIME(PS) =    2620.000  TEMP(K) =   326.07  PRESS =     0.0
+ Etot   =        14.5212  EKtot   =        25.5943  EPtot      =       -11.0731
+ BOND   =         3.0224  ANGLE   =        16.3975  DIHED      =        22.0644
+ 1-4 NB =         4.6736  1-4 EEL =       117.1141  VDWAALS    =        -2.8176
+ EELEC  =      -150.2387  EGB     =       -23.2991  RESTRAINT  =         0.0912
+ ESURF=         1.9190
+ EAMBER (non-restraint)  =       -11.1643
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.091
+===============================================================================
+
+ NSTEP =   315000   TIME(PS) =    2630.000  TEMP(K) =   287.81  PRESS =     0.0
+ Etot   =         6.5072  EKtot   =        22.5915  EPtot      =       -16.0843
+ BOND   =         4.6185  ANGLE   =        12.2623  DIHED      =        19.1969
+ 1-4 NB =         5.4234  1-4 EEL =       117.8745  VDWAALS    =        -4.0881
+ EELEC  =      -145.1696  EGB     =       -28.1441  RESTRAINT  =         0.0050
+ ESURF=         1.9370
+ EAMBER (non-restraint)  =       -16.0893
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.005
+===============================================================================
+| RE_POSITION Moving by  -2.079691  0.784705 -0.995684
+
+ NSTEP =   320000   TIME(PS) =    2640.000  TEMP(K) =   268.97  PRESS =     0.0
+ Etot   =         2.3471  EKtot   =        21.1126  EPtot      =       -18.7656
+ BOND   =         4.6854  ANGLE   =         7.9927  DIHED      =        20.6296
+ 1-4 NB =         5.3691  1-4 EEL =       116.6718  VDWAALS    =        -4.4270
+ EELEC  =      -144.3102  EGB     =       -27.3273  RESTRAINT  =         0.0080
+ ESURF=         1.9423
+ EAMBER (non-restraint)  =       -18.7736
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.008
+===============================================================================
+
+ NSTEP =   325000   TIME(PS) =    2650.000  TEMP(K) =   278.79  PRESS =     0.0
+ Etot   =        16.0892  EKtot   =        21.8834  EPtot      =        -5.7943
+ BOND   =         4.8157  ANGLE   =        16.1557  DIHED      =        24.6720
+ 1-4 NB =         4.8416  1-4 EEL =       117.7577  VDWAALS    =        -2.6646
+ EELEC  =      -150.1897  EGB     =       -23.5445  RESTRAINT  =         0.3201
+ ESURF=         2.0418
+ EAMBER (non-restraint)  =        -6.1143
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.320
+===============================================================================
+| RE_POSITION Moving by  -8.845751  3.858127  3.717234
+
+ NSTEP =   330000   TIME(PS) =    2660.000  TEMP(K) =   351.63  PRESS =     0.0
+ Etot   =        11.1575  EKtot   =        27.6011  EPtot      =       -16.4436
+ BOND   =         2.8027  ANGLE   =        12.9955  DIHED      =        18.7320
+ 1-4 NB =         5.2547  1-4 EEL =       117.3817  VDWAALS    =        -4.3816
+ EELEC  =      -143.3357  EGB     =       -28.0378  RESTRAINT  =         0.2204
+ ESURF=         1.9243
+ EAMBER (non-restraint)  =       -16.6641
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.220
+===============================================================================
+
+ NSTEP =   335000   TIME(PS) =    2670.000  TEMP(K) =   238.61  PRESS =     0.0
+ Etot   =         6.8033  EKtot   =        18.7296  EPtot      =       -11.9264
+ BOND   =         4.4822  ANGLE   =        13.3246  DIHED      =        20.5185
+ 1-4 NB =         5.7007  1-4 EEL =       116.4755  VDWAALS    =        -3.2446
+ EELEC  =      -148.7850  EGB     =       -22.6878  RESTRAINT  =         0.3328
+ ESURF=         1.9569
+ EAMBER (non-restraint)  =       -12.2591
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.333
+===============================================================================
+| RE_POSITION Moving by   3.349206 -8.933181  1.799187
+
+ NSTEP =   340000   TIME(PS) =    2680.000  TEMP(K) =   369.35  PRESS =     0.0
+ Etot   =        19.1468  EKtot   =        28.9915  EPtot      =        -9.8447
+ BOND   =         6.2047  ANGLE   =        12.9643  DIHED      =        22.3263
+ 1-4 NB =         6.4987  1-4 EEL =       116.9982  VDWAALS    =        -3.4707
+ EELEC  =      -150.8925  EGB     =       -22.3740  RESTRAINT  =         0.0222
+ ESURF=         1.8780
+ EAMBER (non-restraint)  =        -9.8669
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.022
+===============================================================================
+
+ NSTEP =   345000   TIME(PS) =    2690.000  TEMP(K) =   287.12  PRESS =     0.0
+ Etot   =        13.7800  EKtot   =        22.5371  EPtot      =        -8.7571
+ BOND   =         5.2444  ANGLE   =        11.7085  DIHED      =        21.2255
+ 1-4 NB =         6.2907  1-4 EEL =       120.8897  VDWAALS    =        -2.1099
+ EELEC  =      -151.5795  EGB     =       -23.2154  RESTRAINT  =         0.8176
+ ESURF=         1.9713
+ EAMBER (non-restraint)  =        -9.5747
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.818
+===============================================================================
+| RE_POSITION Moving by   1.580611 -7.821611  6.486332
+
+ NSTEP =   350000   TIME(PS) =    2700.000  TEMP(K) =   307.29  PRESS =     0.0
+ Etot   =        14.7602  EKtot   =        24.1204  EPtot      =        -9.3602
+ BOND   =         5.3001  ANGLE   =        14.9184  DIHED      =        20.8264
+ 1-4 NB =         6.1784  1-4 EEL =       112.4473  VDWAALS    =        -2.8779
+ EELEC  =      -144.8314  EGB     =       -23.4065  RESTRAINT  =         0.0808
+ ESURF=         2.0041
+ EAMBER (non-restraint)  =        -9.4410
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.081
+===============================================================================
+
+ NSTEP =   355000   TIME(PS) =    2710.000  TEMP(K) =   281.76  PRESS =     0.0
+ Etot   =        11.0536  EKtot   =        22.1167  EPtot      =       -11.0631
+ BOND   =         5.8667  ANGLE   =        11.8586  DIHED      =        22.0741
+ 1-4 NB =         6.0312  1-4 EEL =       119.1250  VDWAALS    =        -3.0964
+ EELEC  =      -150.4705  EGB     =       -24.4867  RESTRAINT  =         0.0533
+ ESURF=         1.9814
+ EAMBER (non-restraint)  =       -11.1164
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.053
+===============================================================================
+| RE_POSITION Moving by   2.869812  4.870380  6.879757
+
+ NSTEP =   360000   TIME(PS) =    2720.000  TEMP(K) =   280.83  PRESS =     0.0
+ Etot   =        14.2169  EKtot   =        22.0438  EPtot      =        -7.8269
+ BOND   =         2.9007  ANGLE   =        15.6223  DIHED      =        22.6217
+ 1-4 NB =         4.9756  1-4 EEL =       123.5089  VDWAALS    =        -3.3403
+ EELEC  =      -153.2692  EGB     =       -22.8773  RESTRAINT  =         0.0415
+ ESURF=         1.9892
+ EAMBER (non-restraint)  =        -7.8684
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.041
+===============================================================================
+
+ NSTEP =   365000   TIME(PS) =    2730.000  TEMP(K) =   285.18  PRESS =     0.0
+ Etot   =        10.4918  EKtot   =        22.3851  EPtot      =       -11.8933
+ BOND   =         6.9632  ANGLE   =        12.4528  DIHED      =        20.9830
+ 1-4 NB =         4.8849  1-4 EEL =       120.4644  VDWAALS    =        -3.7390
+ EELEC  =      -149.7836  EGB     =       -26.1194  RESTRAINT  =         0.0320
+ ESURF=         1.9684
+ EAMBER (non-restraint)  =       -11.9253
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.032
+===============================================================================
+| RE_POSITION Moving by   6.084259 -4.718886  3.715131
+
+ NSTEP =   370000   TIME(PS) =    2740.000  TEMP(K) =   312.61  PRESS =     0.0
+ Etot   =        13.3936  EKtot   =        24.5380  EPtot      =       -11.1444
+ BOND   =         3.6261  ANGLE   =        13.5096  DIHED      =        21.2969
+ 1-4 NB =         5.5405  1-4 EEL =       115.7000  VDWAALS    =        -3.3121
+ EELEC  =      -146.8066  EGB     =       -23.0731  RESTRAINT  =         0.4105
+ ESURF=         1.9638
+ EAMBER (non-restraint)  =       -11.5549
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.411
+===============================================================================
+
+ NSTEP =   375000   TIME(PS) =    2750.000  TEMP(K) =   264.78  PRESS =     0.0
+ Etot   =        14.9006  EKtot   =        20.7835  EPtot      =        -5.8830
+ BOND   =         3.5612  ANGLE   =        17.8056  DIHED      =        21.7925
+ 1-4 NB =         5.3971  1-4 EEL =       115.8232  VDWAALS    =        -2.5751
+ EELEC  =      -142.2015  EGB     =       -27.4890  RESTRAINT  =         0.0000
+ ESURF=         2.0030
+ EAMBER (non-restraint)  =        -5.8830
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.000
+===============================================================================
+| RE_POSITION Moving by   3.571783  6.901701 11.716831
+
+ NSTEP =   380000   TIME(PS) =    2760.000  TEMP(K) =   289.98  PRESS =     0.0
+ Etot   =        12.3000  EKtot   =        22.7616  EPtot      =       -10.4617
+ BOND   =         6.8188  ANGLE   =        15.1122  DIHED      =        19.2221
+ 1-4 NB =         5.0083  1-4 EEL =       117.0522  VDWAALS    =        -4.1524
+ EELEC  =      -142.1376  EGB     =       -29.8248  RESTRAINT  =         0.5311
+ ESURF=         1.9084
+ EAMBER (non-restraint)  =       -10.9928
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.531
+===============================================================================
+
+ NSTEP =   385000   TIME(PS) =    2770.000  TEMP(K) =   270.75  PRESS =     0.0
+ Etot   =         7.0811  EKtot   =        21.2525  EPtot      =       -14.1714
+ BOND   =         5.2098  ANGLE   =        11.3237  DIHED      =        18.0829
+ 1-4 NB =         5.2746  1-4 EEL =       116.1345  VDWAALS    =        -2.5593
+ EELEC  =      -147.6460  EGB     =       -22.9204  RESTRAINT  =         0.9842
+ ESURF=         1.9446
+ EAMBER (non-restraint)  =       -15.1556
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.984
+===============================================================================
+| RE_POSITION Moving by  10.253870 -1.057583-10.811121
+
+ NSTEP =   390000   TIME(PS) =    2780.000  TEMP(K) =   392.57  PRESS =     0.0
+ Etot   =        20.6833  EKtot   =        30.8147  EPtot      =       -10.1314
+ BOND   =         2.5601  ANGLE   =        18.3079  DIHED      =        23.4465
+ 1-4 NB =         4.8684  1-4 EEL =       111.5476  VDWAALS    =        -2.7715
+ EELEC  =      -150.1255  EGB     =       -20.1078  RESTRAINT  =         0.2452
+ ESURF=         1.8978
+ EAMBER (non-restraint)  =       -10.3766
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.245
+===============================================================================
+
+ NSTEP =   395000   TIME(PS) =    2790.000  TEMP(K) =   317.07  PRESS =     0.0
+ Etot   =        16.4247  EKtot   =        24.8878  EPtot      =        -8.4631
+ BOND   =         7.6010  ANGLE   =        19.1499  DIHED      =        18.0666
+ 1-4 NB =         5.7666  1-4 EEL =       110.3915  VDWAALS    =        -3.6151
+ EELEC  =      -146.3696  EGB     =       -22.1756  RESTRAINT  =         0.8058
+ ESURF=         1.9157
+ EAMBER (non-restraint)  =        -9.2689
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.806
+===============================================================================
+| RE_POSITION Moving by -17.659329 -3.952213  5.254884
+
+ NSTEP =   400000   TIME(PS) =    2800.000  TEMP(K) =   367.99  PRESS =     0.0
+ Etot   =        22.6723  EKtot   =        28.8854  EPtot      =        -6.2131
+ BOND   =         7.3872  ANGLE   =        18.6204  DIHED      =        19.9668
+ 1-4 NB =         3.8035  1-4 EEL =       117.7640  VDWAALS    =        -5.0430
+ EELEC  =      -145.9599  EGB     =       -25.2211  RESTRAINT  =         0.5515
+ ESURF=         1.9173
+ EAMBER (non-restraint)  =        -6.7647
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.552
+===============================================================================
+
+ NSTEP =   405000   TIME(PS) =    2810.000  TEMP(K) =   276.67  PRESS =     0.0
+ Etot   =         6.8679  EKtot   =        21.7168  EPtot      =       -14.8489
+ BOND   =         5.1290  ANGLE   =        11.9759  DIHED      =        19.4742
+ 1-4 NB =         5.5726  1-4 EEL =       117.1919  VDWAALS    =        -4.6837
+ EELEC  =      -147.9942  EGB     =       -23.7463  RESTRAINT  =         0.3331
+ ESURF=         1.8987
+ EAMBER (non-restraint)  =       -15.1820
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.333
+===============================================================================
+| RE_POSITION Moving by   3.956339 -4.131318  6.805823
+
+ NSTEP =   410000   TIME(PS) =    2820.000  TEMP(K) =   373.31  PRESS =     0.0
+ Etot   =        13.2585  EKtot   =        29.3026  EPtot      =       -16.0441
+ BOND   =         5.3308  ANGLE   =        10.5862  DIHED      =        21.6211
+ 1-4 NB =         5.0652  1-4 EEL =       115.1373  VDWAALS    =        -3.5785
+ EELEC  =      -151.0971  EGB     =       -21.0918  RESTRAINT  =         0.0632
+ ESURF=         1.9195
+ EAMBER (non-restraint)  =       -16.1073
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.063
+===============================================================================
+
+ NSTEP =   415000   TIME(PS) =    2830.000  TEMP(K) =   361.55  PRESS =     0.0
+ Etot   =        16.3111  EKtot   =        28.3795  EPtot      =       -12.0684
+ BOND   =         5.1449  ANGLE   =        16.0260  DIHED      =        21.0334
+ 1-4 NB =         4.3679  1-4 EEL =       111.1087  VDWAALS    =        -4.2029
+ EELEC  =      -144.0890  EGB     =       -24.6966  RESTRAINT  =         1.3446
+ ESURF=         1.8947
+ EAMBER (non-restraint)  =       -13.4131
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     1.345
+===============================================================================
+| RE_POSITION Moving by  -1.033665  1.795766 -0.363050
+
+ NSTEP =   420000   TIME(PS) =    2840.000  TEMP(K) =   333.18  PRESS =     0.0
+ Etot   =        20.4450  EKtot   =        26.1530  EPtot      =        -5.7079
+ BOND   =         9.4171  ANGLE   =        13.5429  DIHED      =        22.5850
+ 1-4 NB =         5.3399  1-4 EEL =       115.1387  VDWAALS    =        -3.5275
+ EELEC  =      -146.4756  EGB     =       -23.8450  RESTRAINT  =         0.0940
+ ESURF=         2.0223
+ EAMBER (non-restraint)  =        -5.8020
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.094
+===============================================================================
+
+ NSTEP =   425000   TIME(PS) =    2850.000  TEMP(K) =   255.98  PRESS =     0.0
+ Etot   =        16.0902  EKtot   =        20.0929  EPtot      =        -4.0027
+ BOND   =        11.8832  ANGLE   =        14.7388  DIHED      =        23.4289
+ 1-4 NB =         4.2974  1-4 EEL =       117.1119  VDWAALS    =        -3.7118
+ EELEC  =      -150.9054  EGB     =       -22.9761  RESTRAINT  =         0.1675
+ ESURF=         1.9630
+ EAMBER (non-restraint)  =        -4.1701
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.167
+===============================================================================
+| RE_POSITION Moving by   0.702543  4.919575  1.261573
+
+ NSTEP =   430000   TIME(PS) =    2860.000  TEMP(K) =   281.19  PRESS =     0.0
+ Etot   =         6.0089  EKtot   =        22.0719  EPtot      =       -16.0630
+ BOND   =         4.2041  ANGLE   =        10.2987  DIHED      =        20.8158
+ 1-4 NB =         4.7515  1-4 EEL =       116.1599  VDWAALS    =        -3.1306
+ EELEC  =      -147.9470  EGB     =       -23.5655  RESTRAINT  =         0.3378
+ ESURF=         2.0124
+ EAMBER (non-restraint)  =       -16.4008
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.338
+===============================================================================
+
+ NSTEP =   435000   TIME(PS) =    2870.000  TEMP(K) =   350.57  PRESS =     0.0
+ Etot   =        10.7602  EKtot   =        27.5174  EPtot      =       -16.7573
+ BOND   =         3.3844  ANGLE   =        11.4521  DIHED      =        20.0254
+ 1-4 NB =         4.3907  1-4 EEL =       117.1835  VDWAALS    =        -3.0039
+ EELEC  =      -149.2860  EGB     =       -23.2761  RESTRAINT  =         0.3623
+ ESURF=         2.0103
+ EAMBER (non-restraint)  =       -17.1195
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.362
+===============================================================================
+| RE_POSITION Moving by   8.802326 -0.493371  1.943628
+
+ NSTEP =   440000   TIME(PS) =    2880.000  TEMP(K) =   360.31  PRESS =     0.0
+ Etot   =        14.5251  EKtot   =        28.2818  EPtot      =       -13.7567
+ BOND   =         6.4366  ANGLE   =        11.7983  DIHED      =        19.4444
+ 1-4 NB =         4.2618  1-4 EEL =       118.6533  VDWAALS    =        -3.0392
+ EELEC  =      -148.5737  EGB     =       -25.0904  RESTRAINT  =         0.3428
+ ESURF=         2.0093
+ EAMBER (non-restraint)  =       -14.0995
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.343
+===============================================================================
+
+ NSTEP =   445000   TIME(PS) =    2890.000  TEMP(K) =   244.15  PRESS =     0.0
+ Etot   =         9.9579  EKtot   =        19.1643  EPtot      =        -9.2064
+ BOND   =         3.2284  ANGLE   =        16.7418  DIHED      =        21.5286
+ 1-4 NB =         4.8762  1-4 EEL =       117.2910  VDWAALS    =        -2.6232
+ EELEC  =      -145.9067  EGB     =       -26.6379  RESTRAINT  =         0.2949
+ ESURF=         2.0007
+ EAMBER (non-restraint)  =        -9.5013
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.295
+===============================================================================
+| RE_POSITION Moving by  -4.398138  0.033591  4.268922
+
+ NSTEP =   450000   TIME(PS) =    2900.000  TEMP(K) =   313.08  PRESS =     0.0
+ Etot   =        11.3000  EKtot   =        24.5752  EPtot      =       -13.2752
+ BOND   =         3.6886  ANGLE   =        13.5481  DIHED      =        20.6509
+ 1-4 NB =         4.8346  1-4 EEL =       117.7827  VDWAALS    =        -3.0917
+ EELEC  =      -150.0940  EGB     =       -22.7175  RESTRAINT  =         0.1282
+ ESURF=         1.9948
+ EAMBER (non-restraint)  =       -13.4034
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.128
+===============================================================================
+
+ NSTEP =   455000   TIME(PS) =    2910.000  TEMP(K) =   266.90  PRESS =     0.0
+ Etot   =        11.7326  EKtot   =        20.9504  EPtot      =        -9.2178
+ BOND   =         4.1589  ANGLE   =        17.9672  DIHED      =        19.4037
+ 1-4 NB =         4.9243  1-4 EEL =       121.1704  VDWAALS    =        -2.6890
+ EELEC  =      -153.0095  EGB     =       -23.1752  RESTRAINT  =         0.0292
+ ESURF=         2.0022
+ EAMBER (non-restraint)  =        -9.2470
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.029
+===============================================================================
+| RE_POSITION Moving by   2.894817 -4.465026  0.468184
+
+ NSTEP =   460000   TIME(PS) =    2920.000  TEMP(K) =   294.71  PRESS =     0.0
+ Etot   =        10.9254  EKtot   =        23.1333  EPtot      =       -12.2079
+ BOND   =         3.4043  ANGLE   =        16.0437  DIHED      =        20.3133
+ 1-4 NB =         4.5001  1-4 EEL =       117.5325  VDWAALS    =        -2.9474
+ EELEC  =      -150.0929  EGB     =       -23.0120  RESTRAINT  =         0.0664
+ ESURF=         1.9842
+ EAMBER (non-restraint)  =       -12.2743
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.066
+===============================================================================
+
+ NSTEP =   465000   TIME(PS) =    2930.000  TEMP(K) =   263.67  PRESS =     0.0
+ Etot   =        13.6090  EKtot   =        20.6967  EPtot      =        -7.0877
+ BOND   =         8.8187  ANGLE   =        12.1500  DIHED      =        23.4694
+ 1-4 NB =         4.8711  1-4 EEL =       116.3269  VDWAALS    =        -3.9495
+ EELEC  =      -145.6973  EGB     =       -25.4835  RESTRAINT  =         0.4413
+ ESURF=         1.9653
+ EAMBER (non-restraint)  =        -7.5290
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.441
+===============================================================================
+| RE_POSITION Moving by   5.468638  0.715018  2.328711
+
+ NSTEP =   470000   TIME(PS) =    2940.000  TEMP(K) =   295.24  PRESS =     0.0
+ Etot   =        11.4963  EKtot   =        23.1746  EPtot      =       -11.6783
+ BOND   =         3.5741  ANGLE   =        13.9331  DIHED      =        21.7021
+ 1-4 NB =         4.8859  1-4 EEL =       116.4688  VDWAALS    =        -3.1383
+ EELEC  =      -146.3286  EGB     =       -24.7255  RESTRAINT  =         0.0040
+ ESURF=         1.9461
+ EAMBER (non-restraint)  =       -11.6823
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.004
+===============================================================================
+
+ NSTEP =   475000   TIME(PS) =    2950.000  TEMP(K) =   359.89  PRESS =     0.0
+ Etot   =        21.8448  EKtot   =        28.2496  EPtot      =        -6.4048
+ BOND   =         2.9009  ANGLE   =        13.4861  DIHED      =        22.5568
+ 1-4 NB =         7.1945  1-4 EEL =       120.2634  VDWAALS    =        -2.1308
+ EELEC  =      -146.9447  EGB     =       -26.5270  RESTRAINT  =         0.9032
+ ESURF=         1.8929
+ EAMBER (non-restraint)  =        -7.3080
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.903
+===============================================================================
+| RE_POSITION Moving by  -4.002941 -7.277226  6.686573
+
+ NSTEP =   480000   TIME(PS) =    2960.000  TEMP(K) =   332.82  PRESS =     0.0
+ Etot   =        13.7583  EKtot   =        26.1244  EPtot      =       -12.3661
+ BOND   =         4.7479  ANGLE   =        13.8466  DIHED      =        21.7575
+ 1-4 NB =         4.9300  1-4 EEL =       119.5548  VDWAALS    =        -3.3093
+ EELEC  =      -150.4775  EGB     =       -25.3899  RESTRAINT  =         0.0125
+ ESURF=         1.9612
+ EAMBER (non-restraint)  =       -12.3786
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.013
+===============================================================================
+
+ NSTEP =   485000   TIME(PS) =    2970.000  TEMP(K) =   308.20  PRESS =     0.0
+ Etot   =        12.1711  EKtot   =        24.1915  EPtot      =       -12.0205
+ BOND   =         5.2829  ANGLE   =        17.1031  DIHED      =        19.7048
+ 1-4 NB =         4.3726  1-4 EEL =       116.0914  VDWAALS    =        -3.8984
+ EELEC  =      -146.9864  EGB     =       -25.7314  RESTRAINT  =         0.0629
+ ESURF=         1.9781
+ EAMBER (non-restraint)  =       -12.0834
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.063
+===============================================================================
+| RE_POSITION Moving by   8.900657  9.068031  4.555747
+
+ NSTEP =   490000   TIME(PS) =    2980.000  TEMP(K) =   348.84  PRESS =     0.0
+ Etot   =        14.3503  EKtot   =        27.3816  EPtot      =       -13.0314
+ BOND   =         5.3560  ANGLE   =        12.1004  DIHED      =        21.8937
+ 1-4 NB =         3.6307  1-4 EEL =       118.8073  VDWAALS    =        -2.9946
+ EELEC  =      -148.3043  EGB     =       -25.6726  RESTRAINT  =         0.1454
+ ESURF=         2.0065
+ EAMBER (non-restraint)  =       -13.1768
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.145
+===============================================================================
+
+ NSTEP =   495000   TIME(PS) =    2990.000  TEMP(K) =   366.23  PRESS =     0.0
+ Etot   =        15.4848  EKtot   =        28.7471  EPtot      =       -13.2622
+ BOND   =         4.6761  ANGLE   =        15.0437  DIHED      =        19.4553
+ 1-4 NB =         5.1804  1-4 EEL =       118.1741  VDWAALS    =        -3.5345
+ EELEC  =      -148.5889  EGB     =       -25.7200  RESTRAINT  =         0.0824
+ ESURF=         1.9691
+ EAMBER (non-restraint)  =       -13.3447
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.082
+===============================================================================
+| RE_POSITION Moving by  -2.520206  6.646459  3.764682
+
+ NSTEP =   500000   TIME(PS) =    3000.000  TEMP(K) =   281.31  PRESS =     0.0
+ Etot   =        10.5672  EKtot   =        22.0808  EPtot      =       -11.5136
+ BOND   =         4.7357  ANGLE   =        14.8056  DIHED      =        21.4103
+ 1-4 NB =         3.7424  1-4 EEL =       117.6418  VDWAALS    =        -3.5764
+ EELEC  =      -149.6224  EGB     =       -22.7406  RESTRAINT  =         0.0710
+ ESURF=         2.0191
+ EAMBER (non-restraint)  =       -11.5846
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.071
+===============================================================================
+
+      A V E R A G E S   O V E R  500000 S T E P S
+
+
+ NSTEP =   500000   TIME(PS) =    3000.000  TEMP(K) =   297.50  PRESS =     0.0
+ Etot   =        12.6229  EKtot   =        23.3520  EPtot      =       -10.7291
+ BOND   =         5.3257  ANGLE   =        14.1260  DIHED      =        21.0784
+ 1-4 NB =         5.1922  1-4 EEL =       117.6875  VDWAALS    =        -3.4507
+ EELEC  =      -148.6961  EGB     =       -24.3190  RESTRAINT  =         0.3714
+ ESURF=         1.9555
+ EAMBER (non-restraint)  =       -11.1005
+ ------------------------------------------------------------------------------
+
+ NMR restraints: Bond =    0.000   Angle =     0.000   Torsion =     0.071
+===============================================================================
+
+      R M S  F L U C T U A T I O N S
+
+
+ NSTEP =   500000   TIME(PS) =    3000.000  TEMP(K) =    46.96  PRESS =     0.0
+ Etot   =         5.1773  EKtot   =         3.6858  EPtot      =         3.7292
+ BOND   =         1.9475  ANGLE   =         3.0262  DIHED      =         1.6045
+ 1-4 NB =         0.9869  1-4 EEL =         3.2332  VDWAALS    =         0.7228
+ EELEC  =         3.6210  EGB     =         1.9989  RESTRAINT  =         0.5133
+ ESURF=         0.0441
+ EAMBER (non-restraint)  =         3.2159
+ ------------------------------------------------------------------------------
+
+
+ NMR restraints on final step:
+
+
+--------------------------------------------------------------------------------
+   5.  TIMINGS
+--------------------------------------------------------------------------------
+
+|>>>>>>>>PROFILE of Average TIMES>>>>>>>>> 
+|                Calc gb radii             27.65 ( 7.96% of Gen B)
+|                Communicate gb radii     220.83 (63.62% of Gen B)
+|                Calc gb diag              39.12 (11.27% of Gen B)
+|                Calc gb off-diag          25.59 ( 7.37% of Gen B)
+|                Surface area energy       33.26 ( 9.58% of Gen B)
+|                Other                      0.66 ( 0.19% of Gen B)
+|             Gen Born time            347.11 (100.0% of Nonbo)
+|             IPS excludes               0.09 ( 0.03% of Nonbo)
+|          Nonbond force            347.20 (29.39% of Force)
+|          Bond/Angle/Dihedral       12.31 ( 1.04% of Force)
+|          FRC Collect time         594.22 (50.30% of Force)
+|          Other                    227.60 (19.27% of Force)
+|       Force time              1181.34 (78.05% of Runmd)
+|       Shake time                 1.64 ( 0.11% of Runmd)
+|       Verlet update time       260.56 (17.22% of Runmd)
+|       CRD distribute time       68.87 ( 4.55% of Runmd)
+|       Other                      1.10 ( 0.07% of Runmd)
+|    Runmd Time              1513.51 (100.0% of Total)
+|    Other                      0.21 ( 0.01% of Total)
+| Total time              1513.72 (100.0% of ALL  )
+
+| Number of list builds   :          0
+
+| Highest rstack allocated:          0
+| Highest istack allocated:          0
+
+| Final Performance Info:
+| -----------------------------------------------------
+| Average timings for all steps:
+|     Elapsed(s) =    1513.51 Per Step(ms) =       3.03
+|         ns/day =      57.09   seconds/ns =    1513.51
+| -----------------------------------------------------
+
+|           Job began  at 20:31:41.690  on 04/27/2013
+|           Setup done at 20:31:41.901  on 04/27/2013
+|           Run   done at 20:56:55.413  on 04/27/2013
+|     wallclock() was called18500113 times

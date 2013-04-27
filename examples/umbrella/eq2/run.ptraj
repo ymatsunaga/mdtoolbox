@@ -1,0 +1,14 @@
+#!/bin/sh
+
+for i in 60
+do
+
+ptraj parm << EOF
+trajin run_${i}.nc
+
+dihedral d1 @9 @15 @17 @19 out dihedral_${i}.dat
+
+EOF
+
+done
+

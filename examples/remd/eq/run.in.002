@@ -1,0 +1,22 @@
+equilibration
+ &cntrl
+   ig=768854,
+   irest=0, ntx=1,
+   igb=8, gbsa=1,
+   cut=9999.0, rgbmax=9998.0,
+   ntc=2, ntf=1, tol=0.000001,
+   ntt=3, gamma_ln=2.0, tempi=0.1,
+   ntb=0, nscm=10000,
+   ioutfm=1,
+   nstlim=1000000, dt=0.001,
+   ntpr=100000, ntwx=100000, ntwv=0, ntwr=1000000,
+   nmropt=1,
+ /
+ &wt
+   type='TEMP0', istep1=0, istep2=500000, value1=0.1, value2=331.000000,
+ /
+ &wt
+   type='END'
+ /
+DISANG=chirality.disang
+
