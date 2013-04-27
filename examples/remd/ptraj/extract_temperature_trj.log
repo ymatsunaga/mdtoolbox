@@ -1,0 +1,61 @@
+
+  \-/  
+  -/-   PTRAJ: a utility for processing trajectory files
+  /-\  
+  \-/   Version: "AMBER 12.0 integrated" (4/2012)
+  -/-   Executable is: "ptraj"
+  /-\   Running on 1 processor(s)
+  \-/   Residue labels:
+
+ ACE  ALA  ALA  NME 
+
+
+PTRAJ: Processing input from "STDIN" ...
+
+PTRAJ: trajin ../prod/run.nc.001 remdtraj remdtrajtemp 300.00
+  Checking coordinates: ../prod/run.nc.001
+NETCDF file:
+  REMDTRAJ: Using specified file as lowest replica: ../prod/run.nc.001
+  REMDTRAJ: Frames at 300.000000 K will be processed.
+  REMDTRAJ: Scanning for other REMD files.
+NETCDF file:
+NETCDF file:
+NETCDF file:
+NETCDF file:
+NETCDF file:
+NETCDF file:
+NETCDF file:
+  REMDTRAJ: Found 8 replica traj files.
+
+PTRAJ: trajout run.300.00K.nc netcdf
+  ../prod/run.nc.001: 3000 frames.
+
+PTRAJ: Successfully read the input file.
+       Coordinate processing will occur on 3000 frames.
+       Summary of I/O and actions follows:
+
+INPUT COORDINATE FILES
+  File (../prod/run.nc.001) is a NetCDF AMBER trajectory with replica temperatures with 3000 sets
+  Replica processing by temperature will occur.
+  8 files total (First index is 001), frames at 300.000000 K will be used.
+
+OUTPUT COORDINATE FILE
+  File (run.300.00K.nc) is a NetCDF AMBER trajectory
+
+NO ACTIONS WERE SPECIFIED
+  REMDTRAJ: Opening files ../prod/run.nc.001 -> ../prod/run.nc.008
+    Opening ../prod/run.nc.002
+    Opening ../prod/run.nc.003
+    Opening ../prod/run.nc.004
+    Opening ../prod/run.nc.005
+    Opening ../prod/run.nc.006
+    Opening ../prod/run.nc.007
+    Opening ../prod/run.nc.008
+  Done.
+ 1% ............ 25% ............ 50% ............ 75% ............ 100% 
+
+
+PTRAJ: Successfully read in 3000 sets and processed 3000 sets.
+
+Dumping accumulated results (if any)
+
