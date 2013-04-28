@@ -6,7 +6,7 @@ import random
 ############# define functions
 def print_lines(f, value):
     ig = random.randint(0,1000000)
-    f.write("equilibration with restraint\n")
+    f.write("production with restraint\n")
     f.write(" &cntrl\n")
     f.write("   ig=%d, \n" % (ig))
     f.write("   irest=1, ntx=5,\n")

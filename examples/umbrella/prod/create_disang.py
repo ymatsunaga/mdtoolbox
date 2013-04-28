@@ -3,7 +3,7 @@
 
 ############# define functions
 def print_lines(f, value):
-    f.write("harmonic restraint changing spring constant\n")
+    f.write("harmonic restraint fixed spring constant\n")
     f.write(" &rst\n")
     f.write("   iat=9,15,17,19,\n")
     f.write("   r0=%f, k0=200.0,\n" % (value))

@@ -1,6 +1,6 @@
-equilibration with restraint
+production with restraint
  &cntrl
-   ig=414738, 
+   ig=381212, 
    irest=1, ntx=5,
    igb=8, gbsa=1,
    cut=9999.0, rgbmax=9998.0,
