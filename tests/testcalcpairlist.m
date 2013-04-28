@@ -1,26 +1,46 @@
 %% usage:
-%% >> test = testsimulatepoissonprocess;
+%% >> test = testcalcpairlist;
 %% >> result = run(test)
 %%
 
-classdef testsimulatepoissonprocess < matlab.unittest.TestCase
+classdef testcalcpairlist < matlab.unittest.TestCase
 
   methods(Test)
       
-    function AveragedNumberOfEventsShouldBeRateMutipliedByTimewidth(testCase)
-      time_width = 10000;
-      rate = 1;
-      nevent = [];
-      for i = 1:100
-        t = simulatepoissonprocess(time_width, rate);
-        nevent = [nevent; numel(t)];
-      end
-      nevent_expected = time_width*rate;
-      nevent_actual = mean(nevent);
-      testCase.verifyEqual(nevent_actual, nevent_expected, 'AbsTol', 10^(-7));
+    function CompareWithExhaustiveNoPBC(testCase)
+      natom = 16;
+      crd = 16*rand(1, floor((natom^3)/3)*3);
+      tic;
+      pair_expected = calcpairlist_exhaustive(crd, 5.0);
+      toc
+      tic;
+      pair_actual = calcpairlist(crd, 5.0);
+      toc
+      [~, id] = sort(pair_actual(:, 1));
+      pair_actual = pair_actual(id, :);
+      [~, id] = sort(pair_actual(:, 2));
+      pair_actual = pair_actual(id, :);
+      testCase.verifyEqual(pair_actual, pair_expected);
     end
-    
+
+    function CompareWithExhaustivePBC(testCase)
+      natom = 16;
+      crd = 16*rand(1, floor((natom^3)/3)*3);
+      tic;
+      pair_expected = calcpairlist_exhaustive(crd, 5.0, [16.0 16.0 16.0]);
+      toc
+      tic;
+      pair_actual = calcpairlist(crd, 5.0, [16.0 16.0 16.0]);
+      toc
+      [~, id] = sort(pair_actual(:, 1));
+      pair_actual = pair_actual(id, :);
+      [~, id] = sort(pair_actual(:, 2));
+      pair_actual = pair_actual(id, :);
+      testCase.verifyEqual(pair_actual, pair_expected);
+    end
+
   end
   
 end
+
 
