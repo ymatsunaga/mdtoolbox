@@ -1,7 +1,7 @@
-equilibration
+production
  &cntrl
    numexchg=3000,
-   ig=882281,
+   ig=139865,
    irest=1, ntx=5,
    igb=8, gbsa=1,
    cut=9999.0, rgbmax=9998.0,
