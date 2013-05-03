@@ -1,6 +1,6 @@
-function [f_k, log_prob_m, center_m, h_km, bias_km, N_k] = wham(edge_m, fhandle_k, data_k, kbt, tolerance)
+function [f_k, log_prob_m, center_m, h_km, bias_km, N_k] = wham(edge_m, fhandle_k, data_k, kbt)
 %% wham
-% calculate the dimensionless free energies of umbrella windows and the unbiased probabilities on grids by using the WHAM
+% calculate the dimensionless free energies of umbrella-windows and the unbiased probabilities on data-bins by using the WHAM
 %
 %% Syntax
 %# [f_k, prob_m, center_m, h_km, bias_km, N_k] = wham(edge_m, fhandle_k, data_k, kbt)
@@ -8,7 +8,7 @@ function [f_k, log_prob_m, center_m, h_km, bias_km, N_k] = wham(edge_m, fhandle_
 %
 %% Description
 %
-% * edge_m    - edges of bins
+% * edge_m    - edges of data-bins
 %               [double M]
 % * fhandle_k - cell of function handles which represent biased potentials
 %               [cell K]
@@ -16,11 +16,9 @@ function [f_k, log_prob_m, center_m, h_km, bias_km, N_k] = wham(edge_m, fhandle_
 %               [cell K]
 % * kbt       - Kb*T in kcal/mol
 %               [double scalar]
-% * tolerance - tolerance of the convergence in WHAM iterations
-%               [double scalar]
-% * f_k       - dimensionless free energies of umbrella windows
+% * f_k       - dimensionless free energies of umbrella-windows
 %               [double K x 1]
-% * log_prob_m  - log of unbiased probability in bins (prob(m) = exp(-kbt*U(x_m))/Z(kbt) * dx_m)
+% * log_prob_m  - log of unbiased probability in data-bins (prob(m) = exp(-kbt*U(x_m))/Z(kbt) * dx_m)
 %                 [double 1 x M]
 % 
 %% Example
@@ -41,24 +39,24 @@ function [f_k, log_prob_m, center_m, h_km, bias_km, N_k] = wham(edge_m, fhandle_
 
 % The notation of variables and indicies follows Ref [1]. 
 % Also, we assume an array structure whose 
-% rows(k) correspond to umbrella windows and columns(m) are bins. 
+% rows(k) correspond to umbrella-windows and columns(m) are bins. 
 
 %% preparation
-% K: number of umbrella windows
+% Boltzmann constant in kcal/(mol K)
+KB = 0.00198719168260038;
+% K: number of umbrella-windows
 K = numel(data_k); 
-% M: number of bins
+% M: number of data-bins
 M = numel(edge_m) - 1;
-% center_m: centers of data bins (m)
+% center_m: centers of data-bins (m)
 center_m = edge_m + 0.5*(edge_m(2) - edge_m(1));
 center_m(end) = [];
-% tolerance to check convergence of iterations
-if (nargin < 5) || numel(tolerance) == 0
-  tolerance = 10^(-8);
-end
+% tolerance for the convergence of iterations
+tolerance = 10^(-8);
 
 % check consistency of the number of umbrella-windows
 if K ~= numel(fhandle_k)
-  error('# of umbrella windows do not match... data has %d windows. fhandle has %d windows.', numel(data_k), numel(fhandle_k));
+  error('# of umbrella-windows do not match... data has %d windows. fhandle has %d windows.', numel(data_k), numel(fhandle_k));
 end
 
 %% calculate histogram (h_km)
@@ -87,14 +85,14 @@ log_heff_m(:) = double(log(eps('single')));
 log_heff_m(heff_m > 0) = log(heff_m(heff_m > 0));
 
 %% calculate effective counts (Neff_km)
-% Neff_km: effective number of independent samples for umbrella window (k) in data-bin (m)
+% Neff_km: effective number of independent samples for umbrella-window (k) in data-bin (m)
 Neff_km = bsxfun(@rdivide, N_k, g_km);
 log_Neff_km = zeros(K, M);
 log_Neff_km(:) = double(log(eps('single')));
 log_Neff_km(Neff_km > 0) = log(Neff_km(Neff_km > 0));
 
 %% calculate bias-factor
-% bias_km: bias-factor for umbrella window (k) in data-bin (m)
+% bias_km: bias-factor for umbrella-window (k) in data-bin (m)
 bias_km = zeros(K, M);
 for k = 1:K
   for m = 1:M
@@ -106,7 +104,6 @@ bias_km = bias_km ./ kbt;
 
 %% solve the WHAM equations by self-consistent iteration
 f_k = zeros(K, 1);
-log_prob_m = zeros(1, M);
 check_convergence = inf;
 
 count_iteration = 0;
