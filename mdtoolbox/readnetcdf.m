@@ -118,7 +118,7 @@ end
 natom = dimensions.atom;
 nstep = dimensions.frame;
 
-if (nargin < 2) | (numel(index_atom) == 0)
+if (nargin < 2) || (numel(index_atom) == 0)
   index_atom = 1:natom;
 else
   if islogical(index_atom)
@@ -127,7 +127,7 @@ else
   index_atom(index_atom > natom) = [];
 end
 
-if (nargin < 3) | (numel(index_time) == 0)
+if (nargin < 3) || (numel(index_time) == 0)
   index_time = 1:nstep;
 else
   if islogical(index_time)

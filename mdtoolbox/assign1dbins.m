@@ -39,7 +39,7 @@ if isrow(data)
   data = data';
 end
 
-if (nargin < 2) | (numel(nbin) == 0)
+if (nargin < 2) || (numel(nbin) == 0)
   nbin = 100;
 end
 

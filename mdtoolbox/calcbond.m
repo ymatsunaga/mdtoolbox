@@ -1,4 +1,4 @@
-function s = calcbond(x);
+function s = calcbond(x)
 %% calcbond
 % calculate the distances between two atom from their Cartesian coordinates
 %

@@ -17,7 +17,7 @@ function psf = readpsf(filename)
 %      residue_id: [natomx1 double]
 %    residue_name: [natomx4 char]
 %       atom_name: [natomx4 char]
-%       atom_type: [natomx4 char]
+%       atom_type: [natomx4 char] or [natomx1 integer]
 %          charge: [natomx1 double]
 %            mass: [natomx1 double]
 %           nbond: [double]
@@ -43,8 +43,14 @@ function psf = readpsf(filename)
 %# psf = readpsf('jac.psf');
 %# psf = readpsf('jac_xplor.psf');
 %
+%% References
+% NAMD Tutorial
+% http://www.ks.uiuc.edu/Training/Tutorials/namd/namd-tutorial-unix-html/node21.html
+% User Manual for EGO_VIII 
+% http://heller.userweb.mwn.de/ego/manual/node88.html
+% 
 %% See also
-% readcharmmparam
+% writepsf readcharmmparam
 % 
 
 %% open file

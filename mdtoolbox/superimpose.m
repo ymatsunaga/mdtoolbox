@@ -51,7 +51,7 @@ natom3 = size(ref, 2);
 natom  = natom3/3;
 nstep  = size(trj, 1);
 
-if (nargin < 3) | (numel(index) == 0)
+if (nargin < 3) || (numel(index) == 0)
   index = 1:natom;
 else
   if islogical(index)
@@ -63,7 +63,7 @@ else
 end
 index3 = to3(index);
 
-if (nargin < 4) | (numel(mass) == 0)
+if (nargin < 4) || (numel(mass) == 0)
   mass = ones(1, natom);
 else
   if iscolumn(mass)
@@ -75,8 +75,12 @@ if (nargin < 5)
   vel = [];
 end
 
+if nargout >= 4
+  Ucell = cell(nstep, 1);
+end
+
 %% remove the center of mass
-if (nargin < 6) | (~isdecentered)
+if (nargin < 6) || (~isdecentered)
   trj = decenter(trj, index, mass);
   [ref, comy] = decenter(ref, index, mass);
   if numel(vel) ~= 0

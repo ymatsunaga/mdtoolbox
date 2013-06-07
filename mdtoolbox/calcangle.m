@@ -1,4 +1,4 @@
-function s = calcangle(x);
+function s = calcangle(x)
 %% calcangle
 % calculate the angles of three atoms from their Cartesian coordinates
 %

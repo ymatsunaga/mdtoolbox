@@ -55,8 +55,8 @@ function [pair, dist] = searchrange(a, b, rcut, box)
 %
 %% References
 % Heinz, T.N. & Hünenberger, P.H.
-% A fast pairlist-construction algorithm for molecular simulations
-% under periodic boundary conditions. 
+% "A fast pairlist-construction algorithm for molecular simulations
+% under periodic boundary conditions." 
 % J Comput Chem 25, 1474–1486 (2004). 
 %
 %% setup variables

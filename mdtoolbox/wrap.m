@@ -4,17 +4,16 @@ function trj = wrap(trj, box, resname)
 %
 %% Syntax
 %# trj = wrap(trj, box);        % ignore residue-information
-%# trj = wrap(trj, box, resid); % consider residue
+%# trj = wrap(trj, box, residue_name); % consider residue
 %
 %% Description
 %
-% * trj        - trajectory [nstep x natom3 double]
-% * box        - box size [nstep x 3 double]
-% * resname    - residue name lists [nstep x n array chars]
-% * trj2       - trajectory wrapped in to the primary box [nstep x natom3 double]
+% * trj          - trajectory [nstep x natom3 double]
+% * box          - box size [nstep x 3 double]
+% * residue_name - residue name lists [nstep x n array chars]
 %
 %% Example
-%# [trj, box] = readnetcdf('run.dcd');
+%# [trj, box] = readnetcdf('run.nc');
 %# trj2 = wrap(trj, box);
 %# writenetcdf('run_wrap', trj2, box);
 %
@@ -24,8 +23,7 @@ function trj = wrap(trj, box, resname)
 %
 
 %% setup
-[nstep, natom3] = size(trj);
-natom = natom3 / 3;
+nstep = size(trj, 1);
 
 %% setup cell
 

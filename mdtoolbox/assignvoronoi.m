@@ -33,7 +33,7 @@ function [index, dmin] = assignvoronoi(ref, data)
 %
 
 %% setup
-[ncell, ndim1] = size(ref);
+[~, ndim1] = size(ref);
 [nstep, ndim2] = size(data);
 assert(ndim1 == ndim2, 'dimensions of ref and data do not match...');
 

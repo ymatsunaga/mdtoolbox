@@ -1,4 +1,4 @@
-function mass = calcmass(name);
+function mass = calcmass(name)
 %% calcmass
 % calculate to the masses of input atom names
 %

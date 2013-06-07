@@ -138,7 +138,7 @@ for i = 1:natom
 end
 
 %% diagonalize hessian matrix H by singular value decomposition
-[u, s, v] = svd(H);
+[~, s, v] = svd(H);
 emode = v(:,(end-6):-1:1);
 s = diag(s);
 s = sqrt(s);

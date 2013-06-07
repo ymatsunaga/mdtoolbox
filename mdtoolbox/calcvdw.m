@@ -100,7 +100,7 @@ for istep = 1:nstep
   % remove exclusion pairs
   [pair, irows] = setdiff(pair, parm.excluded_pair, 'rows');
   r = r(irows, :);
-  
+
   index     = ico( ntypes*(iac(pair(:, 1)) - 1) + iac(pair(:, 2))  );
   lj_coef12 = cn1(index(index > 0));
   lj_coef6  = cn2(index(index > 0));

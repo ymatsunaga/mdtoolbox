@@ -28,7 +28,7 @@ function logical_index = selectrange(crd, index, rcut, box)
 %# trj = readnetcdf('ak.nc');
 %#
 %# % choose CA atoms
-%# index = selectname(parm.atom_name, 'CA  ');
+%# index = selectname(parm.atom_name, 'CA');
 %# index = find(index);
 %#
 %# % choose all the atoms within 4 Angstrom from CA atoms of residue 1-3 at step 1

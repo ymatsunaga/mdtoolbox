@@ -35,7 +35,7 @@ nstep = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 
-if (nargin < 2) | (numel(index) == 0)
+if (nargin < 2) || (numel(index) == 0)
   index = 1:natom;
 else
   if islogical(index)
@@ -46,7 +46,7 @@ else
   end
 end
 
-if (nargin < 3) | (numel(mass) == 0)
+if (nargin < 3) || (numel(mass) == 0)
   mass = ones(1, natom);
 else
   if iscolumn(mass)
@@ -55,14 +55,14 @@ else
 end
 
 assert(isequal(natom, numel(mass)), ...
-       ['sizes of coordinates and masses are not same'])
+       'sizes of coordinates and masses are not same')
 
 indexx = 3.*(index-1) + 1;
 indexy = 3.*(index-1) + 2;
 indexz = 3.*(index-1) + 3;
 
 %% subtract by the geometric center
-[trj, com] = decenter(trj, index, mass);
+trj = decenter(trj, index, mass);
 
 %% calculate the principal axis of inertia
 for istep = 1:nstep
@@ -86,7 +86,7 @@ for istep = 1:nstep
   I(2,3) = - sum(mass.*(y.*z));
   I(3,2) = I(2,3);
   
-  [p,q,a] = svd(I); %q is already sorted by descending order
+  [~, ~, a] = svd(I); %a is already sorted by descending order
   p_axis = a(:, end:-1:1); %z-axis has the largest inertia
   
   % check reflection

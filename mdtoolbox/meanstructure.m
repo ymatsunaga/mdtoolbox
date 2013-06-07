@@ -14,11 +14,13 @@ function [crd, trj, vel] = meanstructure(trj, index, mass, tolerance, vel)
 %
 %% Description
 % This routine calculates the average structure from given
-% trajectory. The algorithm superimpose the trajectories to a
+% trajectory. The algorithm superimposes the trajectories to a
 % plausible average structure, then updates the average structrue.
-% This step is repeated until some convergence is achieved in rmsd.
+% This process is repeated until some convergence is achieved in
+% the RMSD between the average structures.
 % The total translational and rotational motions are removed in the
-% output trajectory. So, this routine may be useful as a preprocess
+% final output trajectory which are superimposed to the converged
+% average structure. So, this routine may be useful for a preprocess
 % for the subsequent structure-analysis routines, such as Principal
 % Component Analysis. 
 %
@@ -32,8 +34,6 @@ function [crd, trj, vel] = meanstructure(trj, index, mass, tolerance, vel)
 
 %% initialization
 ref = trj(1, :);
-natom3 = numel(ref);
-natom = natom3/3;
 rmsd = realmax;
 
 if (nargin < 2)
@@ -44,7 +44,7 @@ if (nargin < 3)
   mass = [];
 end
 
-if (nargin < 4) | (numel(tolerance) == 0)
+if (nargin < 4) || (numel(tolerance) == 0)
   tolerance = 10^(-6);
 end
 
@@ -69,6 +69,5 @@ while rmsd > tolerance
 end
 
 crd = ref;
-[rmsd, trj, vel] = superimpose(ref, trj, index, mass, vel);
-
+[~, trj, vel] = superimpose(ref, trj, index, mass, vel);
 
