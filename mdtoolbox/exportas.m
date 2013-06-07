@@ -1,4 +1,4 @@
-function rc = exportas(basename, style)
+function exportas(basename, style)
 %% exportas
 % export fig, eps, png, tiff files of the current figure
 %
@@ -53,8 +53,12 @@ elseif strncmpi(style, 'single', numel('single'))
   image_width = 8.3;
 elseif strncmpi(style, 'double', numel('double'))
   image_width = 17.35;
+elseif strncmpi(style, 'jcp-single', numel('jcp-single'))
+  image_width = 8.5;
+elseif strncmpi(style, 'jcp-double', numel('jcp-double'))
+  image_width = 17.00;
 else
-  error(sprintf('sorry, does not support your style option %s', style));
+  error('sorry, does not support your style option %s', style);
 end
   
 %% create figures
@@ -83,7 +87,7 @@ else
   position      = get(gcf, 'Position');
   figure_width  = position(3);
   figure_height = position(4);
-  image_height  = figure_height * (image_width./figure_width)
+  image_height  = figure_height * (image_width./figure_width);
   
   set(gcf, 'Papersize', [image_width image_height]);
   set(gcf, 'PaperPosition', [0 0 image_width image_height]);
