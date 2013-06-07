@@ -182,4 +182,6 @@ else
 
 end
 
+fprintf(fid, 'END\n');
+
 
