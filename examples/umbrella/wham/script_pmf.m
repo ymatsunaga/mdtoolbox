@@ -22,8 +22,8 @@ kbt = s.KB*300;
 
 %% calculate probability along the dihedral angle and calculate
 %% the potential of mean force (PMF) along the dihedral angle
-[f, prob, center, h, bias, ndata] = wham(linspace(-1, 181, 82), fhandle, dihedral, kbt);
-pmf = - kbt * log(prob);
+[f, log_prob, center] = wham(dihedral, fhandle, 300, linspace(-1, 181, 82));
+pmf = - kbt * log_prob;
 pmf = pmf - pmf(1);
 
 %% plot the PMF
