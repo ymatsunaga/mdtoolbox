@@ -1,6 +1,11 @@
 function [event_time, interarrival_time] = simulatepoisson(time_width, rate)
 %% simulatepoisson
-% simulates event- and inter-arrival times of the Poisson process within the given time-width and rate
+% simulates event- and inter-arrival times of Poisson process using the given time-width and rate
+%
+%% Example
+%# [event_time, interarrival_time] = simulatepoisson(1, 100);
+%# numel(event_time)
+%# plotevent(event_time);
 %
 %% References
 % Simulation, New York, Academic Press.

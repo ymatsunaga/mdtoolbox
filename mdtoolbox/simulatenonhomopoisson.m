@@ -1,9 +1,17 @@
 function [event_time, interarrival_time] = simulatenonhomopoisson(time_width, rate, time)
 %% simulatenonhomopoisson
-% simulates event- and inter-arrival times of the non-homogeneous Poisson process within the given time-width and rate
+% simulates event- and inter-arrival times of non-homogeneous Poisson process using the given time-width and rate
+%
+%% Example
+%# time = 0:0.1:1.0;
+%# rate = zeros(size(time));
+%# rate(1:5) = 1;
+%# rate(6:11) = 100;
+%# [event_time, interarrival_time] = simulatenonhomopoisson(1, rate, time);
+%# plotevent(event_time)
 %
 %% References
-% thinning algorithm is used, which are described in 
+% thinning algorithm is used, described in 
 % Simulation, New York, Academic Press.
 % Sheldon M. Ross, Chapter 5.
 %

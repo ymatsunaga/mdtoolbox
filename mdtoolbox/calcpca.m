@@ -1,6 +1,6 @@
-function [p, pmode, variances]  = calcpca(trj)
+function [p, pmode, variances] = calcpca(trj)
 %% calcpca
-% calc principal components
+% perform principal component analysis of given input trajectory
 %
 %% Syntax
 %# q = calcbond(trj);
@@ -32,5 +32,4 @@ pmode = eigenVector(:, index);
 
 %% projection
 p = trj * pmode;
-
 
