@@ -7,7 +7,7 @@ def print_line(f, value):
     s = s + "-O -remlog rem.log -remtype rem.type -rem 1 "
     s = s + "-p parm "
     s = s + "-i run.in.%03d " % (value)
-    s = s + "-c ../eq/run.rst.%03d " % (value)
+    s = s + "-c ../1_eq/run.rst.%03d " % (value)
     s = s + "-o run.out.%03d " % (value)
     s = s + "-r run.rst.%03d " % (value)
     s = s + "-x run.nc.%03d\n" % (value)

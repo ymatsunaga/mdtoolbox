@@ -33,14 +33,14 @@ Building proper torsion parameters.
 Building improper torsion parameters.
  total 6 improper torsions applied
 Building H-Bond parameters.
+Incorporating Non-Bonded adjustments.
 Not Marking per-residue atom chain types.
 Marking per-residue atom chain types.
  (no restraints)
-Writing pdb file: ala.pdb
+Writing pdb file: pdb
 
 *** Error: tl_getline(): not interactive, use stdio.
-  "C" "sp2" }
->> 	{ "CK"  "C" "sp2" }
+2" }
 >> 	{ "CQ"  "C" "sp2" }
 >> 	{ "CD"  "C" "sp2" }
 >> 	{ "C5"  "C" "sp2" }
@@ -125,6 +125,7 @@ Loading: GLY
 Loading: HID
 Loading: HIE
 Loading: HIP
+Loading: HYP
 Loading: ILE
 Loading: LEU
 Loading: LYN
@@ -151,6 +152,7 @@ Loading: CGLY
 Loading: CHID
 Loading: CHIE
 Loading: CHIP
+Loading: CHYP
 Loading: CILE
 Loading: CLEU
 Loading: CLYS
@@ -271,6 +273,7 @@ Loading: TPF
 >> #	Define the PDB name map for the amino acids and nucleic acids
 >> #
 >> addPdbResMap {
+>>   { 0 "HYP" "NHYP" } { 1 "HYP" "CHYP" }
 >>   { 0 "ALA" "NALA" } { 1 "ALA" "CALA" }
 >>   { 0 "ARG" "NARG" } { 1 "ARG" "CARG" }
 >>   { 0 "ASN" "NASN" } { 1 "ASN" "CASN" }
@@ -373,7 +376,7 @@ Joining ALA - ALA
 Sequence: NME
 Joining ALA - NME
 > 
-> saveamberparm a ala.parm ala.crd
+> saveamberparm a parm crd
 Checking Unit.
 Building topology.
 Building atom parameters.
@@ -383,10 +386,11 @@ Building proper torsion parameters.
 Building improper torsion parameters.
  total 6 improper torsions applied
 Building H-Bond parameters.
+Incorporating Non-Bonded adjustments.
 Not Marking per-residue atom chain types.
 Marking per-residue atom chain types.
  (no restraints)
-> savepdb a ala.pdb
-Writing pdb file: ala.pdb
+> savepdb a pdb
+Writing pdb file: pdb
 > 
  

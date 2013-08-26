@@ -4,7 +4,7 @@ NPROC=2
 mpirun -np $NPROC sander.MPI -O \
  -p parm \
  -i run.in.001 \
- -c ../init/ala.crd \
+ -c ../0_init/ala.crd \
  -o run.out.001 \
  -r run.rst.001 \
  -x run.nc.001

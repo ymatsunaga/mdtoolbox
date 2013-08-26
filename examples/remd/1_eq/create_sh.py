@@ -11,7 +11,7 @@ def print_lines(f, value):
     f.write("mpirun -np $NPROC sander.MPI -O \\\n")
     f.write(" -p parm \\\n")
     f.write(" -i run.in.%03d \\\n" % (value))
-    f.write(" -c ../init/ala.crd \\\n")
+    f.write(" -c ../0_init/ala.crd \\\n")
     f.write(" -o run.out.%03d \\\n" % (value))
     f.write(" -r run.rst.%03d \\\n" % (value))
     f.write(" -x run.nc.%03d\n" % (value))

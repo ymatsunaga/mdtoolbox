@@ -1,0 +1,8 @@
+-O -remlog rem.log -remtype rem.type -rem 1 -p parm -i run.in.001 -c ../1_eq/run.rst.001 -o run.out.001 -r run.rst.001 -x run.nc.001
+-O -remlog rem.log -remtype rem.type -rem 1 -p parm -i run.in.002 -c ../1_eq/run.rst.002 -o run.out.002 -r run.rst.002 -x run.nc.002
+-O -remlog rem.log -remtype rem.type -rem 1 -p parm -i run.in.003 -c ../1_eq/run.rst.003 -o run.out.003 -r run.rst.003 -x run.nc.003
+-O -remlog rem.log -remtype rem.type -rem 1 -p parm -i run.in.004 -c ../1_eq/run.rst.004 -o run.out.004 -r run.rst.004 -x run.nc.004
+-O -remlog rem.log -remtype rem.type -rem 1 -p parm -i run.in.005 -c ../1_eq/run.rst.005 -o run.out.005 -r run.rst.005 -x run.nc.005
+-O -remlog rem.log -remtype rem.type -rem 1 -p parm -i run.in.006 -c ../1_eq/run.rst.006 -o run.out.006 -r run.rst.006 -x run.nc.006
+-O -remlog rem.log -remtype rem.type -rem 1 -p parm -i run.in.007 -c ../1_eq/run.rst.007 -o run.out.007 -r run.rst.007 -x run.nc.007
+-O -remlog rem.log -remtype rem.type -rem 1 -p parm -i run.in.008 -c ../1_eq/run.rst.008 -o run.out.008 -r run.rst.008 -x run.nc.008
