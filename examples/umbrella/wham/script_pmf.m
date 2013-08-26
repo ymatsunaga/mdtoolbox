@@ -5,7 +5,7 @@ nwindow = numel(window_center);
 %% read dihedral angle data
 dihedral = {};
 for i = 1:nwindow
-  filename = sprintf('../prod/run_%d.dat', window_center(i));
+  filename = sprintf('../3_prod/run_%d.dat', window_center(i));
   x = load(filename);
   dihedral{i} = x(:, 2);
 end
