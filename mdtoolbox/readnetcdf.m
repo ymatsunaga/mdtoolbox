@@ -8,6 +8,7 @@ function [trj, box, vel, temp, attributes] = readnetcdf(filename, index_atom, in
 %# trj = readnetcdf(filename, [], index_time);
 %# [trj, box] = readnetcdf(filename, index_atom, index_time);
 %# [trj, box, vel] = readnetcdf(filename, index_atom, index_time);
+%# [trj, box, vel, temp] = readnetcdf(filename, index_atom, index_time);
 %# [trj, box, vel, attributes] = readnetcdf(filename, index_atom, index_time);
 %
 %% Description

@@ -1,10 +1,10 @@
-function [f_l, log_state_m, center_m, h_km, bin_kn] = ptwham(penergy_kn, temperature_kn, M)
+function [f_l, log_state_m, center_m, h_km, bin_kn] = ptwham(penergy_kn, temperature_kn, edge_m)
 %% ptwham
-% calculate dimensionless free energies of umbrella-windows and the potential energy density of states by using the PTWHAM
+% calculate (dimensionless relative) free energies of umbrella-windows and potential energy density by using the PTWHAM
 %
 %% Syntax
 %# [f_l, log_state_m, center_m, h_km, bin_kn] = ptwham(penergy_kn, temperature_kn)
-%# [f_l, log_state_m, center_m, h_km, bin_kn] = ptwham(penergy_kn, temperature_kn, M)
+%# [f_l, log_state_m, center_m, h_km, bin_kn] = ptwham(penergy_kn, temperature_kn, edge_m)
 %
 %% Description
 %
@@ -34,10 +34,13 @@ function [f_l, log_state_m, center_m, h_km, bin_kn] = ptwham(penergy_kn, tempera
 % [4] J. S. Hub, B. L. de Groot, and D. van der Spoel,
 %     J. Chem. Theory Comput. 6, 3713 (2010). 
 %
+%% TODO
+% bootstrap
+%
 
-% The notation of variables and indicies follows Ref [1]. 
+% The names of variables and indicies follow the convention of Ref 1.
 % Also, we assume an array structure whose 
-% rows correspond to umbrella-windows and columns are energy-bins. 
+% rows(k) correspond to umbrella-windows and columns(m) are bins. 
 
 %% preparation
 % Boltzmann constant in kcal/(mol K)
@@ -94,11 +97,18 @@ beta0_l = 1.0./(temp0_l*KB);
 
 %% calculate histogram (h_km)
 % h_km: number of smaples in energy-bin (m) from umbrella-window (k)
-edge_min = min(cellfun(@min, penergy_kn));
-edge_max = max(cellfun(@max, penergy_kn));
-edge_m = linspace(edge_min, edge_max+(M*eps), M+1)';
+if (nargin < 4) || isempty(edge_m)
+  % M: number of data-bins
+  M = 100;
+  edge_min = min(cellfun(@min, penergy_kn));
+  edge_max = max(cellfun(@max, penergy_kn));
+  edge_m = linspace(edge_min, edge_max+(M*eps), M+1)';
+else
+  % M: number of data-bins
+  M = numel(edge_m) - 1;
+end
 center_m = 0.5 * (edge_m(2:end) + edge_m(1:(end-1)));
-
+  
 h_km = zeros(K, M);
 for k = 1:K
   [h_m, bin_n] = histc(penergy_kn{k}, edge_m);
@@ -176,9 +186,10 @@ while check_convergence > TOLERANCE
 
   count_iteration = count_iteration + 1;
   if mod(count_iteration, 1) == 0
-    fprintf('%dth iteration\n', count_iteration);
+    fprintf('%dth iteration  delta = %e  tolerance = %e\n', count_iteration, check_convergence, TOLERANCE);
     fprintf('free energies = ');
-    fprintf('%f ', f_l);
+    fprintf('%f ', f_k);
+    fprintf('\n');
     fprintf('\n');
   end
 end

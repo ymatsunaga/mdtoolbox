@@ -1,6 +1,6 @@
 function [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_kn, fhandle_k, temperature, edge_m)
 %% wham
-% calculate the dimensionless free energies of umbrella-windows and the unbiased probabilities on data-bins by using the WHAM
+% calculate (dimensionless relative) free energies of umbrella-windows and (unbiased) density of states in data-bins by using the WHAM
 %
 %% Syntax
 %# [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_kn, fhandle_k, temperature)
@@ -8,17 +8,17 @@ function [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_kn, fhandle_k, t
 %
 %% Description
 %
-% * edge_m    - edges of data-bins
-%               [double M]
-% * fhandle_k - cell of function handles which represent biased potentials
-%               [cell K]
-% * data_kn   - cell of trajectories in a space where histograms are counted
-%               [cell K]
-% * kbt       - Temperature in Kelvin
-%               [double scalar]
-% * f_k       - dimensionless free energies of umbrella-windows
-%               [double K x 1]
-% * log_prob_m  - log of unbiased probability in data-bins (prob(m) = exp(-kbt*U(x_m))/Z(kbt) * dx_m)
+% * edge_m      - edges of data-bins
+%                 [double M]
+% * fhandle_k   - cell of function handles which represent biased potentials
+%                 [cell K]
+% * data_kn     - cell of trajectories in a space where histograms are counted
+%                 [cell K]
+% * kbt         - Temperature in Kelvin
+%                 [double scalar]
+% * f_k         - dimensionless free energies of umbrella-windows
+%                 [double K x 1]
+% * log_prob_m  - log of unbiased density of states in data-bins (prob(m) = exp(-kbt*U(x_m))/Z(kbt) * dx_m)
 %                 [double 1 x M]
 % 
 %% Example
@@ -36,8 +36,11 @@ function [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_kn, fhandle_k, t
 % [4] J. S. Hub, B. L. de Groot, and D. van der Spoel,
 %     J. Chem. Theory Comput. 6, 3713 (2010). 
 %
+%% TODO
+% bootstrap
+%
 
-% The notation of variables and indicies follows Ref [1]. 
+% The names of variables and indicies follow the convention of Ref 1.
 % Also, we assume an array structure whose 
 % rows(k) correspond to umbrella-windows and columns(m) are bins. 
 
@@ -147,9 +150,10 @@ while check_convergence > TOLERANCE
 
   count_iteration = count_iteration + 1;
   if mod(count_iteration, 100) == 0
-    fprintf('%dth iteration\n', count_iteration);
+    fprintf('%dth iteration  delta = %e  tolerance = %e\n', count_iteration, check_convergence, TOLERANCE);
     fprintf('free energies = ');
     fprintf('%f ', f_k);
+    fprintf('\n');
     fprintf('\n');
   end
 end

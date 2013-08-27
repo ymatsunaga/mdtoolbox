@@ -12,7 +12,7 @@ function [pair, dist] = searchrange(a, b, rcut, box)
 %  This code finds all the atoms in 'crd1' that are within cutoff
 %  distance 'rcut' for atoms in 'crd2'. 
 %  Atom coordinates should be 3-dimensional points of vector 1 x 3natom.
-%  The grid-cell algorithm proposed by Heinz and Hünenberger (JCC, 2004)
+%  The grid-cell algorithm by Heinz and Hünenberger (JCC, 2004)
 %  is used. If the cutoff distance is large compared to the system
 %  size, then the exhaustive search algorithm is used instead of
 %  the grid-cell. When 'box' is given, periodic boundary condition

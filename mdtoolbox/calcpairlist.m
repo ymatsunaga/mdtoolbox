@@ -11,7 +11,7 @@ function [pair, dist] = calcpairlist(crd, rcut, box)
 %% Description
 %  This code searches all the pairs within a cutoff distance.
 %  Input coordinates should be 3-dimensional points of vector 1 x 3natom.
-%  The grid-cell algorithm proposed by Heinz and Hünenberger (JCC, 2004)
+%  The grid-cell algorithm by Heinz and Hünenberger (JCC, 2004)
 %  is used. If the cutoff distance is large compared to the system
 %  size, then the exhaustive search algorithm is used instead of
 %  the grid-cell.

@@ -7,7 +7,10 @@ function [p, pmode, variances] = calcpca(trj)
 %
 %% Description
 %
-% * trj    - trajectory [nstep x 3natom]
+% * trj       - trajectory of coordinates [nstep x 3natom]
+% * p         - principal components (projection of the trajectory on to the principal modes) [nstep x 3natom]
+% * pmode     - principal modes [nstep x 3natom]
+% * variances - variances of principal components [3natom x 1]
 %
 %% Example
 %#
@@ -21,8 +24,8 @@ nstep = size(trj, 1);
 
 %% covariance matrix
 trj = bsxfun(@minus, trj, mean(trj));
-covmat = (trj'*trj)./(nstep-1); %unbiased
-%covmat = (trj'*trj)./nstep;     %biased
+covmat = (trj'*trj)./(nstep-1);  % unbiased estimates of covariances
+%covmat = (trj'*trj)./nstep;     % biased estimates of covariances
 
 %% diagonalize
 [eigenVector, eigenValue] = eig(covmat);
