@@ -2,28 +2,42 @@
 window_center = 0:3:180;
 nwindow = numel(window_center);
 
+%% setup constant
+c = getconstants;
+% KB is the Boltzmann constant
+KBT = c.KB*300;
+BETA = 1./KBT;
+
+%% read potential energy data
+for i = 1:nwindow
+  filename = sprintf('../3_prod/run_%d.out', window_center(i));
+  e = readamberout(filename);
+  u_kn{i} = e.eamber*BETA;
+end
+
 %% read dihedral angle data
-dihedral = {};
 for i = 1:nwindow
   filename = sprintf('../3_prod/run_%d.dat', window_center(i));
   x = load(filename);
-  dihedral{i} = x(:, 2);
+  dihedral_kn{i} = x(:, 2);
 end
 
 %% define a function handle of bias energy for each umbrella window
-fhandle = {};
 for i = 1:nwindow
   k = 200 * (pi/180)^2; % conversion of the unit from kcal/mol/rad^2 to kcal/mol/deg^2
-  fhandle{i} = @(x) k*(periodic(x, window_center(i))).^2;
+  fhandle_k{i} = @(x) BETA*k*(periodic(x, window_center(i))).^2;
 end
 
-s = getconstants;
-kbt = s.KB*300;
+%% MBAR
+f_k = mbar(u_kn, fhandle_k, dihedral_kn);
 
-%% calculate probability along the dihedral angle and calculate
-%% the potential of mean force (PMF) along the dihedral angle
-[f, log_prob, center] = wham(dihedral, fhandle, 300, linspace(-1, 181, 82));
-pmf = - kbt * log_prob;
+%% PMF
+edge = linspace(-1, 181, 101);
+for i = 1:nwindow
+  [bin_kn{i}, center] = assign1dbins(dihedral_kn{i}, edge);
+end
+pmf = mbarpmf(u_kn, fhandle_k, dihedral_kn, bin_kn, f_k);
+pmf = KBT*pmf;
 pmf = pmf - pmf(1);
 
 %% plot the PMF
