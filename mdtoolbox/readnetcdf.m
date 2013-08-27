@@ -1,4 +1,4 @@
-function [trj, box, vel, attributes] = readnetcdf(filename, index_atom, index_time)
+function [trj, box, vel, temp, attributes] = readnetcdf(filename, index_atom, index_time)
 %% readnetcdf
 % read amber netcdf file
 %
@@ -20,9 +20,10 @@ function [trj, box, vel, attributes] = readnetcdf(filename, index_atom, index_ti
 % * index_atom - atom index or logical index specifying atoms to be read
 % * index_time - time-step index or logical index specifying steps to be read
 %                please note that this should be a regularly-spaced index
-% * trj        - trajectory in units of angstrom [nstep x natom3 double]
-% * vel        - velocity in units of  angstrom/picosecond [nstep x natom3 double]
+% * trj        - coordinates in units of angstrom [nstep x natom3 double]
 % * box        - box size in units of angstrom [nstep x 3 double]
+% * vel        - velocity in units of angstrom/picosecond [nstep x natom3 double]
+% * temp       - target temperature in units of kelvin [nstep x 1 double]
 % * attributes - attributes (like header information) of netcdf file
 %                [structure]
 %
@@ -67,7 +68,7 @@ function [trj, box, vel, attributes] = readnetcdf(filename, index_atom, index_ti
 %   float velocities(frame, atom, spatial) units="angstrom/picosecond"
 %                                           scale_factor=20.455f
 %% TODO
-% support for velocities
+%
 % 
 
 %% displays groups, dimensions, variable definitions, and all attributes in the NetCDF data
@@ -92,6 +93,7 @@ end
 is_trj = false;
 is_box = false;
 is_vel = false;
+is_temp = false;
 
 for i = 1:numel(finfo.Variables)
   varname = finfo.Variables(i).Name;
@@ -104,6 +106,9 @@ for i = 1:numel(finfo.Variables)
   if strncmpi(varname, 'velocities', numel('velocities'))
     is_vel = true;
   end
+  if strncmpi(varname, 'temp0', numel('temp0'))
+    is_temp = true;
+  end
 end
 
 if nargout < 2
@@ -112,6 +117,10 @@ end
 
 if nargout < 3
   is_vel = false;
+end
+
+if nargout < 4
+  is_temp = false;
 end
 
 %% initialization
@@ -146,7 +155,7 @@ count_time  = numel(index_time);
 stride_time = unique(diff(index_time));
 
 %% read data
-% trajectory in Angstrom
+% coordinates in Angstrom
 if is_trj
   trj = ncread(filename, 'coordinates', [1 start_atom start_time], ...
                [3 count_atom count_time], [1 stride_atom stride_time]); 
@@ -158,7 +167,7 @@ else
   trj = [];
 end
 
-% box-size in Angstrom
+% box-sizes in Angstrom
 if is_box
   box = ncread(filename, 'cell_lengths', [1 start_time], ...
                [3 count_time], [1 stride_time]); 
@@ -180,10 +189,12 @@ else
   vel = [];
 end
 
-% time in picosecond
-% attribute.time = ncread(filename, 'time');
+% target temperatures in Kelvin
+if is_temp
+  temp = ncread(filename, 'temp0', [start_time], ...
+               [count_time], [stride_time]); 
+else
+  temp = [];
+end
 
-% box-angle in degree
-% tmp = ncread(filename, 'cell_angles');
-% attribute.angular = tmp';
 
