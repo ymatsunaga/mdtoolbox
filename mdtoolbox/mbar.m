@@ -61,43 +61,38 @@ for k = 1:K
   end
 end
 
-% %% solve the MBAR equation by self-consistent iteration
-% f_k = zeros(K, 1);
-% f_k_new = f_k;
-% check_convergence = inf;
+%% solve the MBAR equation by self-consistent iteration
+f_k = zeros(K, 1);
+f_k_new = f_k;
 
-% log_wi_jn = zeros(K, N_max);
-% for j = 1:K
-%   log_wi_jn(j, 1:N_k(j)) = 1;
-% end
-% index = log_wi_jn > 0;
+log_wi_jn = zeros(K, N_max);
+for j = 1:K
+  log_wi_jn(j, 1:N_k(j)) = 1;
+end
+index = log_wi_jn > 0;
 
-% count_iteration = 0;
-% while check_convergence > tolerance
-%   for i = 1:K
-%     log_wi_jn = calc_log_wi_jn(N_k, f_k, u_kln, squeeze(u_kln(:, i, :)), K, N_max);
-%     f_k_new(i) = - logsumexp(log_wi_jn(index));
-%   end
+for count_iteration = 1:5
+  for i = 1:K
+    log_wi_jn = calc_log_wi_jn(N_k, f_k, u_kln, squeeze(u_kln(:, i, :)), K, N_max);
+    f_k_new(i) = - logsumexp(log_wi_jn(index));
+  end
   
-%   f_k_new = f_k_new - f_k_new(1);
-%   check_convergence = max(abs(f_k_new - f_k))./std(f_k_new);
-%   f_k = f_k_new;
+  f_k_new = f_k_new - f_k_new(1);
+  check_convergence = max(abs(f_k_new - f_k))./std(f_k_new);
+  f_k = f_k_new;
 
-%   count_iteration = count_iteration + 1;
-%   if mod(count_iteration, 10) == 0
-%     fprintf('%dth iteration  delta = %e  tolerance = %e\n', count_iteration, check_convergence, tolerance);
-%     fprintf('free energies = ');
-%     fprintf('%f ', f_k);
-%     fprintf('\n');
-%     fprintf('\n');
-%   end
-% end
+  fprintf('%dth iteration  delta = %e  tolerance = %e\n', count_iteration, check_convergence, tolerance);
+  fprintf('free energies = ');
+  fprintf('%f ', f_k);
+  fprintf('\n');
+  fprintf('\n');
+end
 
 %% solve the MBAR equation by the Newton-Raphson method
 first_gamma = 0.1;
 gamma = 1.0;
 
-f_k = zeros(K, 1);
+%f_k = zeros(K, 1);
 f_k_new = f_k;
 check_convergence = inf;
 
@@ -108,7 +103,7 @@ end
 index = log_wi_jn > 0;
 W_nk = zeros(sum(N_k), K);
 
-count_iteration = 0;
+count_iteration = 5;
 while check_convergence > tolerance
   f_k_new = f_k;
   for i = 1:K
