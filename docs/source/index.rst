@@ -11,7 +11,8 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
-   plot
+   introduction
+   matlab
    pmf
    anm
 ..   spline
