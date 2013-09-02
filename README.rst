@@ -14,6 +14,5 @@ functions which cover the following types of scientific computations:
 * WHAM, and MBAR methods
 * Other auxiliary functions... such as atom selections
 
-For details, see `the documentation <http://ymatsunaga.github.io/mdtoolbox/>`_ 
-http://ymatsunaga.github.io/mdtoolbox/ . 
+For details, see the documentation http://ymatsunaga.github.io/mdtoolbox/ . 
 
