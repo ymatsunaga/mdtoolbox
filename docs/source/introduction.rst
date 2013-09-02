@@ -28,7 +28,7 @@ or just clone this repository by invokning the following command,
  $ git clone https://github.com/ymatsunaga/mdtoolbox.git
 
 After downloading (and unpacking), invoke ``pathtool`` commmand in MATLAB
-and add ``mdtoolbox/function`` to your MATLAB search path. 
+and add ``mdtoolbox/mdtoolbox/`` to your MATLAB search path. 
 
 Usage
 ----------------------------------
