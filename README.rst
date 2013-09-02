@@ -2,9 +2,8 @@ MD Toolbox
 ==================
 
 MD Toolbox is a MATLAB toolbox for analysis of molecular dynamics
-trajectories of biomolecules. 
-
-The functions are:
+trajectories of biomolecules. It consists of a collection of MATLAB
+functions which cover the following types of scientific computations:
 
 * I/O for topology, coordinates, and trajectory files used for MD simulation
 * Least-squares fitting of structures
