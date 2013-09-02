@@ -74,7 +74,7 @@ for ireplica = 1:nReplicates
 
   distSum = sum(distPointCenter);
   disp(sprintf('%d iteration, total distance = %f', ireplica, distSum));
-  if (ireplica == 1) | (distSum < distSum_out)
+  if (ireplica == 1) || (distSum < distSum_out)
     distSum_out = distSum;
     indexOfCluster_out = indexOfCluster;
     indexOfCenter_out = indexOfCenter;

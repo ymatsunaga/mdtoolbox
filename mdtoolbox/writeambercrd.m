@@ -45,7 +45,7 @@ end
 natom3 = size(crd, 2);
 natom = natom3 / 3;
 
-if (nargin < 5) | (isempty(title))
+if (nargin < 5) || (isempty(title))
   title = sprintf('FILENAME=%s CREATED BY MATLAB', filename);
 end
 for i = (numel(title)+1):80

@@ -72,7 +72,7 @@ end
 %% preparatin
 natom = size(pdb.record, 1);
 
-if (nargin < 3) | (numel(index) == 0)
+if (nargin < 3) || (numel(index) == 0)
   index = 1:natom;
 else
   if islogical(index)

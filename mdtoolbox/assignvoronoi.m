@@ -10,20 +10,22 @@ function [index, dmin] = assignvoronoi(ref, data)
 % This routine assigns Voronoi cell indices to the elements of data
 % by checking the distances between ref and data. For the distance,
 % n-dimensional Euclid distance is used. 
+% Data points of index=i belong to the Voronoi cell of the
+% reference point (or generating point) point ref(i,:).
 %
 % * ref   - generating points of Voronoi cells 
 %           [n x ndim double]
 % * data  - some trajectory or data set to be assigned 
 %           [nstep x ndim double]
 % * index - indices of Voronoi cells. indices correspond to the rows of ref 
-%           [nstep double]
+%           [nstep x 1 double]
 % * dmin  - distance between the data to the nearest generating point 
-%           [nstep double]
+%           [nstep x 1 double]
 %
 %% Example
 %# ref  = rand(10, 2);
 %# data = rand(10000, 2);
-%# [index, dmin] = assignvoronoi(ref, data);
+%# index = assignvoronoi(ref, data);
 %# scatter(data(:, 1), data(:, 2), 5, index, 'filled');
 %# hold on
 %# scatter(ref(:, 1), ref(:, 2), 100, 'ro', 'filled');
@@ -48,5 +50,4 @@ for istep = 1:nstep
   index(istep) = index_each;
   dmin(istep) = sqrt(dmin_each);
 end
-
 

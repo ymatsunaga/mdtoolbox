@@ -72,7 +72,7 @@ natom = 0;
 while ~feof(fid)
   line_raw = strtrim(fgetl(fid));
   
-  if strncmpi(line_raw, 'ATOM', numel('ATOM')) | strncmpi(line_raw, 'HETATM', numel('HETATM'))
+  if strncmpi(line_raw, 'ATOM', numel('ATOM')) || strncmpi(line_raw, 'HETATM', numel('HETATM'))
     % ATOM or HETATM record
     natom = natom + 1;
   end
@@ -99,7 +99,7 @@ natom = 0;
 while ~feof(fid)
   line_raw = strtrim(fgetl(fid));
   
-  if strncmpi(line_raw, 'ATOM', numel('ATOM')) | strncmpi(line_raw, 'HETATM', numel('HETATM'))
+  if strncmpi(line_raw, 'ATOM', numel('ATOM')) || strncmpi(line_raw, 'HETATM', numel('HETATM'))
     % ATOM or HETATM record
     line = repmat(' ', 1, 80);
     line(1:length(line_raw)) = line_raw;

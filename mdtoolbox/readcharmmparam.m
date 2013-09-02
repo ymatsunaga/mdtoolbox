@@ -68,7 +68,7 @@ fseek(fid, 0, 'bof');
 while ~feof(fid)
   line = fgetl(fid);
   line = uncomment(line);
-  if strncmpi(line, 'DIHEdral', numel('DIHEdral')) | strncmpi(line, 'PHI', numel('PHI'))
+  if strncmpi(line, 'DIHEdral', numel('DIHEdral')) || strncmpi(line, 'PHI', numel('PHI'))
     C = textscan(fid, '%s %s %s %s %f %f %f', 'CommentStyle', '!', 'CollectOutput', true);
     break;
   end

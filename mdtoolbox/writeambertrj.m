@@ -44,7 +44,7 @@ end
 natom3 = size(trj, 2);
 nstep = size(trj, 1);
 
-if nargin < 4 | (isempty(title))
+if nargin < 4 || (isempty(title))
   title = sprintf('FILENAME=%s CREATED BY MATLAB', filename);
 end
 

@@ -31,7 +31,7 @@ end
 natom3 = numel(crd);
 natom = natom3 / 3;
 
-if (nargin < 5) | (isempty(header))
+if (nargin < 5) || (isempty(header))
   title1 = sprintf('REMARKS FILENAME=%s CREATED BY MATLAB', filename);
   for i = (numel(title1)+1):80
     title1 = [title1 ' '];

@@ -1,6 +1,6 @@
 function logical_index = selectname(namelist, varargin)
 %% selectname
-% used for atom selection. Finds all the atoms or residues which matches given names.
+% used for atom selection. Finds atoms or residues which matches given names.
 %
 %% Syntax
 %# logical_index = selectname(namelist, name)

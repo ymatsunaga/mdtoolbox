@@ -44,7 +44,7 @@ end
 [nstep, natom3] = size(trj);
 natom = natom3 / 3;
 
-if (nargin < 4) | (isempty(header))
+if (nargin < 4) || (isempty(header))
   % default header in xplor format
   header.is_charmm = false;
   header.is_charmm_extrablock = false;

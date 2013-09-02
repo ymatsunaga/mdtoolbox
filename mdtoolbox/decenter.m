@@ -37,7 +37,7 @@ natom3 = size(x, 2);
 natom = natom3/3;
 com = zeros(nstep, 3);
 
-if (nargin < 2) | (numel(index) == 0)
+if (nargin < 2) || (numel(index) == 0)
   index = 1:natom;
 else
   if islogical(index)

@@ -75,7 +75,7 @@ vel = cell2mat(vel)';
 
 if numel(vel) == 0
   vel = [];
-elseif (numel(vel) == 3) | (numel(vel) == 6)
+elseif (numel(vel) == 3) || (numel(vel) == 6)
   box = vel(1:3);
   vel = [];
 elseif numel(vel) == natom3

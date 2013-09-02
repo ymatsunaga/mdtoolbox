@@ -1,18 +1,22 @@
 function pmf_i = mbarpmf(u_kn, fhandle_k, data_kn, bin_kn, f_k)
 %% mbarpmf
-% calculate the potential of mean force of bins
+% calculate the potential of mean force of bins by using the Multistate Bennet Acceptance Ratio Method (MBAR)
 %
 %% Syntax
 %# pmf = mbarpmf(u_kn, fhandle_k, data_kn, bin_kn, f_k)
 %
 %% Description
 %
-% * u_kn      - u (x_{kn})
-%               [cell nwindow x nstep]
-% * fhandle   - cell of function handles which represent biased potentials
-%               [cell nwindow]
-% * bin       - cell of trajectories in a space where histograms are counted
-%               [cell nwindow]
+% * u_kn      - unbiased (dimensionless) potential energy of n-th snapshot from k-th umbrella-windows
+%               [cell nwindow x 1]
+% * fhandle_k - function handle of biased (dimensionless) potential for k-th umbrella-window
+%               [cell nwindow x 1]
+% * data_kn   - coordinates relevant to biased potentials
+%               [cell nwindow x 1]
+% * bin_kn    - cell of binned trajectories in the order parameter space where PMF is calculated
+%               [cell nwindow x 1]
+% * f_k       - (dimensionless) free energies of umbrella-windows
+%               [double K x 1]
 % 
 %% Example
 %#
@@ -26,7 +30,7 @@ function pmf_i = mbarpmf(u_kn, fhandle_k, data_kn, bin_kn, f_k)
 % [3] C. H. Bennett, Journal of Computational Physics (1976).
 %
 
-% The names of variables and indicies follow those of Ref [1]. 
+% The names of variables and indicies follow the convention of Ref 1.
 % We assume array structures whose rows correspond to umbrella
 % windows and columns are bins. 
 

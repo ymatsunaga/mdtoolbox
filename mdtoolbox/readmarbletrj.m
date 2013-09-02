@@ -36,7 +36,7 @@ is_box = false;
 is_vel = false;
 is_compressed = false;
 
-if (nargin < 3) | isempty(index_time)
+if (nargin < 3) || isempty(index_time)
   index_time = [];
 end
 
@@ -76,7 +76,7 @@ if regexp(trj_type, 'V')
   is_vel = true;
 end
 
-if (nargin < 2) | isempty(index_atom)
+if (nargin < 2) || isempty(index_atom)
   index_atom = 1:natom;
 else
   if islogical(index_atom)
@@ -103,7 +103,7 @@ istep = 0;
 idata = 0;
 while ~feof(fid)
   istep = istep + 1;
-  if isempty(index_time) | ismember(istep, index_time)
+  if isempty(index_time) || ismember(istep, index_time)
     idata = idata + 1;
     if is_trj
       %crd = fscanf(fid, '%f %f %f\n', [3 natom]);

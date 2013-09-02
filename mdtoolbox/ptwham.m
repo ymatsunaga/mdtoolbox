@@ -188,7 +188,7 @@ while check_convergence > TOLERANCE
   if mod(count_iteration, 1) == 0
     fprintf('%dth iteration  delta = %e  tolerance = %e\n', count_iteration, check_convergence, TOLERANCE);
     fprintf('free energies = ');
-    fprintf('%f ', f_k);
+    fprintf('%f ', f_l);
     fprintf('\n');
     fprintf('\n');
   end
