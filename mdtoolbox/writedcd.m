@@ -81,7 +81,7 @@ if header.nset ~= size(trj, 1)
   header.nset = size(trj, 1);
 end
 
-if (nargin > 2) & (~isempty(box))
+if (nargin > 2) && (~isempty(box))
   % charmm format
   header.is_charmm = true;
   header.is_charmm_extrablock = true;

@@ -10,7 +10,7 @@ if exist(filename, 'file')
   movefile(filename, filename_old);
 end
 
-index = selectname(pdb.name, 'CA') & selectname(pdb.chainid, 'A');
+index = selectname(pdb.name, 'CA') && selectname(pdb.chainid, 'A');
 pdb_ca = substruct(pdb, index);
 crd_ca = pdb_ca.xyz';
 crd_ca = crd_ca(:)';

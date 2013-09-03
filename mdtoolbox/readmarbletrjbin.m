@@ -97,7 +97,7 @@ while 1
     fseek(fid, 8*9, 0);
   end
 
-  if (~isempty(index_time)) & (istep >= max(index_time))
+  if (~isempty(index_time)) && (istep >= max(index_time))
     break;
   end
 end

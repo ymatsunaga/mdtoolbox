@@ -20,7 +20,7 @@ function [indexOfCluster_out, indexOfCenter_out, distPointCenter_out] = clusteri
 %% Example
 %# parm = readparm('ala.parm');
 %# trj = readnetcdf('ala.nc');
-%# index = find(selectid(parm.residue_id, 1:3) & ~selectname(parm.atom_name, 'H*'));w
+%# index = find(selectid(parm.residue_id, 1:3) & ~selectname(parm.atom_name, 'H*'));
 %# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj(:, to3(index)), 4, parm.mass(index));
 % 
 %% See also

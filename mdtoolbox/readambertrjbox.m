@@ -59,7 +59,7 @@ box_buffer = zeros(nblock, 3);
 
 %% open file
 filename = strtrim(filename);
-if (numel(filename) >= 3) & strncmpi(filename((end-2):end), '.gz', numel('.gz'))
+if (numel(filename) >= 3) && strncmpi(filename((end-2):end), '.gz', numel('.gz'))
   dirname = tempname();
   dirname = [dirname '/'];
   mkdir(dirname);

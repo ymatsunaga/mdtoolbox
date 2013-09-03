@@ -60,7 +60,7 @@ for istep = 1:nstep
     fprintf(fid, '%8.3f', trj(istep, i:min(i+9,natom3)));
     fprintf(fid, '\n');
   end
-  if (nargin >= 3) & (~isempty(box))
+  if (nargin >= 3) && (~isempty(box))
     fprintf(fid, '%8.3f', box(istep, :));
     fprintf(fid, '\n');
   end

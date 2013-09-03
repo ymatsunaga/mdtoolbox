@@ -73,7 +73,7 @@ for i = 1:6:natom3
 end
 
 % velocities
-if (nargin >= 4) & (~isempty(vel))
+if (nargin >= 4) && (~isempty(vel))
   for i = 1:6:natom3
     fprintf(fid, '%12.7f', vel(1, i:min(i+5,natom3)));
     fprintf(fid, '\n');
@@ -81,7 +81,7 @@ if (nargin >= 4) & (~isempty(vel))
 end
 
 % box sizes
-if (nargin >= 3) & (~isempty(box))
+if (nargin >= 3) && (~isempty(box))
   fprintf(fid, '%12.7f', box);
   fprintf(fid, '%12.7f', [90.0 90.0 90.0]);
   fprintf(fid, '\n');

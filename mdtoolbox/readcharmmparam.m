@@ -25,7 +25,7 @@ cleaner = onCleanup(@() fclose(fid));
 param.title = [];
 while ~feof(fid)
   line = fgetl(fid);
-  if (numel(line) > 0) & (strncmpi(line(1), '*', numel('*')))
+  if (numel(line) > 0) && (strncmpi(line(1), '*', numel('*')))
     for i = (numel(line)+1):80
       line = [line ' '];
     end
