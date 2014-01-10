@@ -19,7 +19,7 @@ function mass = calcmass(name)
 % 
 
 %% setup
-natom       = size(name,1);
+natom       = size(name, 1);
 mass        = zeros(natom, 1);
 index_check = false(natom, 1);
 
@@ -98,7 +98,7 @@ index = selectname(name, 'OX');
 index_check = index_check | index;
 mass(index) = 15.99940;
 
-index = selectname(name, 'PL');
+index = selectname(name, 'P', 'PL');
 index_check = index_check | index;
 mass(index) = 30.974000;
 

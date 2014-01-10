@@ -43,7 +43,7 @@ log_h_m(:) = double(log(eps('single')));
 log_h_m(h_m > 0) = log(h_m(h_m > 0));
 
 %% calculate weights
-% w_kn: weight of the n-the snapshot from umbrella-window (k)
+% w_kn: weight of the n-th snapshot from umbrella-window (k)
 for k = 1:K
   N = numel(data_kn{k});
   w_n = zeros(N, 1);

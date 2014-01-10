@@ -1,4 +1,4 @@
-function rc = writenetcdf(filename, trj, box, title)
+function writenetcdf(filename, trj, box, title)
 %% writenetcdf
 % write amber netcdf file
 %

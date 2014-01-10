@@ -1,6 +1,6 @@
 function logical_index = selectid(id, index)
-%% selectname
-% used for atom selection. Finds all the atoms or residues which matches given index.
+%% selectid
+% Used for atom selection. Returns logical indices of atoms or residues which matched given IDs.
 %
 %% Syntax
 %# logical_index = selectid(id, index)

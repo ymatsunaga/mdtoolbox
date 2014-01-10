@@ -34,7 +34,6 @@ function [trj, box, vel] = readmarbletrj(filename, index_atom, index_time)
 is_trj = false;
 is_box = false;
 is_vel = false;
-is_compressed = false;
 
 if (nargin < 3) || isempty(index_time)
   index_time = [];
@@ -46,7 +45,7 @@ if (numel(filename) >= 3) && strncmpi(filename((end-2):end), '.gz', numel('.gz')
   dirname = tempname();
   dirname = [dirname '/'];
   mkdir(dirname);
-  disp(sprintf('uncompressing %s into %s', filename, dirname))
+  fprintf('uncompressing %s into %s', filename, dirname);
   filename = gunzip(filename, dirname);
   filename = filename{1};
   disp('done')
@@ -60,7 +59,7 @@ cleaner = onCleanup(@() fclose(fid));
 %% read header
 line = strtrim(fgetl(fid));
 line = regexp(line, ' ', 'split');
-natom = str2num(line{6}(1:end-1));
+natom = str2double(line{6}(1:end-1));
 natom3 = natom*3;
 trj_type = line{8};
 
@@ -143,7 +142,7 @@ while ~feof(fid)
     end
   end
    
-  if (~isempty(index_time)) && (istep >= max(index_time))
+  if (~isempty(index_time)) & (istep >= max(index_time))
     break;
   end
 end

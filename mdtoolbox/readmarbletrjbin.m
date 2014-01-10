@@ -83,7 +83,6 @@ while 1
 
   istep = istep + 1;
   if isempty(index_time) || ismember(istep, index_time)
-    istep
     idata = idata + 1;
     crd  = fread(fid, natom3, 'float64');
     vcrd = fread(fid, natom3, 'float64');

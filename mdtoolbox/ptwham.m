@@ -89,9 +89,9 @@ end
 % L: number of unique target temperatures (temp0_l)
 temp0_l = [];
 for k = 1:K
-  temp0_l = unique([temp0_l; temperature_kn{k}]);
+  temp0_l = unique([temp0_l; temperature_kn{k}(:)]);
 end
-temp0_l = sort(unique(temp0_l(:)))
+temp0_l = sort(unique(temp0_l(:)));
 L = numel(temp0_l);
 beta0_l = 1.0./(temp0_l*KB);
 

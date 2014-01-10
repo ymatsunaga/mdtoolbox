@@ -34,7 +34,7 @@ function [rmsd, trj, vel, Ucell] = superimpose(ref, trj, index, mass, vel, isdec
 %# plot(rmsd)
 %
 %% See also
-% meanstructure
+% superimpose2d meanstructure
 %
 %% References
 % W. Kabsch, "A solution for the best rotation to relate two sets of vectors." 

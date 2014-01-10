@@ -34,11 +34,11 @@ end
 nAtom = length(crd)/3;
 
 %% write
-disp('use little-endian')
-fid = fopen(filename, 'w', 'l');
+% disp('use little-endian')
+% fid = fopen(filename, 'w', 'l');
 
-% disp('use big-endian')
-% fid = fopen(filename,'w', 'b');
+disp('use big-endian')
+fid = fopen(filename,'w', 'b');
 
 % nAtom
 fwrite(fid, nAtom, 'int32');

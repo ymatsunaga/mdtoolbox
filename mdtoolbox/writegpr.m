@@ -10,7 +10,7 @@ if exist(filename, 'file')
   movefile(filename, filename_old);
 end
 
-index = selectname(pdb.name, 'CA') && selectname(pdb.chainid, 'A');
+index = selectname(pdb.name, 'CA') & selectname(pdb.chainid, 'A');
 pdb_ca = substruct(pdb, index);
 crd_ca = pdb_ca.xyz';
 crd_ca = crd_ca(:)';
@@ -96,7 +96,7 @@ fprintf(fid, '%13.5e%13.5e\n', 0.2, 4.0);
 fprintf(fid, '\n');
 
 
-function s = calcdihedral(x);
+function s = calcdihedral(x)
 nstep = size(x,1);
 s = zeros(nstep,1);
 

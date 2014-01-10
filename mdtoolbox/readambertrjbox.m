@@ -35,7 +35,6 @@ function [trj, box, title] = readambertrjbox(natom, filename, index)
 %% initialization
 trj = [];
 box = [];
-title = [];
 natom3 = natom*3;
 iblock = 1;
 
@@ -63,7 +62,7 @@ if (numel(filename) >= 3) && strncmpi(filename((end-2):end), '.gz', numel('.gz')
   dirname = tempname();
   dirname = [dirname '/'];
   mkdir(dirname);
-  disp(sprintf('uncompressing %s into %s', filename, dirname))
+  fprintf('uncompressing %s into %s', filename, dirname);
   filename = gunzip(filename, dirname);
   filename = filename{1};
   disp('done')
