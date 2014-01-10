@@ -1,13 +1,13 @@
-function [emode, frequency, covar, covar_atom] = anm_sparse(crd, cutoff, k)
+function [emode, frequency, covar, covar_atom] = anmsparse(crd, cutoff, k)
 %% anm
 % calculate normal modes and anisotropic fluctuations by using Anisotropic (Elastic) Network Model.
 %
 %% Syntax
-%# emode = anm_sparse(crd);
-%# emode = anm_sparse(crd, cutoff);
-%# [emode, frequency] = anm_sparse(crd, cutoff);
-%# [emode, frequency, covar] = anm_sparse(crd, cutoff);
-%# [emode, frequency, covar, covar_atom] = anm_sparse(crd, cutoff);
+%# emode = anmsparse(crd);
+%# emode = anmsparse(crd, cutoff);
+%# [emode, frequency] = anmsparse(crd, cutoff);
+%# [emode, frequency, covar] = anmsparse(crd, cutoff);
+%# [emode, frequency, covar, covar_atom] = anmsparse(crd, cutoff);
 %
 %% Description
 % This routine performs a normal mode analysis of the Anisotropic 
