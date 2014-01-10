@@ -1,8 +1,0 @@
-source leaprc.ff12SB
-set default PBradii mbondi3
-
-a = sequence { ACE ALA ALA NME }
-
-saveamberparm a ala.parm ala.crd
-savepdb a ala.pdb
-

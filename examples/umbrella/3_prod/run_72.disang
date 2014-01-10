@@ -1,6 +1,0 @@
-harmonic restraint fixed spring constant
- &rst
-   iat=9,15,17,19,
-   r0=72.000000, k0=200.0,
- /
-
