@@ -28,9 +28,9 @@ function writedcd(filename, trj, box, header)
 % readdcd
 %
 %% References
-% CafeMol Manual ( http://www.cafemol.org/doc.php )
-% MolFile Plugin ( http://www.ks.uiuc.edu/Research/vmd/plugins/molfile/dcdplugin.html )
-% EGO_VIII Manual ( http://www.lrz.de/~heller/ego/manual/node93.html )
+% MolFile Plugin http://www.ks.uiuc.edu/Research/vmd/plugins/molfile/dcdplugin.html
+% CafeMol Manual http://www.cafemol.org/doc.php
+% EGO_VIII Manual http://www.lrz.de/~heller/ego/manual/node93.html
 %
 
 %% check existing file
