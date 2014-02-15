@@ -252,7 +252,7 @@ FastCalcRMSDAndRotation(double *rot, double *A, double *rmsd, double E0, int len
 
     if (minScore > 0) 
         if (rms < minScore)
-            return (-1); // Don't bother with rotation. 
+            return (-1);
 
     a11 = SxxpSyy + Szz-mxEigenV; a12 = SyzmSzy; a13 = - SxzmSzx; a14 = SxymSyx;
     a21 = SyzmSzy; a22 = SxxmSyy - Szz-mxEigenV; a23 = SxypSyx; a24= SxzpSzx;
@@ -662,7 +662,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
       if ( nlhs > 1 ) {
         /* apply rotation matrix */
-        for (int i = 0; i < natom; ++i) {
+        for (i = 0; i < natom; ++i) {
           x = rotmat[0]*frag_b[0][i] + rotmat[1]*frag_b[1][i] + rotmat[2]*frag_b[2][i];
           y = rotmat[3]*frag_b[0][i] + rotmat[4]*frag_b[1][i] + rotmat[5]*frag_b[2][i];
           z = rotmat[6]*frag_b[0][i] + rotmat[7]*frag_b[1][i] + rotmat[8]*frag_b[2][i];
@@ -687,7 +687,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
           }
         }
 
-        for (int i = 0; i < natom; ++i) {
+        for (i = 0; i < natom; ++i) {
           x = rotmat[0]*frag_v[0][i] + rotmat[1]*frag_v[1][i] + rotmat[2]*frag_v[2][i];
           y = rotmat[3]*frag_v[0][i] + rotmat[4]*frag_v[1][i] + rotmat[5]*frag_v[2][i];
           z = rotmat[6]*frag_v[0][i] + rotmat[7]*frag_v[1][i] + rotmat[8]*frag_v[2][i];
@@ -724,7 +724,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
       if ( nlhs > 1 ) {
         /* apply rotation matrix */
-        for (int i = 0; i < natom; ++i) {
+        for (i = 0; i < natom; ++i) {
           frag_b[0][i] = frag_b[0][i] - xsum_b;
           frag_b[1][i] = frag_b[1][i] - ysum_b;
           frag_b[2][i] = frag_b[2][i] - zsum_b;
@@ -753,7 +753,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
           }
         }
 
-        for (int i = 0; i < natom; ++i) {
+        for (i = 0; i < natom; ++i) {
           x = rotmat[0]*frag_v[0][i] + rotmat[1]*frag_v[1][i] + rotmat[2]*frag_v[2][i];
           y = rotmat[3]*frag_v[0][i] + rotmat[4]*frag_v[1][i] + rotmat[5]*frag_v[2][i];
           z = rotmat[6]*frag_v[0][i] + rotmat[7]*frag_v[1][i] + rotmat[8]*frag_v[2][i];
