@@ -479,6 +479,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   double  *dindex;
   double  *weight;
   double  *vel;
+  bool    *isDecentered;
 
   /* outputs */
   double  *rmsd;
@@ -496,6 +497,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   double  *weight_sub;
   double  **frag_v;
   double  rotmat[9];
+  bool    isDecentered2;
 
   mxArray *mxIsLogical;
   bool    *isLogical;
@@ -606,6 +608,15 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     }
   }
 
+  /* setup: velocity */
+  isDecentered2 = false;
+  if ( nrhs > 5 ) {
+    if ( mxGetNumberOfElements(prhs[5]) != 0 ) {
+      isDecentered = (bool*) mxGetData(prhs[5]);
+      isDecentered2 = isDecentered[0];
+    }
+  }
+
   /* setup: allocate subsets if index is given */
   frag_a_sub = NULL;
   frag_b_sub = NULL;
@@ -641,10 +652,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
 
   /* center coordinates */
-  if( index == NULL ) {
-    CenterCoords(frag_a, &xsum_a, &ysum_a, &zsum_a, natom, weight);
-  } else {
-    CenterCoords(frag_a_sub, &xsum_a, &ysum_a, &zsum_a, len, weight_sub);
+  if ( !isDecentered2 ) {
+    if( index == NULL ) {
+      CenterCoords(frag_a, &xsum_a, &ysum_a, &zsum_a, natom, weight);
+    } else {
+      CenterCoords(frag_a_sub, &xsum_a, &ysum_a, &zsum_a, len, weight_sub);
+    }
   }
 
   /* calculate RMSD and Rotaion matrix */
@@ -657,7 +670,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         }
       }
 
-      CenterCoords(frag_b, &xsum_b, &ysum_b, &zsum_b, natom, weight);
+      if ( !isDecentered2 ) {
+        CenterCoords(frag_b, &xsum_b, &ysum_b, &zsum_b, natom, weight);
+      }
       rmsd[istep] = CalcRMSDRotationalMatrix((double **) frag_a, (double **) frag_b, natom, rotmat, weight);
 
       if ( nlhs > 1 ) {
@@ -666,10 +681,16 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
           x = rotmat[0]*frag_b[0][i] + rotmat[1]*frag_b[1][i] + rotmat[2]*frag_b[2][i];
           y = rotmat[3]*frag_b[0][i] + rotmat[4]*frag_b[1][i] + rotmat[5]*frag_b[2][i];
           z = rotmat[6]*frag_b[0][i] + rotmat[7]*frag_b[1][i] + rotmat[8]*frag_b[2][i];
-        
-          frag_b[0][i] = x + xsum_a;
-          frag_b[1][i] = y + ysum_a;
-          frag_b[2][i] = z + zsum_a;
+
+          if ( !isDecentered2 ) {
+            frag_b[0][i] = x + xsum_a;
+            frag_b[1][i] = y + ysum_a;
+            frag_b[2][i] = z + zsum_a;
+          } else {
+            frag_b[0][i] = x;
+            frag_b[1][i] = y;
+            frag_b[2][i] = z;
+          }
         }
 
         for (i = 0; i < natom; i++) {
@@ -679,7 +700,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         }
       }
 
-      if ( nlhs > 2 ) {
+      if ( (frag_v != NULL) & (nlhs > 2) ) {
         /* apply rotation matrix to velocity*/
         for (i = 0; i < natom; i++) {
           for (j = 0; j < 3; j++) {
@@ -719,23 +740,33 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         }
       }
 
-      CenterCoords(frag_b_sub, &xsum_b, &ysum_b, &zsum_b, len, weight_sub);
+      if ( !isDecentered2 ) {
+        CenterCoords(frag_b_sub, &xsum_b, &ysum_b, &zsum_b, len, weight_sub);
+      }
       rmsd[istep] = CalcRMSDRotationalMatrix((double **) frag_a_sub, (double **) frag_b_sub, len, rotmat, weight_sub);
 
       if ( nlhs > 1 ) {
         /* apply rotation matrix */
         for (i = 0; i < natom; ++i) {
-          frag_b[0][i] = frag_b[0][i] - xsum_b;
-          frag_b[1][i] = frag_b[1][i] - ysum_b;
-          frag_b[2][i] = frag_b[2][i] - zsum_b;
+          if ( !isDecentered2 ) {
+            frag_b[0][i] = frag_b[0][i] - xsum_b;
+            frag_b[1][i] = frag_b[1][i] - ysum_b;
+            frag_b[2][i] = frag_b[2][i] - zsum_b;
+          }
 
           x = rotmat[0]*frag_b[0][i] + rotmat[1]*frag_b[1][i] + rotmat[2]*frag_b[2][i];
           y = rotmat[3]*frag_b[0][i] + rotmat[4]*frag_b[1][i] + rotmat[5]*frag_b[2][i];
           z = rotmat[6]*frag_b[0][i] + rotmat[7]*frag_b[1][i] + rotmat[8]*frag_b[2][i];
         
-          frag_b[0][i] = x + xsum_a;
-          frag_b[1][i] = y + ysum_a;
-          frag_b[2][i] = z + zsum_a;
+          if ( !isDecentered2 ) {
+            frag_b[0][i] = x + xsum_a;
+            frag_b[1][i] = y + ysum_a;
+            frag_b[2][i] = z + zsum_a;
+          } else {
+            frag_b[0][i] = x;
+            frag_b[1][i] = y;
+            frag_b[2][i] = z;
+          }
         }
 
         for (i = 0; i < natom; i++) {
@@ -745,7 +776,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         }
       }
 
-      if ( nlhs > 2 ) {
+      if ( (frag_v != NULL) & (nlhs > 2) ) {
         /* apply rotation matrix to velocity*/
         for (i = 0; i < natom; i++) {
           for (j = 0; j < 3; j++) {
