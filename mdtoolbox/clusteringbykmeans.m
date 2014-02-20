@@ -91,4 +91,3 @@ for icluster = 1:kcluster
   sumd(icluster) = sum(distanceFromCentroid(indexOfCluster == icluster, icluster));
 end
 
-
