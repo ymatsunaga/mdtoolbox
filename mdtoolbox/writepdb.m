@@ -1,11 +1,12 @@
-function writepdb(filename, pdb, index, format_type)
+function writepdb(filename, pdb, trj, format_type)
 %% writepdb
 % write Protein Data Bank (PDB) file
 %
 %% Syntax
 %# writepdb(filename, pdb);
-%# writepdb(filename, pdb, index);
-%# writepdb(filename, pdb, index, format_type);
+%# writepdb(filename, pdb, crd);
+%# writepdb(filename, pdb, trj);
+%# writepdb(filename, pdb, crd, format_type);
 %# writepdb(filename, pdb, [], format_type);
 %
 %% Description
@@ -13,7 +14,7 @@ function writepdb(filename, pdb, index, format_type)
 % Note that icode fields (code for insetion of residues, see
 % "References" below) are ignored in this routine. 
 %
-% * filename  - input filename of PDB
+% * filename  - input filename of PDB [char]
 % * pdb       - structure data
 %          record: 'ATOM  ' or 'HETATM' [natomx6 char]
 %          serial: Atom serial number. [natomx1 double]
@@ -28,7 +29,11 @@ function writepdb(filename, pdb, index, format_type)
 %      tempfactor: Temperature factor. [natomx1 double]
 %         element: Element symbol, right-justified. [natomx2 char]
 %          charge: Charge on the atom. [natomx2 char]
-% * index       -  index of atoms to be written
+% * crd, trj    -  coordinates, or trajecotry of the molecule
+%                  if given, the coordiates of pdb is replaced with
+%                  this data. Trajectory is written as mutiple
+%                  models in pdb file. 
+%                  [1 x 3natom double] or [nstep x 3natom double]
 % * format_type -  format type [chars. only 'vmd' can be available,
 %                  otherwise default(standard?) format is used]
 %
@@ -72,16 +77,11 @@ end
 %% preparation
 natom = size(pdb.record, 1);
 
-if (nargin < 3) || (numel(index) == 0)
-  index = 1:natom;
-else
-  if islogical(index)
-    index = find(index);
-  end
+if (nargin < 3) || (numel(trj) == 0)
+  trj = pdb.xyz';
+  trj = trj(:)';
 end
-if iscolumn(index)
-  index = index';
-end
+nstep = size(trj, 1);
   
 if nargin < 4
   format_type = 'default';
@@ -93,139 +93,155 @@ assert(fid > 0, 'Could not open file.');
 cleaner = onCleanup(@() fclose(fid));
 
 %% write file
-if strncmpi(format_type, 'vmd', numel('vmd'))
-  % VMD format
-  for iatom = index
-    fprintf(fid, '%6s', pdb.record(iatom, :));
-    fprintf(fid, '%5d', mod(pdb.serial(iatom), 100000));
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%4s', pdb.name(iatom, :));
-    fprintf(fid, '%1s', pdb.altloc(iatom, :));
-    %fprintf(fid, '%3s', pdb.resname(iatom, :));
-    %fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%4s', pdb.resname(iatom, :));
-    fprintf(fid, '%1s', pdb.chainid(iatom, :));
-    fprintf(fid, '%4d', mod(pdb.resseq(iatom), 10000));
-    %fprintf(fid, '%1s', pdb.icode(iatom, :));
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%8.3f', pdb.xyz(iatom, 1));
-    fprintf(fid, '%8.3f', pdb.xyz(iatom, 2));
-    fprintf(fid, '%8.3f', pdb.xyz(iatom, 3));
-    fprintf(fid, '%6.2f', pdb.occupancy(iatom));
-    fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%2s', pdb.element(iatom, :));
-    fprintf(fid, '%2s', pdb.charge(iatom, :));
-    fprintf(fid, '\n');
-  end
+for istep = 1:nstep
 
-elseif strncmpi(format_type, 'namd', numel('namd'))
-  % NAMD format
-  fprintf(fid, 'CRYST1    0.000    0.000    0.000  90.00  90.00  90.00 P 1           1\n');
-  for iatom = index
-    fprintf(fid, '%6s', pdb.record(iatom, :));
-    if pdb.serial(iatom) < 100000
-      fprintf(fid, '%5d', pdb.serial(iatom));
-    else
-      fprintf(fid, '%5s', lower(dec2hex(pdb.serial(iatom))));
-    end
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%4s', pdb.name(iatom, :));
-    fprintf(fid, '%1s', pdb.altloc(iatom, :));
-    %fprintf(fid, '%3s', pdb.resname(iatom, :));
-    %fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%4s', pdb.resname(iatom, :));
-    fprintf(fid, '%1s', pdb.chainid(iatom, :));
-    fprintf(fid, '%4d', mod(pdb.resseq(iatom), 10000));
-    %fprintf(fid, '%1s', pdb.icode(iatom, :));
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%8.3f', pdb.xyz(iatom, 1));
-    fprintf(fid, '%8.3f', pdb.xyz(iatom, 2));
-    fprintf(fid, '%8.3f', pdb.xyz(iatom, 3));
-    fprintf(fid, '%6.2f', pdb.occupancy(iatom));
-    fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    %fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', pdb.chainid(iatom, :));
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%2s', pdb.element(iatom, :));
-    %fprintf(fid, '%2s', pdb.charge(iatom, :));
-    fprintf(fid, '\n');
+  if(nstep > 1)
+    fprintf(fid, 'MODEL %8d\n', istep);
   end
-
-else
-  % PDB format with some extentions for large digits of atom_serial and resseq
-  for iatom = index
-    fprintf(fid, '%6s', pdb.record(iatom, :));
-    if pdb.serial(iatom) < 100000
-      fprintf(fid, '%5d', pdb.serial(iatom));
+  
+  for iatom = 1:natom
+    if strncmpi(format_type, 'vmd', numel('vmd'))
+      % VMD format
+      fprintf(fid, '%6s', pdb.record(iatom, :));
+      fprintf(fid, '%5d', mod(pdb.serial(iatom), 100000));
       fprintf(fid, '%1s', ' ');
-    else
-      fprintf(fid, '%6d', pdb.serial(iatom));
-    end
-    fprintf(fid, '%4s', pdb.name(iatom, :));
-    fprintf(fid, '%1s', pdb.altloc(iatom, :));
-    %fprintf(fid, '%3s', pdb.resname(iatom, :));
-    %fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%4s', pdb.resname(iatom, :));
-    fprintf(fid, '%1s', pdb.chainid(iatom, :));
-    if pdb.resseq(iatom) < 10000
-      fprintf(fid, '%4d', pdb.resseq(iatom));
+      fprintf(fid, '%4s', pdb.name(iatom, :));
+      fprintf(fid, '%1s', pdb.altloc(iatom, :));
+      %fprintf(fid, '%3s', pdb.resname(iatom, :));
+      %fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%4s', pdb.resname(iatom, :));
+      fprintf(fid, '%1s', pdb.chainid(iatom, :));
+      fprintf(fid, '%4d', mod(pdb.resseq(iatom), 10000));
       %fprintf(fid, '%1s', pdb.icode(iatom, :));
       fprintf(fid, '%1s', ' ');
       fprintf(fid, '%1s', ' ');
-    elseif pdb.resseq(iatom) < 100000
-      fprintf(fid, '%5d', pdb.resseq(iatom));
       fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      %fprintf(fid, '%8.3f', pdb.xyz(iatom, 1));
+      %fprintf(fid, '%8.3f', pdb.xyz(iatom, 2));
+      %fprintf(fid, '%8.3f', pdb.xyz(iatom, 3));
+      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+1));
+      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+2));
+      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+3));
+      fprintf(fid, '%6.2f', pdb.occupancy(iatom));
+      fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%2s', pdb.element(iatom, :));
+      fprintf(fid, '%2s', pdb.charge(iatom, :));
+      fprintf(fid, '\n');
+      
+    elseif strncmpi(format_type, 'namd', numel('namd'))
+      % NAMD format
+      if(istep == 1) 
+        fprintf(fid, 'CRYST1    0.000    0.000    0.000  90.00  90.00  90.00 P 1           1\n');
+      end
+      fprintf(fid, '%6s', pdb.record(iatom, :));
+      if pdb.serial(iatom) < 100000
+        fprintf(fid, '%5d', pdb.serial(iatom));
+      else
+        fprintf(fid, '%5s', lower(dec2hex(pdb.serial(iatom))));
+      end
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%4s', pdb.name(iatom, :));
+      fprintf(fid, '%1s', pdb.altloc(iatom, :));
+      %fprintf(fid, '%3s', pdb.resname(iatom, :));
+      %fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%4s', pdb.resname(iatom, :));
+      fprintf(fid, '%1s', pdb.chainid(iatom, :));
+      fprintf(fid, '%4d', mod(pdb.resseq(iatom), 10000));
+      %fprintf(fid, '%1s', pdb.icode(iatom, :));
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      %fprintf(fid, '%8.3f', pdb.xyz(iatom, 1));
+      %fprintf(fid, '%8.3f', pdb.xyz(iatom, 2));
+      %fprintf(fid, '%8.3f', pdb.xyz(iatom, 3));
+      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+1));
+      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+2));
+      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+3));
+      fprintf(fid, '%6.2f', pdb.occupancy(iatom));
+      fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      %fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', pdb.chainid(iatom, :));
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%2s', pdb.element(iatom, :));
+      %fprintf(fid, '%2s', pdb.charge(iatom, :));
+      fprintf(fid, '\n');
+    
     else
-      fprintf(fid, '%6d', pdb.resseq(iatom));
+      % PDB format with some extentions for large digits of atom_serial and resseq
+      fprintf(fid, '%6s', pdb.record(iatom, :));
+      if pdb.serial(iatom) < 100000
+        fprintf(fid, '%5d', pdb.serial(iatom));
+        fprintf(fid, '%1s', ' ');
+      else
+        fprintf(fid, '%6d', pdb.serial(iatom));
+      end
+      fprintf(fid, '%4s', pdb.name(iatom, :));
+      fprintf(fid, '%1s', pdb.altloc(iatom, :));
+      %fprintf(fid, '%3s', pdb.resname(iatom, :));
+      %fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%4s', pdb.resname(iatom, :));
+      fprintf(fid, '%1s', pdb.chainid(iatom, :));
+      if pdb.resseq(iatom) < 10000
+        fprintf(fid, '%4d', pdb.resseq(iatom));
+        %fprintf(fid, '%1s', pdb.icode(iatom, :));
+        fprintf(fid, '%1s', ' ');
+        fprintf(fid, '%1s', ' ');
+      elseif pdb.resseq(iatom) < 100000
+        fprintf(fid, '%5d', pdb.resseq(iatom));
+        fprintf(fid, '%1s', ' ');
+      else
+        fprintf(fid, '%6d', pdb.resseq(iatom));
+      end
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      %fprintf(fid, '%8.3f', pdb.xyz(iatom, 1));
+      %fprintf(fid, '%8.3f', pdb.xyz(iatom, 2));
+      %fprintf(fid, '%8.3f', pdb.xyz(iatom, 3));
+      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+1));
+      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+2));
+      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+3));
+      fprintf(fid, '%6.2f', pdb.occupancy(iatom));
+      fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%1s', ' ');
+      fprintf(fid, '%2s', pdb.element(iatom, :));
+      fprintf(fid, '%2s', pdb.charge(iatom, :));
+      fprintf(fid, '\n');
     end
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%8.3f', pdb.xyz(iatom, 1));
-    fprintf(fid, '%8.3f', pdb.xyz(iatom, 2));
-    fprintf(fid, '%8.3f', pdb.xyz(iatom, 3));
-    fprintf(fid, '%6.2f', pdb.occupancy(iatom));
-    fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%1s', ' ');
-    fprintf(fid, '%2s', pdb.element(iatom, :));
-    fprintf(fid, '%2s', pdb.charge(iatom, :));
-    fprintf(fid, '\n');
   end
-
+  
+  fprintf(fid, 'TER\n');
+  fprintf(fid, 'ENDMDL\n');
+  
 end
 
 fprintf(fid, 'END\n');
-
 
