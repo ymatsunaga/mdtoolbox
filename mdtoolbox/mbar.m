@@ -73,7 +73,7 @@ index = log_wi_jn > 0;
 
 for count_iteration = 1:5
   for i = 1:K
-    log_wi_jn = calc_log_wi_jn(N_k, f_k, u_kln, squeeze(u_kln(:, i, :)), K, N_max);
+    log_wi_jn = mbar_log_wi_jn(N_k, f_k, u_kln, squeeze(u_kln(:, i, :)), K, N_max);
     f_k_new(i) = - logsumexp(log_wi_jn(index));
   end
   
@@ -107,7 +107,7 @@ count_iteration = 5;
 while check_convergence > tolerance
   f_k_new = f_k;
   for i = 1:K
-    log_wi_jn = calc_log_wi_jn(N_k, f_k, u_kln, squeeze(u_kln(:, i, :)), K, N_max);
+    log_wi_jn = mbar_log_wi_jn(N_k, f_k, u_kln, squeeze(u_kln(:, i, :)), K, N_max);
     W_nk(:,i) = exp(log_wi_jn(index) + f_k(i));
   end
 
@@ -144,7 +144,7 @@ end
 
 % recompute all free energies
 for i = 1:K
-  log_wi_jn = calc_log_wi_jn(N_k, f_k, u_kln, squeeze(u_kln(:, i, :)), K, N_max);  
+  log_wi_jn = mbar_log_wi_jn(N_k, f_k, u_kln, squeeze(u_kln(:, i, :)), K, N_max);  
   f_k(i) = - logsumexp(log_wi_jn(index));
 end
 f_k = f_k - f_k(1);
@@ -154,24 +154,9 @@ fprintf('\n');
 fprintf('\n');
 
 
-%% calc log weights
-function log_wi_jn = calc_log_wi_jn(N_k, f_k, u_kln, u_kn, K, N_max)
-log_wi_jn = zeros(K, N_max);
-for k = 1:K
-  log_wi_jn(k, 1:N_k(k)) = - logsumexp2(repmat(log(N_k), 1, N_k(k)) + repmat(f_k, 1, N_k(k)) - (squeeze(u_kln(k, :, 1:N_k(k))) - repmat(u_kn(k, 1:N_k(k)), K, 1)));
-end
-
-
 %% logsumexp (input should be a vector)
 function s = logsumexp(x)
 max_x = max(x);
 exp_x = exp(x - max_x);
-s = log(sum(exp_x)) + max_x;
-
-    
-%% logsumexp2 (input should be an array. sums over rows)
-function s = logsumexp2(x)
-max_x = max(x);
-exp_x= exp(bsxfun(@minus, x, max_x));
 s = log(sum(exp_x)) + max_x;
 

@@ -82,7 +82,7 @@ for j = 1:K
 end
 index = log_w_kn > 0;
 
-log_w_kn = calc_log_wi_jn(N_k, f_k, u_kln, u_kn, K, N_max);
+log_w_kn = mbar_log_wi_jn(N_k, f_k, u_kln, u_kn, K, N_max);
 log_w_n  = log_w_kn(index);
 
 nbin   = max(bin_kn(:));
@@ -94,25 +94,9 @@ end
 pmf_i = pmf_i - pmf_i(1);
 
 
-%% calc log weights
-function log_wi_jn = calc_log_wi_jn(N_k, f_k, u_kln, u_kn, K, N_max)
-log_wi_jn = zeros(K, N_max);
-for k = 1:K
-  log_wi_jn(k, 1:N_k(k)) = - logsumexp2(repmat(log(N_k), 1, N_k(k)) + repmat(f_k, 1, N_k(k)) - (squeeze(u_kln(k, :, 1:N_k(k))) - repmat(u_kn(k, 1:N_k(k)), K, 1)));
-end
-
-
 %% logsumexp (input should be vector)
 function s = logsumexp(x)
 max_x = max(x);
 exp_x = exp(x - max_x);
-s = log(sum(exp_x)) + max_x;
-
-    
-%% logsumexp2 (input should be array. sum over rows)
-function s = logsumexp2(x)
-[K, M] = size(x);
-max_x = max(x);
-exp_x = exp(x - repmat(max_x, K, 1));
 s = log(sum(exp_x)) + max_x;
 
