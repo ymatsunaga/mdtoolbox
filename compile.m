@@ -2,6 +2,7 @@
 
 % mex files list
 mex_list{1} = 'superimpose.c'; % least-squares fitting routine
+mex_list{2} = 'mbar_log_wi_jn.c'; % mbar auxiliary function
 
 % get fullpaths to mdtoolbox
 this_file = mfilename('fullpath');
