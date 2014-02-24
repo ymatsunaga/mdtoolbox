@@ -1,5 +1,5 @@
 MD Toolbox
-==================
+==========
 
 MD Toolbox is a MATLAB toolbox for analysis of molecular dynamics
 trajectories of biomolecules. It consists of a collection of MATLAB
@@ -14,5 +14,5 @@ functions which cover the following types of scientific computations:
 * WHAM, and MBAR methods
 * Other auxiliary functions... such as atom selections
 
-For details, see the documentation http://ymatsunaga.github.io/mdtoolbox/ . 
+For details, see the documentation http://ymatsunaga.github.io/mdtoolbox/
 
