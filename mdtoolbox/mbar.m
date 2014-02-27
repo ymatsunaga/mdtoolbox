@@ -124,7 +124,7 @@ while check_convergence > tolerance
 
   Hinvg = pinv(H, 1.0e-10) * g;
   for k = 1:(K-1)
-    if (count_iteration == 0)
+    if (count_iteration == 5)
       f_k_new(k+1) = f_k_new(k+1) - first_gamma * Hinvg(k);
     else
       f_k_new(k+1) = f_k_new(k+1) - gamma * Hinvg(k);
