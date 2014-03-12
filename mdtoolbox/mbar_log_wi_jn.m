@@ -1,6 +1,6 @@
 function log_wi_jn = mbar_log_wi_jn(N_k, f_k, u_kln, u_kn, K, N_max)
 %% mbar_log_wi_jn
-% A auxiliary function for mbar
+% An auxiliary function for mbar routines (mbar*.m)
 %
 %% References
 % [1] M. R. Shirts and J. D. Chodera, J Chem Phys 129, 124105 (2008).

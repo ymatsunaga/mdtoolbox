@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 {
@@ -62,8 +65,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   /* setup: working variables */
   FlogN = (double *) malloc(K*sizeof(double));
-  log_term = (double *) malloc(K*sizeof(double));
-
   for (k = 0; k < K; k++) {
     FlogN[k] = log((double)N_k[k])+f_k[k];
   }
@@ -71,16 +72,27 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   /* allocate output variables */
   plhs[0] = mxCreateDoubleMatrix(K, N_max, mxREAL);
   log_wi_jn = mxGetPr(plhs[0]);
+  for (k = 0; k < K; k++) {
+    for (n = 0; n < N_max; n++) {
+      log_wi_jn[k + n*K] = 0.0;
+    }
+  }
 
   /* calculation */
+  #pragma omp parallel for \
+  default(none) \
+  private(k, n, l, max_log_term, u_k, u_l, log_term, term_sum, log_sum) \
+  shared(K, N_k, u_kln, u_kn, FlogN, log_wi_jn)
   for (k = 0; k < K; k++) {
 
     for (n = 0; n < N_k[k]; n++) {
       max_log_term = -1e100;
       u_k = u_kn[k + n*K];
-      
+
+      log_term = (double *) malloc(K*sizeof(double));
+
       for (l = 0; l < K; l++) {
-        u_l = u_kln[k + l*(K) + n*(K*K)];
+        u_l = u_kln[k + l*K + n*K*K];
         log_term[l] = FlogN[l] - (u_l - u_k);
         if (log_term[l] > max_log_term) {max_log_term = log_term[l];}
       }
@@ -91,6 +103,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
       }
       log_sum = log(term_sum) + max_log_term;
       log_wi_jn[k + n*K] = -log_sum;
+
+      if (log_term != NULL) {
+        free(log_term);
+      }
+
     }
   }
 
@@ -100,10 +117,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   if (FlogN != NULL) {
     free(FlogN);
-  }
-
-  if (log_term != NULL) {
-    free(log_term);
   }
 
   /* exit(EXIT_SUCCESS); */
