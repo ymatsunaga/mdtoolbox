@@ -79,36 +79,37 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
 
   /* calculation */
-  #pragma omp parallel for \
+  #pragma omp parallel \
   default(none) \
   private(k, n, l, max_log_term, u_k, u_l, log_term, term_sum, log_sum) \
   shared(K, N_k, u_kln, u_kn, FlogN, log_wi_jn)
-  for (k = 0; k < K; k++) {
+  {
+    log_term = (double *) malloc(K*sizeof(double));
 
-    for (n = 0; n < N_k[k]; n++) {
-      max_log_term = -1e100;
-      u_k = u_kn[k + n*K];
+    #pragma omp for
+    for (k = 0; k < K; k++) {
 
-      log_term = (double *) malloc(K*sizeof(double));
+      for (n = 0; n < N_k[k]; n++) {
+        max_log_term = -1e100;
+        u_k = u_kn[k + n*K];
 
-      for (l = 0; l < K; l++) {
-        u_l = u_kln[k + l*K + n*K*K];
-        log_term[l] = FlogN[l] - (u_l - u_k);
-        if (log_term[l] > max_log_term) {max_log_term = log_term[l];}
+        for (l = 0; l < K; l++) {
+          u_l = u_kln[k + l*K + n*K*K];
+          log_term[l] = FlogN[l] - (u_l - u_k);
+          if (log_term[l] > max_log_term) {max_log_term = log_term[l];}
+        }
+
+        term_sum = 0.0;
+        for (l = 0; l < K; l++) {
+          term_sum += exp(log_term[l]-max_log_term);
+        }
+        log_sum = log(term_sum) + max_log_term;
+        log_wi_jn[k + n*K] = -log_sum;
+
       }
-
-      term_sum = 0.0;
-      for (l = 0; l < K; l++) {
-        term_sum += exp(log_term[l]-max_log_term);
-      }
-      log_sum = log(term_sum) + max_log_term;
-      log_wi_jn[k + n*K] = -log_sum;
-
-      if (log_term != NULL) {
-        free(log_term);
-      }
-
     }
+
+    free(log_term);
   }
 
   if (N_k != NULL) {
