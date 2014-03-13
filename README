@@ -1,5 +1,5 @@
 MD Toolbox
-===================
+==========
 
 MD Toolbox is a MATLAB toolbox for analysis of molecular dynamics
 trajectories of biomolecules. It consists of a collection of MATLAB
@@ -17,18 +17,18 @@ functions which cover the following types of scientific computations:
 For details, see the documentation http://ymatsunaga.github.io/mdtoolbox/
 
 Reference
-===================
+==========
 
 In preparation.
 
 Funding
-===================
+==========
 
 Development of MDToolbox is supported by Grant-in-Aid for Young
 Scientists (B) (Grant No. 24770159) from JSPS. 
 
 License
-===================
+==========
 
 MD Toolbox is licensed under the BSD license. 
 
