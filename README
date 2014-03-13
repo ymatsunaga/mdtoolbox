@@ -1,7 +1,7 @@
-MD Toolbox
-==========
+MDToolbox
+=========
 
-MD Toolbox is a MATLAB toolbox for analysis of molecular dynamics
+MDToolbox is a MATLAB toolbox for analysis of molecular dynamics (MD) 
 trajectories of biomolecules. It consists of a collection of MATLAB
 functions which cover the following types of scientific computations:
 
@@ -17,20 +17,20 @@ functions which cover the following types of scientific computations:
 For details, see the documentation http://ymatsunaga.github.io/mdtoolbox/
 
 Reference
-==========
+=========
 
 In preparation.
 
 Funding
-==========
+=========
 
 Development of MDToolbox is supported by Grant-in-Aid for Young
 Scientists (B) (Grant No. 24770159) from JSPS. 
 
 License
-==========
+=========
 
-MD Toolbox is licensed under the BSD license. 
+MDToolbox is licensed under the BSD license. 
 
   Author: Yasuhiro Matsunaga (ymatsunaga@riken.jp)
   Copyright (c) 2012-2014, RIKEN. 
@@ -63,9 +63,9 @@ MD Toolbox is licensed under the BSD license.
 
 It should be mentioned this package contains the following softwares
 for convenience.  Please note that these are not covered by the
-license under which a copy of MD Toolbox is licensed to you, while
-neither composition nor distribution of any derivative work of MD
-Toolbox with these software violates the terms of each license,
+license under which a copy of MDToolbox is licensed to you, while
+neither composition nor distribution of any derivative work of
+MDToolbox with these software violates the terms of each license, 
 provided that it meets every condition of the respective licenses. 
 
 --
@@ -163,7 +163,7 @@ superimpose.c is licensed under the BSD license.
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. 
 
 --
-MBAR routines in MD Toolbox (mbar*.m) are a derivative work of pymbar,
+MBAR routines in MDToolbox (mbar*.m) are a derivative work of pymbar,
 a Python implementation of the multistate Bennett acceptance ratio
 (MBAR) method for estimating expectations and free energy differences. 
 Pymbar is distributed under the GNU General Public License.
