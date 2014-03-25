@@ -19,23 +19,23 @@ source_dir = [path_mdtoolbox filesep 'mdtoolbox'];
 
 cd(source_dir);
 
-if strcmp(target, 'all')
+if strncmpi(target, 'all', numel('all'))
   opts = '';
   compile_mex(mex_list, opts);
 
-elseif strcmp(target, 'verbose')
+elseif strncmpi(target, 'verbose', numel('verbose'))
   opts = '-v';
   compile_mex(mex_list, opts);
 
-elseif strcmp(target, 'debug')
+elseif strncmpi(target, 'debug', numel('debug'))
   option = '-g -DDEBUG';
   compile_mex(mex_list, opts);
 
-elseif strcmp(target, 'openmp')
+elseif strncmpi(target, 'openmp', numel('openmp'))
   option = 'LDFLAGS="-fopenmp \$LDFLAGS" CFLAGS="-fopenmp \$CFLAGS"';
   compile_mex(mex_list, opts);
 
-elseif strcmp(target, 'clean')
+elseif strncmpi(target, 'clean', numel('clean'))
   delete_mex(mex_list);
 
 else

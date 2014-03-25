@@ -38,7 +38,7 @@ function exportas(basename, style)
 % 
 %% References
 % Guidelines for Figure Preparation (PLoS Comput Biol)
-% http://www.ploscompbiol.org/static/figureGuidelines.action
+% http://www.ploscompbiol.org/static/figureGuidelines.action#width
 % 
 
 %% setup
@@ -79,7 +79,7 @@ if strncmpi(style, 'default', numel('default'))
   print('-dtiff', f);
 
 else
-  % single-column width with 300 ppi
+  % single or double column width with 300 ppi
   set(gcf, 'PaperPositionMode', 'manual');
   
   set(gcf, 'Units', 'centimeters');
