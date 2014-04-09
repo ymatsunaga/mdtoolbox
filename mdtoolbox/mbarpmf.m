@@ -89,9 +89,13 @@ nbin   = max(bin_kn(:));
 pmf_i  = zeros(nbin, 1);
 for ibin = 1:nbin
   lindex_ibin = (bin_kn(index) == ibin);
-  pmf_i(ibin) = - logsumexp(log_w_n(lindex_ibin));
+  if any(lindex_ibin)
+    pmf_i(ibin) = - logsumexp(log_w_n(lindex_ibin));
+  else
+    pmf_i(ibin) = NaN;
+  end
 end
-pmf_i = pmf_i - pmf_i(1);
+%pmf_i = pmf_i - pmf_i(1);
 
 
 %% logsumexp (input should be vector)
