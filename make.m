@@ -28,11 +28,11 @@ elseif strncmpi(target, 'verbose', numel('verbose'))
   compile_mex(mex_list, opts);
 
 elseif strncmpi(target, 'debug', numel('debug'))
-  option = '-g -DDEBUG';
+  opts = '-g -DDEBUG';
   compile_mex(mex_list, opts);
 
 elseif strncmpi(target, 'openmp', numel('openmp'))
-  option = 'LDFLAGS="-fopenmp \$LDFLAGS" CFLAGS="-fopenmp \$CFLAGS"';
+  opts = 'LDFLAGS="-fopenmp \$LDFLAGS" CFLAGS="-fopenmp \$CFLAGS"';
   compile_mex(mex_list, opts);
 
 elseif strncmpi(target, 'clean', numel('clean'))
