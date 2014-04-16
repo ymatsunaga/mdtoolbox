@@ -36,19 +36,19 @@ function [crd, trj, vel] = meanstructure(trj, index, mass, tolerance, vel)
 ref = trj(1, :);
 rmsd = realmax;
 
-if (nargin < 2)
+if ~exist('index', 'var')
   index = [];
 end
   
-if (nargin < 3)
+if ~exist('mass', 'var')
   mass = [];
 end
 
-if (nargin < 4) || (numel(tolerance) == 0)
+if ~exist('tolerance', 'var') || isempty(tolerance)
   tolerance = 10^(-6);
 end
 
-if (nargin < 5)
+if ~exist('vel', 'var')
   vel = [];
 end
 

@@ -37,7 +37,7 @@ natom3 = size(x, 2);
 natom = natom3/3;
 com = zeros(nstep, 3);
 
-if (nargin < 2) || (numel(index) == 0)
+if ~exist('index', 'var') || isempty(index)
   index = 1:natom;
 else
   if islogical(index)
@@ -48,8 +48,11 @@ else
   end
 end
 
-if (nargin < 3)
+if ~exist('mass', 'var')
   mass = [];
+else
+  assert(isequal(natom, numel(mass)), ...
+         ['sizes of coordinates and masses are not same'])
 end
 
 %% calculate the center of mass
@@ -57,7 +60,7 @@ indexx = 3.*(index-1) + 1;
 indexy = 3.*(index-1) + 2;
 indexz = 3.*(index-1) + 3;
 
-if numel(mass) == 0
+if isempty(mass)
 
   totalMass = numel(index);
   com(:, 1) = sum(x(:, indexx), 2) ./ totalMass;
@@ -65,9 +68,6 @@ if numel(mass) == 0
   com(:, 3) = sum(x(:, indexz), 2) ./ totalMass;
 
 else
-
-  assert(isequal(natom, numel(mass)), ...
-         ['sizes of coordinates and masses are not same'])
 
   if iscolumn(mass)
     mass = mass';
