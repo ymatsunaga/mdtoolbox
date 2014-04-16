@@ -75,11 +75,13 @@ trj = single(trj);
 trj = trj';
 trj = reshape(trj, 3, natom, nstep);
 
-if (nargin > 2) && (size(box, 1) == 1)
-  box = repmat(box, nstep, 1);
+if exist('box', 'var') && ~isempty(box)
+  if (size(box, 1) == 1)
+    box = repmat(box, nstep, 1);
+  end
 end
 
-if nargin < 4
+if ~exist('title', 'var')
   title = 'CREATED BY MATLAB';
 end
 
@@ -118,7 +120,7 @@ finfo.Dimensions(3).Name      = 'atom';
 finfo.Dimensions(3).Length    = natom;
 finfo.Dimensions(3).Unlimited = false;
 
-if (nargin > 2) && (size(box, 1) == nstep)
+if exist('box', 'var') && ~isempty(box)
   finfo.Dimensions(4).Name      = 'label';
   finfo.Dimensions(4).Length    = 5;
   finfo.Dimensions(4).Unlimited = false;
@@ -176,7 +178,7 @@ finfo.Variables(3).FillValue               = [];
 finfo.Variables(3).DeflateLevel            = [];
 finfo.Variables(3).Shuffle                 = false;
 
-if (nargin > 2) && (size(box, 1) == nstep)
+if exist('box', 'var') && ~isempty(box)
   finfo.Variables(4).Name                 = 'cell_spatial';
   finfo.Variables(4).Dimensions.Name      = 'cell_spatial';
   finfo.Variables(4).Dimensions.Length    = 3;
@@ -243,7 +245,7 @@ ncwriteschema(filename, finfo);
 ncwrite(filename, 'spatial', ['xyz']);
 ncwrite(filename, 'time', [1:nstep]);
 ncwrite(filename, 'coordinates', trj);
-if (nargin > 2) && (size(box, 1) == nstep)
+if exist('box', 'var') && ~isempty(box)
   ncwrite(filename, 'cell_spatial', ['abc']);
   ncwrite(filename, 'cell_angular', ['alpha'; 'beta '; 'gamma']');
   ncwrite(filename, 'cell_lengths', box');
