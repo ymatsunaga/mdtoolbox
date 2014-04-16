@@ -44,8 +44,11 @@ end
 natom3 = size(trj, 2);
 nstep = size(trj, 1);
 
-if nargin < 4 || (isempty(title))
+if ~exist('title', 'var') || isempty(title)
   title = sprintf('FILENAME=%s CREATED BY MATLAB', filename);
+end
+for i = (numel(title)+1):80
+  title = [title ' '];
 end
 
 %% open file
@@ -60,7 +63,7 @@ for istep = 1:nstep
     fprintf(fid, '%8.3f', trj(istep, i:min(i+9,natom3)));
     fprintf(fid, '\n');
   end
-  if (nargin >= 3) && (~isempty(box))
+  if exist('box', 'var') && ~isempty(box)
     fprintf(fid, '%8.3f', box(istep, :));
     fprintf(fid, '\n');
   end

@@ -11,7 +11,7 @@ function rc = writevmdvector(basename, crd, pcs, scale, resolution, radius)
 %
 
 %% initialization
-if nargin < 4
+if ~exist('scale', 'var') || ~exist('resolution', 'var') || ~exist('radius', 'var')
 % for bpti ca
 %  scale = 15.0;
 %  resolution = 100;
