@@ -29,7 +29,7 @@ function [trj, box, vel] = readmarbletrjbin(filename, index_atom, index_time)
 %
 
 %% initialization
-if (nargin < 3) || isempty(index_time)
+if ~exist('index_time', 'var') || isempty(index_time)
   index_time = [];
 end
 
@@ -55,7 +55,7 @@ trj_flag    = fread(fid, 1, 'int');
 natom       = fread(fid, 1, 'int');
 natom3      = natom*3;
 
-if (nargin < 2) || isempty(index_atom)
+if ~exist('index_atom', 'var') || isempty(index_atom)
   index_atom = 1:natom;
 else
   if islogical(index_atom)

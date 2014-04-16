@@ -35,7 +35,7 @@ trj = [];
 natom3 = natom*3;
 iblock = 1;
 
-if nargin < 3
+if ~exist('index', 'var') || isempty(index)
   index = 1:natom;
 else
   if islogical(index)

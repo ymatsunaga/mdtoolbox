@@ -23,11 +23,11 @@ function [trj,box] = readfloattrj(natom, filename, index, isbox)
 
 natom3 = natom*3;
 
-if nargin < 3
+if ~exist('index', 'var') || isempty(index)
   index = 1:natom;
 end
 
-if nargin < 4
+if ~exist('index', 'var')
   isbox = false;
 end
 

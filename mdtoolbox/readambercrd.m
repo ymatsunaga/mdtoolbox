@@ -38,7 +38,7 @@ box = [];
 vel = [];
 title = [];
 
-if nargin > 1
+if exist('index', 'var') && ~isempty(index)
   if islogical(index)
     index = find(index);
   end
@@ -60,7 +60,7 @@ str = fgetl(fid);
 natom = sscanf(str, '%d', 1);
 natom3 = natom*3;
 
-if nargin == 1
+if ~exist('index', 'var') || isempty(index)
   index = 1:natom;
 end
 index3 = to3(index);

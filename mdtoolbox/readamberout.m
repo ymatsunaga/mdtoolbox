@@ -68,7 +68,7 @@ while 1
 
     break;
   
-  end % enf of if line == NSTEP
+  end % end of if line == NSTEP
 
 end
 nlabel = ilabel;

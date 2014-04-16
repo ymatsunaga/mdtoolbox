@@ -35,7 +35,7 @@ is_trj = false;
 is_box = false;
 is_vel = false;
 
-if (nargin < 3) || isempty(index_time)
+if ~exist('index_time', 'var') || isempty(index_time)
   index_time = [];
 end
 
@@ -75,7 +75,7 @@ if regexp(trj_type, 'V')
   is_vel = true;
 end
 
-if (nargin < 2) || isempty(index_atom)
+if ~exist('index_atom', 'var') || isempty(index_atom)
   index_atom = 1:natom;
 else
   if islogical(index_atom)

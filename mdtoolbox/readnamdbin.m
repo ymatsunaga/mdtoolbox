@@ -25,7 +25,7 @@ function [crd, nAtom] = readnamdbin(filename, nAtomLimit)
 % writenamdbin
 %
 
-if nargin == 1
+if ~exist('nAtomLimit', 'var')
   nAtomLimit = 10^9;
 end
 
