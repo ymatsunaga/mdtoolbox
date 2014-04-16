@@ -44,7 +44,7 @@ header.is_charmm = false;
 header.is_charmm_extrablock = false;
 header.is_charmm_4dims = false;
 
-if nargin > 1
+if exist('index', 'var') && ~isempty(index)
   if islogical(index)
     index = find(index);
   end
@@ -218,7 +218,7 @@ if header.is_charmm_4dims
 end
 
 natom = numel(x);
-if nargin == 1
+if ~exist('index', 'var') || isempty(index)
   index = 1:natom;
 end
 

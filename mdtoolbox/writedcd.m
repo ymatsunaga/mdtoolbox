@@ -44,7 +44,7 @@ end
 [nstep, natom3] = size(trj);
 natom = natom3 / 3;
 
-if (nargin < 4) || (isempty(header))
+if ~exist('header', 'var') || isempty(header)
   % default header in xplor format
   header.is_charmm = false;
   header.is_charmm_extrablock = false;
@@ -81,7 +81,7 @@ if header.nset ~= size(trj, 1)
   header.nset = size(trj, 1);
 end
 
-if (nargin > 2) && (~isempty(box))
+if exist('box', 'var') && ~isempty(box)
   % charmm format
   header.is_charmm = true;
   header.is_charmm_extrablock = true;
