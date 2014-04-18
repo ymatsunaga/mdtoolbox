@@ -36,7 +36,7 @@ nstep = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 
-if (nargin < 3)
+if ~exist('mass', 'var')
   mass = [];
 else
   if iscolumn(mass)
@@ -44,7 +44,7 @@ else
   end
 end
 
-if (nargin < 4)
+if ~exist('nReplicates', 'var')
     nReplicates = 10;
 end
 

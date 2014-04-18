@@ -41,7 +41,7 @@ nstep = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 
-if (nargin < 3)
+if ~exist('mass', 'var')
   mass = [];
 else
   if iscolumn(mass)

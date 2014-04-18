@@ -31,15 +31,15 @@ tolerance = 10^(-10);
 %% setup
 [nstep, ndim] = size(x);
 
-if nargin < 2
+if ~exist('temperature', 'var')
     temperature = 1/30;
 end
 
-if nargin < 3
+if ~exist('nc', 'var')
     nc = round(sqrt(ndim));
 end
 
-if nargin < 4
+if ~exist('nReplicates', 'var')
     nReplicates = 10;
 end
 

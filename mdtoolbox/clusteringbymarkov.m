@@ -19,7 +19,7 @@ function [indexOfCluster_out] = clusteringbymarkov(t, indexOfState, r)
 nstate = size(t, 1);
 nstep = size(indexOfState, 1);
 
-if nargin <= 2
+if ~exist('r', 'var')
   r = 2;
 end
 
