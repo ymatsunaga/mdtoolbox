@@ -46,7 +46,7 @@ c1 = bsxfun(@minus,crd(1:3:end)',crd(1:3:end));
 c2 = bsxfun(@minus,crd(2:3:end)',crd(2:3:end));
 c3 = bsxfun(@minus,crd(3:3:end)',crd(3:3:end));
 
-if nargin >= 3
+if exist('box', 'var') && ~isempty(box)
   c1 = c1 - box(1)*round(c1./box(1));
   c2 = c2 - box(2)*round(c2./box(2));
   c3 = c3 - box(3)*round(c3./box(3));

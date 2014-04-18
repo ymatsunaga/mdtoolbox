@@ -26,7 +26,7 @@ function rmsd = calcrmsd(ref, trj, index, mass)
 %% preparation
 natom = numel(ref)/3;
 
-if (nargin < 3) || isempty(index)
+if ~exist('index', 'var') || isempty(index)
   index = 1:natom;
 else
   if islogical(index)
@@ -37,7 +37,7 @@ else
   end
 end
 
-if (nargin < 4) || isempty(mass)
+if ~exist('mass', 'var') || isempty(mass)
   mass = ones(1, natom);
 else
   if iscolumn(mass)

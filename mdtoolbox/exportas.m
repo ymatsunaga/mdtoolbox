@@ -44,7 +44,7 @@ function exportas(basename, style)
 %% setup
 ppi = 300;
 
-if nargin < 2
+if ~exist('style', 'var')
   style = 'default';
 end
 

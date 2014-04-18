@@ -15,12 +15,13 @@ function [z,xi,yi] = hist2d(x,nbin)
 xd = x(:,1);
 yd = x(:,2);
 
-if nargin == 1
+if ~exist('nbin', 'var') || isempty(nbin)
   nbin = 100;
 end  
 
 % calc 2-d histogram of x(:,1:2)
-% see http://blogs.mathworks.com/videos/2010/01/22/advanced-making-a-2d-or-3d-histogram-to-visualize-data-density/
+% this idea is based on a tutorial at
+% http://blogs.mathworks.com/videos/2010/01/22/advanced-making-a-2d-or-3d-histogram-to-visualize-data-density/
 n  = nbin;
 xi = linspace(min(xd(:)),max(xd(:)),n);
 yi = linspace(min(yd(:)),max(yd(:)),n);

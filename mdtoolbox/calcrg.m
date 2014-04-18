@@ -16,7 +16,7 @@ nstep  = size(trj, 1);
 natom3 = size(trj, 2);
 natom  = natom3/3;
 
-if (nargin < 2) || (numel(mass) == 0)
+if ~exist('mass', 'var') || isempty(mass)
   mass = ones(1, natom);
 else
   if iscolumn(mass)

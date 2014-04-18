@@ -16,8 +16,8 @@ function [z,xi,yi] = calcpmf2d(x,nbin)
 xd = x(:,1);
 yd = x(:,2);
 
-if nargin == 1
-  nbin = 256;
+if ~exist('nbin', 'var') || isempty(nbin)
+  nbin = 100;
 end
 
 xi = linspace(min(xd),max(xd),nbin);

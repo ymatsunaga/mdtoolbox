@@ -31,7 +31,7 @@ index_to   = (1+tau):nstep;
 indexOfCluster_from = indexOfCluster(index_from);
 indexOfCluster_to   = indexOfCluster(index_to);
 
-if (nargin <= 2) || (numel(prior) == 0)
+if ~exist('prior', 'var') || isempty(prior)
   prior = 0;
 end
 

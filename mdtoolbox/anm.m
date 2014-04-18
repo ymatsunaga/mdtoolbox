@@ -74,7 +74,7 @@ y = crd(1,2:3:end);
 z = crd(1,3:3:end);
 natom = length(x);
 
-if nargin == 1
+if ~exist('cutoff', 'var')
   cutoff = 10.0;
 end
 

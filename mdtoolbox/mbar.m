@@ -47,7 +47,7 @@ end
 N_max = max(N_k);
 
 % tolerance to check convergence of iterations
-if (nargin < 4) || numel(tolerance) == 0
+if ~exist('tolerance', 'var') || isempty(tolerance)
   tolerance = 10^(-8);
 end
 

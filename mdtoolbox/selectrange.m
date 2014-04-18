@@ -50,7 +50,7 @@ crd(index3) = [];
 subindex = 1:natom;
 subindex(index) = [];
 
-if nargin >= 4
+if exist('box', 'var') && ~isempty(box)
   [pair, dist] = searchrange(crd, crd2, rcut, box);
 else
   [pair, dist] = searchrange(crd, crd2, rcut);

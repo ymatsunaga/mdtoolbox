@@ -31,7 +31,7 @@ function x_ave = calcmovingaverage(x, nwindow)
 nstep = size(x, 1);
 nvar  = size(x, 2);
 
-if (nargin < 2)
+if ~exist('nwindow', 'var') || isempty(nwindow)
   nwindow = 10
 end
 

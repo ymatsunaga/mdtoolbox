@@ -27,14 +27,14 @@ function [pair, dist] = calccontact(crd, atom_name, residue_id, cutoff, sub_resi
 %
 
 %% setup
-if nargin < 4
+if ~exist('cutoff', 'var') || isempty(cutoff)
   cutoff = 6.5;
 end
 
-if nargin > 4
-  residue_unique = unique(sort(sub_residue_id));
-else
+if ~exist('sub_residue_id', 'var') || isempty(sub_residue_id)
   residue_unique = unique(sort(residue_id));
+else
+  residue_unique = unique(sort(sub_residue_id));
 end
 
 % choose non-hydrogen atoms

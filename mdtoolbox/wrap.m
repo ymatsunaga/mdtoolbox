@@ -27,7 +27,7 @@ nstep = size(trj, 1);
 
 %% setup cell
 
-if nargin < 3
+if ~exist('resname', 'var')
   for istep = 1:nstep
     trj(istep, 1:3:end) = trj(istep, 1:3:end) + box(istep, 1)*0.5;
     trj(istep, 2:3:end) = trj(istep, 2:3:end) + box(istep, 2)*0.5;

@@ -55,11 +55,11 @@ natom = numel(crd)./3;
 rcut2 = rcut^2;
 
 %% setup cell
-if (nargin >= 3)
-  crd(1:3:end) = crd(1:3:end) - floor(crd(1:3:end)./box(1))*box(1);
-  crd(2:3:end) = crd(2:3:end) - floor(crd(2:3:end)./box(2))*box(2);
-  crd(3:3:end) = crd(3:3:end) - floor(crd(3:3:end)./box(3))*box(3);
-else
+is_pbc = false;
+
+if ~exist('box', 'var') || isempty(box)
+  is_pbc = false;
+  
   minx = min(crd(1:3:end));
   miny = min(crd(2:3:end));
   minz = min(crd(3:3:end));
@@ -72,6 +72,12 @@ else
   box(1) = max(crd(1:3:end)) + 1.0;
   box(2) = max(crd(2:3:end)) + 1.0;
   box(3) = max(crd(3:3:end)) + 1.0;
+else
+  is_pbc = true;
+
+  crd(1:3:end) = crd(1:3:end) - floor(crd(1:3:end)./box(1))*box(1);
+  crd(2:3:end) = crd(2:3:end) - floor(crd(2:3:end)./box(2))*box(2);
+  crd(3:3:end) = crd(3:3:end) - floor(crd(3:3:end)./box(3))*box(3);
 end
 
 if any(box < (2*rcut))
@@ -139,7 +145,7 @@ for m1 = 1:M
   if numel(m1index) == 0
     continue
   elseif numel(m1index) > 1
-    if nargin >= 3
+    if is_pbc
       [lpair, ldist, num] = calcpair_pbc(crd(m1index3), rcut, box);
     else
       [lpair, ldist, num] = calcpair(crd(m1index3), rcut);
@@ -158,7 +164,7 @@ for m1 = 1:M
   end
   m2index = [mindex{m2}];
   m2index3 = [mindex3{m2}];
-  if nargin >= 3
+  if is_pbc
     [lpair, ldist, num] = calcpair2_pbc(crd(m1index3), crd(m2index3), rcut, box);
   else
     [lpair, ldist, num] = calcpair2(crd(m1index3), crd(m2index3), rcut);

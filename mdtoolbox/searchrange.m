@@ -64,14 +64,11 @@ natom = numel(b)./3;
 rcut2 = rcut^2;
 
 %% setup cell
-if nargin >= 4
-  a(1:3:end) = a(1:3:end) - floor(a(1:3:end)./box(1))*box(1);
-  a(2:3:end) = a(2:3:end) - floor(a(2:3:end)./box(2))*box(2);
-  a(3:3:end) = a(3:3:end) - floor(a(3:3:end)./box(3))*box(3);
-  b(1:3:end) = b(1:3:end) - floor(b(1:3:end)./box(1))*box(1);
-  b(2:3:end) = b(2:3:end) - floor(b(2:3:end)./box(2))*box(2);
-  b(3:3:end) = b(3:3:end) - floor(b(3:3:end)./box(3))*box(3);
-else
+is_pbc = false;
+
+if ~exist('box', 'var') || isempty(box)
+  is_pbc = false;
+
   minx = min([a(1:3:end) b(1:3:end)]);
   miny = min([a(2:3:end) b(2:3:end)]);
   minz = min([a(3:3:end) b(3:3:end)]);
@@ -88,6 +85,15 @@ else
   box(1) = max([a(1:3:end) b(1:3:end)]) + 1.0;
   box(2) = max([a(2:3:end) b(2:3:end)]) + 1.0;
   box(3) = max([a(3:3:end) b(3:3:end)]) + 1.0;
+else
+  is_pbc = true;
+
+  a(1:3:end) = a(1:3:end) - floor(a(1:3:end)./box(1))*box(1);
+  a(2:3:end) = a(2:3:end) - floor(a(2:3:end)./box(2))*box(2);
+  a(3:3:end) = a(3:3:end) - floor(a(3:3:end)./box(3))*box(3);
+  b(1:3:end) = b(1:3:end) - floor(b(1:3:end)./box(1))*box(1);
+  b(2:3:end) = b(2:3:end) - floor(b(2:3:end)./box(2))*box(2);
+  b(3:3:end) = b(3:3:end) - floor(b(3:3:end)./box(3))*box(3);
 end
 
 if any(box < (2*rcut))
@@ -171,7 +177,7 @@ for m1 = 1:M
   m2index = [maindex{m2}];
   m2index3 = [maindex3{m2}];
 
-  if nargin >= 4
+  if is_pbc
     [lpair, ldist, num] = calcpair2_pbc(b(m1index3), a(m2index3), rcut, box);
   else
     [lpair, ldist, num] = calcpair2(b(m1index3), a(m2index3), rcut);

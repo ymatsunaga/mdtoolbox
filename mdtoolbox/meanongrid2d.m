@@ -9,8 +9,8 @@ function [z, xi, yi] = meanongrid2d(x, y, data, nbin)
 % xlabel('PC1','FontSize',45); ylabel('PC2','FontSize',45); colorbar; formatplot
 %
 
-if nargin == 3
-  nbin = 256;
+if ~exist('nbin', 'var') || isempty(nbin)
+  nbin = 100;
 end
 
 %% translation of x and y to on-grid coordinates

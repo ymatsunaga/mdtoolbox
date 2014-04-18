@@ -17,7 +17,7 @@ function [p, pmode, variances] = calcpca(trj)
 %% Example
 %#
 %
-%% See alo
+%% See also
 %
 % 
 

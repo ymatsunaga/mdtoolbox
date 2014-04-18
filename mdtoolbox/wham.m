@@ -70,7 +70,7 @@ end
 
 %% calculate histogram (h_km)
 % h_km: number of smaples in data-bin (m) from umbrella-window (k)
-if (nargin < 4) || isempty(edge_m)
+if ~exist('edge_m', 'var') || isempty(edge_m)
   % M: number of data-bins
   M = 100;
   edge_min = min(cellfun(@min, data_kn));

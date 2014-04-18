@@ -70,7 +70,7 @@ end
 % K: number of umbrella-windows
 K = numel(penergy_kn); 
 % M: number of energy-bins
-if nargin < 3
+if ~exist('M', 'var') || isempty(M)
   M = 100;
 end
 
@@ -97,7 +97,7 @@ beta0_l = 1.0./(temp0_l*KB);
 
 %% calculate histogram (h_km)
 % h_km: number of smaples in energy-bin (m) from umbrella-window (k)
-if (nargin < 4) || isempty(edge_m)
+if ~exist('edge_m', 'var') || isempty(edge_m)
   % M: number of data-bins
   M = 100;
   edge_min = min(cellfun(@min, penergy_kn));
