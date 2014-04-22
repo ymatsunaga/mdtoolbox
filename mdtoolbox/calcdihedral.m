@@ -1,46 +1,56 @@
-function s = calcdihedral(x);
+function dihedral = calcdihedral(trj, quadruplet);
 %% calcdihedral
-% calculate the dihedral angles of four atoms from their Cartesian coordinates
+% calculate dihedral angles of quadruplet atoms from their Cartesian coordinates
 %
 %% Syntax
-%# dihed = calcdihedral(x);
+%# dihedral = calcdihedral(trj);
+%# dihedral = calcdihedral(trj, quadruplet);
 %
 %% Description
-% Calculate dihedral angles from the input Cartesian coordinates 
-% of four atoms in radians.
-% Input coordinates variable x has have 'nstep' rows and '3*4=12' columns.
-% Each row has the XYZ coordinates of four atoms in order 
-% [x(1) y(1) z(1) x(2) y(2) z(2) x(3) y(3) z(3) x(4) y(4) z(4)].
+% Calculate dihedral angles from the input trajectory of Cartesian coordinates.
+% Quadruplets, whose dihedral angles are calculated, can be specified via the
+% variable (quadruplet).
 %
-% * x       - coordinates of four atoms [nstep x 12 double]
-% * dihed   - dihedral angles in radians [nstep x 1 double]
+% * trj        - coordinates of atoms [nstep x natom3]
+% * quadruplet - quadruplet indices whose angles are calculated [nquadruplet x 3]
+% * dihedral   - dihedral angles of the quadruplet (in radian) [nstep x nquadruplet]
 %
 %% Example
 %# trj = readnetcdf('ala.nc');
-%# index_phi = [5 7 9 15];
-%# index_psi = [7 9 15 17];
-%# index_phi3 = to3(index_phi);
-%# index_psi3 = to3(index_psi);
-%# phi = calcdihedral(trj(:, index_phi3)).*180./pi;
-%# psi = calcdihedral(trj(:, index_psi3)).*180./pi;
+%# quadruplet = [5 6 7 8; 6 7 8 9];
+%# dihedral = calcdihedral(trj, quadruplet).*180./pi;
 %
 %% See alo
 % calcbond, calcangle
 % 
 
-nstep = size(x,1);
-s = zeros(nstep,1);
+%% initialization
+if ~exist('quadruplet', 'var')
+  triplet = [1 2 3 4];
+end
 
-for istep = 1:nstep
-  d1 = x(istep,1:3) - x(istep,4:6);
-  d2 = x(istep,7:9) - x(istep,4:6);
-  d3 = x(istep,7:9) - x(istep,10:12);
-  m1 = cross(d1,d2);
-  m2 = cross(d2,d3);
-  s(istep) = acos(dot(m1,m2)./(norm(m1).*norm(m2)));
-  rotdirection = dot(d2,cross(m1,m2));
-  if rotdirection < 0
-    s(istep) = - s(istep);
+nstep = size(trj, 1);
+nquadruplet = size(quadruplet, 1);
+
+%% calculation
+dihedral = zeros(nstep, nquadruplet);
+
+for iquadruplet = 1:nquadruplet
+  index1 = to3(quadruplet(iquadruplet, 1));
+  index2 = to3(quadruplet(iquadruplet, 2));
+  index3 = to3(quadruplet(iquadruplet, 3));
+  index4 = to3(quadruplet(iquadruplet, 4));
+  for istep = 1:nstep
+    d1 = trj(istep, index1) - trj(istep, index2);
+    d2 = trj(istep, index3) - trj(istep, index2);
+    d3 = trj(istep, index3) - trj(istep, index4);
+    m1 = cross(d1, d2);
+    m2 = cross(d2, d3);
+    dihedral(istep, iquadruplet) = acos(dot(m1, m2)./(norm(m1).*norm(m2)));
+    rotdirection = dot(d2,cross(m1, m2));
+    if rotdirection < 0
+      dihedral(istep, iquadruplet) = - dihedral(istep, iquadruplet);
+    end
   end
 end
 

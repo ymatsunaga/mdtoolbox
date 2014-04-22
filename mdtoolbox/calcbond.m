@@ -1,6 +1,6 @@
 function bond = calcbond(trj, pair)
 %% calcbond
-% calculate the distances between two atom from their Cartesian coordinates
+% calculate distances between pair atom from their Cartesian coordinates
 %
 %% Syntax
 %# bond = calcbond(trj);
@@ -25,7 +25,7 @@ function bond = calcbond(trj, pair)
 
 %% initialization
 if ~exist('pair', 'var')
-  fprintf('calculating the distances between the 1st and 2nd atoms\n');
+  %fprintf('calculating the distances between the 1st and 2nd atoms\n');
   pair = [1 2];
 end
 
