@@ -10,7 +10,7 @@ function bond = calcbond(trj, pair)
 % Pairs, whose distances are calculated, can be specified via the
 % variable (pair).
 %
-% * trj    - coordinates of two atoms [nstep x natom3]
+% * trj    - coordinates of atoms [nstep x natom3]
 % * pair   - pair indices whose distances are calculated [npair x 2]
 % * bond   - distances between the pairs [nstep x npair]
 %

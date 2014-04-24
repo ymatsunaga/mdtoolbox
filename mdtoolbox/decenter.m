@@ -1,6 +1,6 @@
 function [x, com] = decenter(x, index, mass)
 %% decenter 
-% remove the center of mass from coordinates or velocities
+% calculate the center of mass (com) and remove the com from coordinates or velocities
 %
 %% Syntax
 %# [trj, com] = decenter(trj);
@@ -10,9 +10,9 @@ function [x, com] = decenter(x, index, mass)
 %
 %% Description
 % Calculate the center of 'mass' from given coordinates
-% specified by 'index'. When 'index' is omitted, the center 
-% of all the atoms is calculated.
-% When 'mass' is ommited, uniform weights are assumed. 
+% specified by 'index'. 
+% When 'index' is omitted, all atoms are assumed. 
+% When 'mass' is omitted, uniform mass weights are assumed. 
 %
 % * trj         - XYZ coordinates of atoms in order
 %                 (x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom))
@@ -21,7 +21,8 @@ function [x, com] = decenter(x, index, mass)
 %                 calculated [1 x n integer]
 % * mass        - atom masses [1 x natom double]
 % * trj(output) - XYZ coordinates of atoms where the centers of mass
-%                 are removed. [nstep x natom3 double]
+%                 are removed, i.e., the com is always equal to the origin. 
+%                 [nstep x natom3 double]
 % * com         - centers of mass [nstep x 3]
 %
 %% Example
