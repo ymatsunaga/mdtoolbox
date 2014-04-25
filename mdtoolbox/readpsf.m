@@ -66,6 +66,7 @@ isCHEQ = false;
 
 line = fgetl(fid);
 line_size = numel(line);
+if strcmpi(line(1:3), 'PSF'); isPSF = true; end;
 for i=1:4:(line_size-3)
   if strcmpi(line(i:(i+3)), 'PSF '); isPSF = true; end;
   if strcmpi(line(i:(i+3)), 'EXT '); isEXT = true; end;
