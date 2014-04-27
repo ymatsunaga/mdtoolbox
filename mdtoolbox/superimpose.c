@@ -544,7 +544,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     }
   }
   trj = mxGetPr(prhs[1]);
-  frag_b = MatInit(3, natom);
 
   /* setup: index */
   len = natom;
@@ -600,11 +599,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
 
   /* setup: velocity */
+  vel = NULL;
   frag_v = NULL;
   if ( nrhs > 4 ) {
     if ( mxGetNumberOfElements(prhs[4]) != 0 ) {
       vel = mxGetPr(prhs[4]);
-      frag_v = MatInit(3, natom);
     }
   }
 
@@ -628,7 +627,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         frag_a_sub[j][i] = frag_a[j][index[i]];
       }
     }
-    frag_b_sub = MatInit(3, len);
     if ( weight != NULL ) {
       weight_sub = (double *) malloc(len*sizeof(double));
       for (i = 0; i < len; i++) {
@@ -661,7 +659,20 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
 
   /* calculate RMSD and Rotaion matrix */
+  #pragma omp parallel \
+    default(none) \
+    private(istep, i, j, frag_b, frag_b_sub, xsum_b, ysum_b, zsum_b, rotmat, x, y, z, frag_v) \
+    shared(index, nstep, natom, len, trj, isDecentered2, weight, weight_sub, rmsd, frag_a, frag_a_sub, nlhs, xsum_a, ysum_a, zsum_a, trj_fitted, vel, vel_fitted)
+  {
   if( index == NULL ) {
+    frag_b = MatInit(3, natom);
+    if ( (vel != NULL) & (nlhs > 2) ) {    
+      frag_v = MatInit(3, natom);
+    } else {
+      frag_v = NULL;
+    }
+
+    #pragma omp for
     for (istep = 0; istep < nstep; istep++) {
 
       for (i = 0; i < natom; i++) {
@@ -700,7 +711,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         }
       }
 
-      if ( (frag_v != NULL) & (nlhs > 2) ) {
+      if ( frag_v != NULL ) {
         /* apply rotation matrix to velocity*/
         for (i = 0; i < natom; i++) {
           for (j = 0; j < 3; j++) {
@@ -725,7 +736,22 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
       }
 
     }
+
+    MatDestroy(&frag_b);
+    if (frag_v != NULL) {
+      MatDestroy(&frag_v);
+    }
+
   } else {
+    frag_b = MatInit(3, natom);
+    frag_b_sub = MatInit(3, len);
+    if ( (vel != NULL) & (nlhs > 2) ) {    
+      frag_v = MatInit(3, natom);
+    } else {
+      frag_v = NULL;
+    }
+
+    #pragma omp for
     for (istep = 0; istep < nstep; istep++) {
 
       for (i = 0; i < natom; i++) {
@@ -776,7 +802,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         }
       }
 
-      if ( (frag_v != NULL) & (nlhs > 2) ) {
+      if ( frag_v != NULL ) {
         /* apply rotation matrix to velocity*/
         for (i = 0; i < natom; i++) {
           for (j = 0; j < 3; j++) {
@@ -801,13 +827,20 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
       }
 
     }
+
+    MatDestroy(&frag_b);
+    MatDestroy(&frag_b_sub);
+    if (frag_v != NULL) {
+      MatDestroy(&frag_v);
+    }
+
   }
 
+
+  } /* end of #pragma omp parallel */
+
   MatDestroy(&frag_a);
-  MatDestroy(&frag_b);
   MatDestroy(&frag_a_sub);
-  MatDestroy(&frag_b_sub);
-  MatDestroy(&frag_v);
 
   if (index != NULL) {
     free(index);
