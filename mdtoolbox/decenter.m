@@ -49,7 +49,7 @@ else
   end
 end
 
-if ~exist('mass', 'var')
+if ~exist('mass', 'var') || isempty(mass)
   mass = [];
 else
   assert(isequal(natom, numel(mass)), ...
