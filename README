@@ -7,7 +7,7 @@ functions covering the following types of scientific computations:
 
 * I/O for topology, coordinates, and trajectory files used for MD simulation
 * Least-squares fitting of structures
-* Anisotropic network model (Elastic network model)
+* Elastic network models (Gaussian and Anisotropic network models)
 * Calculation of PMF surface from scattered data
 * Principal component analysis
 * Statistical estimators. WHAM, and MBAR methods
@@ -19,6 +19,12 @@ Reference
 =========
 
 In preparation.
+
+Funding
+=========
+
+Development of MDToolbox is supported by Grant-in-Aid for Young
+Scientists (B) (Grant No. 24770159) from JSPS. 
 
 License
 =========
@@ -186,12 +192,4 @@ Pymbar is distributed under the GNU General Public License.
   along with this program; if not, write to the Free Software
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
   02110-1301, USA. 
-
-
-Funding
-=========
-
-Development of MDToolbox is supported by Grant-in-Aid for Young
-Scientists (B) (Grant No. 24770159) from JSPS. 
-
 
