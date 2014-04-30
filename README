@@ -1,18 +1,17 @@
 MDToolbox
 =========
 
-MDToolbox is a MATLAB toolbox for analysis of molecular dynamics (MD) 
-trajectories of biomolecules. It consists of a collection of MATLAB
-functions which cover the following types of scientific computations:
+MDToolbox is a MATLAB toolbox for analysis of molecular dynamics (MD)
+simulation data of biomolecules. It consists of a collection of MATLAB 
+functions covering the following types of scientific computations: 
 
 * I/O for topology, coordinates, and trajectory files used for MD simulation
 * Least-squares fitting of structures
-* Elastic network models (Gaussian/Anisotropic network model)
+* Anisotropic network model (Elastic network model)
 * Calculation of PMF surface from scattered data
 * Principal component analysis
-* Hydrogen bond analysis
-* WHAM, and MBAR methods
-* Other auxiliary functions... such as atom selections
+* Statistical estimators. WHAM, and MBAR methods
+* Utility functions, such as atom selections
 
 For details, see the documentation http://mdtoolbox.readthedocs.org/
 
