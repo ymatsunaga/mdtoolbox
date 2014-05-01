@@ -26,7 +26,7 @@ yi = linspace(min(yd),max(yd),nbin);
 xi = xi(1,:);
 yi = yi(:,1)';
 
-z(z<0) = 0.0;
+z(z < realmin) = NaN;
 z = -log(z);
 %z = -log(abs(z));
 z_max = max(max(-z));
