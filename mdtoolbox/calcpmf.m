@@ -1,31 +1,51 @@
-function [z, xi] = calcpmf(x, nbin, xi)
+function [z, xi] = calcpmf(x, nbin, xmin, xmax)
 %% calcpmf
 % calculate 1D potential of mean force from the scattered 1D-data (using kernel density estimator)
 %
-% function [z,xi] = fene1d(x,nbin)
+%% Syntax
+% [pmf, xi] = calcpmf(data);
+% [pmf, xi] = calcpmf(data, nbin);
+% [pmf, xi] = calcpmf(data, nbin, xmin, xmax);
 %
-% %AKの粗視化モデルの主成分データを読み込む
-% load p.mat
-% %ヒストグラム計算に用いるbinの数
-% nbin = 1000;
-% [z,xi] = fene1d(p(:,1),nbin);
-% plot(xi,z,'-'); xlabel('PC1','FontSize',45); ylabel('\Delta {\itF} ({\itk_{B}T})','FontSize',45); plot_format;
+%% Description
 %
+%% Example
+%# load p.mat
+%# nbin = 256;
+%# [pmf, xi] = calcpmf(x, nbin);
+%# plot(xi, z,'-'); 
+%# xlabel('PC1','FontSize',25); ylabel('\Delta {\itPMF}({\itk_{B}T})','FontSize',25); 
+%# formatplot;
+%
+%% See also
+% calcpmf2d
+%
+%% References
+% Kernel density estimation via diffusion
+% Z. I. Botev, J. F. Grotowski, and D. P. Kroese (2010)
+% Annals of Statistics, Volume 38, Number 5, pages 2916-2957. 
+% 
 
-x = x(:, 1);
-nstep = size(x, 1);
+%% setup
+%x = x(:, 1);
 
 if ~exist('nbin', 'var') || isempty(nbin)
-  nbin = 100;
+  nbin = 256;
 end
 
-if ~exist('xi', 'var') || isempty(xi)
-  xi = linspace(min(x), max(x), nbin);
+if ~exist('xmin', 'var') || isempty(xmin)
+  xmin = min(x);
 end
 
-z = ksdensity(x, xi);
+if ~exist('xmax', 'var') || isempty(xmin)
+  xmax = max(x);
+end
 
+%% calculation
+%z = ksdensity(x, xi);
+[bandwidth, z, xi] = kde(x, nbin);
+z(z < realmin) = NaN;
 z = -log(z);
-z_max = max(max(-z));
-z = z + z_max;
+z_min = min(z(:));
+z = z - z_min;
 
