@@ -6,13 +6,23 @@ function [z, xi, yi] = calcpmf2d(x, nbin)
 % [pmf, xi, yi] = calcpmf2d(data)
 % [pmf, xi, yi] = calcpmf2d(data, nbin)
 %
-%% Example
-% load p.mat;
-% nbin = 256;
-% [z, xi, yi] = calcpmf2d(p(:,[1 2]), nbin);
-% imagesc(xi,yi,z); axis xy;
-% xlabel('PC1','FontSize',45); ylabel('PC2','FontSize',45); colorbar; plot_format
+%% Description
 %
+%% Example
+%# load p.mat;
+%# nbin = 256;
+%# [z, xi, yi] = calcpmf2d(p(:,[1 2]), nbin);
+%# imagesc(xi,yi,z); axis xy;
+%# xlabel('PC1','FontSize',45); ylabel('PC2','FontSize',45); colorbar; plot_format
+%
+%% See also
+% calcpmf2d
+%
+%% References
+% Kernel density estimation via diffusion
+% Z. I. Botev, J. F. Grotowski, and D. P. Kroese (2010)
+% Annals of Statistics, Volume 38, Number 5, pages 2916-2957. 
+% 
 
 xd = x(:,1);
 yd = x(:,2);
