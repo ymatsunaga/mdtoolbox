@@ -14,20 +14,22 @@ function [pdb, crd] = readpdb(filename)
 %
 % * filename  - input filename of PDB
 % * pdb       - structure data
-%          record: 'ATOM  ' or 'HETATM' [natomx6 char]
-%          serial: Atom serial number. [natomx1 double]
-%            name: Atom name. [natomx4 char]
-%          altloc: Alternate location indicator. [natomx1 char]
-%         resname: Residue name. [natomx3 char]
-%         chainid: Chain identifier. [natomx1 char]
-%          resseq: Residue sequence number. [natomx1 double]
-%           icode: Code for insertion of residues. [natomx1 char]
-%             xyz: Cartesian coordinate of atom in Angstrom [natomx3 double]
-%       occupancy: Occupancy. [natomx1 double]
-%      tempfactor: Temperature factor. [natomx1 double]
-%         element: Element symbol, right-justified. [natomx2 char]
-%          charge: Charge on the atom. [natomx2 char]
+%          record: 'ATOM  ' or 'HETATM' [natom x 6 char]
+%          serial: Atom serial number. [natom x 1 double]
+%            name: Atom name. [natom x 4 char]
+%          altloc: Alternate location indicator. [natom x 1 char]
+%         resname: Residue name. [natom x 3 char]
+%         chainid: Chain identifier. [natom x 1 char]
+%          resseq: Residue sequence number. [natom x 1 double]
+%           icode: Code for insertion of residues. [natom x 1 char]
+%             xyz: Cartesian coordinate of atom in Angstrom [natom x 3 double]
+%       occupancy: Occupancy. [natom x 1 double]
+%      tempfactor: Temperature factor. [natom x 1 double]
+%         element: Element symbol, right-justified. [natom x 2 char]
+%          charge: Charge on the atom. [natom x 2 char]
 % * crd       - coordinates [1 x natom3 double]
+%               if the PDB file contains multiple MODELs
+%               coordinates [nmodel x natom3 double]
 %         
 %% Example
 %# pdb = readpsf('jac.pdb');
@@ -56,7 +58,7 @@ function [pdb, crd] = readpdb(filename)
 % 77 - 78        LString(2)    element      Element symbol, right-justified.
 % 79 - 80        LString(2)    charge       Charge on the atom.
 %
-% e.g.,
+% example:
 % 123456789012345678901234567890123456789012345678901234567890123456
 % ATOM      1  N   MET A   1       9.984  -7.396  -9.702  1.00  1.00
 % ATOM  480033 OH2 TIP3W1770     -51.346  17.802  41.770  1.00  1.00
@@ -67,19 +69,32 @@ fid = fopen(filename, 'r');
 assert(fid > 0, 'Could not open file.');
 cleaner = onCleanup(@() fclose(fid));
 
-%% parse file
-natom = 0;
-while ~feof(fid)
-  line_raw = strtrim(fgetl(fid));
-  
-  if strncmpi(line_raw, 'ATOM', numel('ATOM')) || strncmpi(line_raw, 'HETATM', numel('HETATM'))
-    % ATOM or HETATM record
-    natom = natom + 1;
+%% read the whole lines into a cell array
+lines = textscan(fid, '%s', 'delimiter', '\n');
+lines = lines{1};
+nline = numel(lines);
+
+%% check the number of atoms and multi-models
+lines_clean = {};
+icount = 0;
+nmodel = 0;
+model = {};
+
+for iline = 1:nline
+  line = lines{iline};
+  if strncmpi(line, 'ATOM', numel('ATOM')) || strncmpi(line, 'HETATM', numel('HETATM'))
+    icount = icount + 1;
+    lines_clean{icount} = line;
   end
-
+  if strncmpi(line, 'ENDMDL', numel('ENDMDL')) || (iline == nline & icount ~= 0)
+    natom = icount;
+    nmodel = nmodel + 1;
+    model{nmodel} = lines_clean;
+    icount = 0;
+  end
 end
-frewind(fid);
 
+%% allocate variables
 pdb.record     = repmat('123456', natom, 1);
 pdb.serial     = zeros(natom, 1);
 pdb.name       = repmat('3456', natom, 1);
@@ -95,48 +110,57 @@ pdb.tempfactor = zeros(natom, 1);
 pdb.element    = repmat('78', natom, 1);
 pdb.charge     = repmat('90', natom, 1);
 
-natom = 0;
-while ~feof(fid)
-  line_raw = strtrim(fgetl(fid));
-  
-  if strncmpi(line_raw, 'ATOM', numel('ATOM')) || strncmpi(line_raw, 'HETATM', numel('HETATM'))
-    % ATOM or HETATM record
-    line = repmat(' ', 1, 80);
-    line(1:length(line_raw)) = line_raw;
-    natom = natom + 1;
-    pdb.record(natom, :)     = line(1:6);
-    %pdb.serial(natom)        = str2num(line(7:11));
-    num = str2num(line(7:12));
-    if numel(num) == 0;
-      if natom > 1
-        pdb.serial(natom)    = pdb.serial(natom-1) + 1;
-      else
-        pdb.serial(natom)    = 1;
-      end
+%% read PDB data
+lines = model{1};
+for iatom = 1:natom
+  line = repmat(' ', 1, 80);
+  line(1:length(lines{iatom})) = lines{iatom};
+  pdb.record(iatom, :)     = line(1:6);
+  %pdb.serial(iatom)        = str2num(line(7:11));
+  num = str2num(line(7:12));
+  if numel(num) == 0;
+    if iatom > 1
+      pdb.serial(iatom)    = pdb.serial(iatom-1) + 1;
     else
-      pdb.serial(natom)      = num;
+      pdb.serial(iatom)    = 1;
     end
-    pdb.name(natom, :)       = line(13:16);
-    pdb.altloc(natom, :)     = line(17);
-    %pdb.resname(natom, :)    = line(18:20);
-    pdb.resname(natom, :)    = line(18:21);
-    pdb.chainid(natom, :)    = line(22);
-    %pdb.resseq(natom, :)     = str2num(line(23:26));
-    %pdb.icode(natom, :)      = line(27);
-    pdb.resseq(natom, :)     = str2num(line(23:28));
-    pdb.xyz(natom, 1)        = str2num(line(31:38));
-    pdb.xyz(natom, 2)        = str2num(line(39:46));
-    pdb.xyz(natom, 3)        = str2num(line(47:54));
-    pdb.occupancy(natom)     = str2num(line(55:60));
-    pdb.tempfactor(natom)    = str2num(line(61:66));
-    pdb.element(natom, :)    = line(77:78);
-    pdb.charge(natom, :)     = line(79:80);
+  else
+    pdb.serial(iatom)      = num;
   end
-
+  pdb.name(iatom, :)       = line(13:16);
+  pdb.altloc(iatom, :)     = line(17);
+  %pdb.resname(iatom, :)    = line(18:20);
+  pdb.resname(iatom, :)    = line(18:21);
+  pdb.chainid(iatom, :)    = line(22);
+  %pdb.resseq(iatom, :)     = str2num(line(23:26));
+  %pdb.icode(iatom, :)      = line(27);
+  pdb.resseq(iatom, :)     = str2num(line(23:28));
+  pdb.xyz(iatom, 1)        = str2num(line(31:38));
+  pdb.xyz(iatom, 2)        = str2num(line(39:46));
+  pdb.xyz(iatom, 3)        = str2num(line(47:54));
+  pdb.occupancy(iatom)     = str2num(line(55:60));
+  pdb.tempfactor(iatom)    = str2num(line(61:66));
+  pdb.element(iatom, :)    = line(77:78);
+  pdb.charge(iatom, :)     = line(79:80);
 end
 
 if nargout >= 2
-  crd = pdb.xyz';
-  crd = crd(:)';
+  crd = zeros(nmodel, 3*natom);
+  tmp = pdb.xyz';
+  crd(1, :) = tmp(:)';
+  
+  for imodel = 2:nmodel
+    xyz = zeros(natom, 3);
+    lines = model{imodel};
+    for iatom = 1:natom
+      line = repmat(' ', 1, 80);
+      line(1:length(lines{iatom})) = lines{iatom};
+      xyz(iatom, 1) = str2num(line(31:38));
+      xyz(iatom, 2) = str2num(line(39:46));
+      xyz(iatom, 3) = str2num(line(47:54));
+    end
+    tmp = xyz';
+    crd(imodel, :) = tmp(:)';
+  end
 end
 
