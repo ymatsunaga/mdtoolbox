@@ -11,11 +11,6 @@ function corr_atom = calccorr(trj)
 % This routine calculates the Pearson correlation coefficients 
 % between atomi and atom j, and make a cross-correlation matrix
 % from input trajectory
-% Prior to the calculation of the covariance,
-% superimposing is automatically applied to eliminate external
-% translations and rotations. In the current implementation,
-% mass-weight calculation is not supported. Just assuming uniform
-% mass for all atoms.
 %
 % * trj       - trajectory of coordinates [nstep x 3natom]
 % * corr_atom - cross correlation matrix of atomic fluctuations. 
@@ -25,6 +20,7 @@ function corr_atom = calccorr(trj)
 %
 %% Example
 %# trj = readdcd('ak.dcd');
+%# [~, trj] = meanstructure(trj);
 %# corr_atom = calccorr(trj);
 %# imagesc(corr_atom, [-1, 1]);
 %# axis xy; axis square; colorbar;

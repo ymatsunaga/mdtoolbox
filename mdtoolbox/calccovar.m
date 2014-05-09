@@ -7,11 +7,7 @@ function covar_atom = calccovar(trj)
 %
 %% Description
 % This routine calculates a covariance matrix from input
-% trajectory. Prior to the calculation of the covariance,
-% superimposing is automatically applied to eliminate external
-% translations and rotations. In the current implementation,
-% mass-weight calculation is not supported. Just assuming uniform
-% mass for all atoms.
+% trajectory.
 %
 % * trj        - trajectory of coordinates [nstep x 3natom]
 % * covar_atom - covariance matrix of atomic fluctuations. 
@@ -20,6 +16,7 @@ function covar_atom = calccovar(trj)
 %
 %% Example
 %# trj = readdcd('ak.dcd');
+%# [~, trj] = meanstructure(trj);
 %# covar_atom = calccovar(trj);
 %# imagesc(covar_atom);
 %# axis xy; axis square; colorbar;
@@ -36,8 +33,8 @@ nstep = size(trj, 1);
 natom = size(trj, 2)/3;
 
 %% superimpose trajectory
-fprintf('superimposing trajectory to the average structure...\n');
-[~, trj] = meanstructure(trj);
+%fprintf('superimposing trajectory to the average structure...\n');
+%[~, trj] = meanstructure(trj);
 
 %% covariance matrix
 trj = bsxfun(@minus, trj, mean(trj));
