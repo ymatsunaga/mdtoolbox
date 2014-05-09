@@ -118,7 +118,7 @@ for iatom = 1:natom
   pdb.record(iatom, :)     = line(1:6);
   %pdb.serial(iatom)        = str2num(line(7:11));
   num = str2num(line(7:12));
-  if numel(num) == 0;
+  if isempty(num);
     if iatom > 1
       pdb.serial(iatom)    = pdb.serial(iatom-1) + 1;
     else
