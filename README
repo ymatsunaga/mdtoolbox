@@ -13,7 +13,7 @@ functions covering the following types of scientific computations:
 * Statistical estimators. WHAM, and MBAR methods
 * Utility functions, such as atom selections
 
-For details, see the documentation http://mdtoolbox.readthedocs.org/
+For more information, see the documentation http://mdtoolbox.readthedocs.org/
 
 Reference
 =========
