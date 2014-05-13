@@ -4,23 +4,35 @@ function [indexOfCluster, centroid, population] = clusteringbyrandom(trj, radius
 %
 %% Syntax
 %# indexOfCluster = clusteringbyrandom(trj, radius)
+%# [indexOfCluster, centroid] = clusteringbyrandom(trj, radius)
+%# [indexOfCluster, centroid, population] = clusteringbyrandom(trj, radius)
 %
 %% Description
+% In this clustering altogithm, cluster centers (reference
+% structures) are randomly chosen from the input trajectory. 
 %
 % * trj             - trajectory to be clustered [nstep x natom3 double]
 % * radius          - radius of clusters [scalar double]
 % * indexOfCluster  - cluster index from 1 to kcluster [nstep integer]
-% * centroid       - centroids of clusters [double kcluster x natom3]
+% * centroid        - centroids of clusters [double kcluster x natom3]
+% * population      - populatinos of clusters calculted from the
+%                     first and second halves of trajectory 
+%                     [double kcluster x 2]
 % 
 %% Example
-%#
+%# trj = readdcd('ak_ca.dcd');
+%# [indexOfCluster, centroid, population] = clusteringbyrandom(trj, 3.5);
+%# semilogy(population);
+%# xlabel('reference structure', 'fontsize', 25);
+%# ylabel('P_i', 'fontsize', 25);
+%# legend('fitst half', 'second half');
 % 
 %% See also
 % clusteringbykcenter, clusteringbykmeans, clusteringbyinformation
 %
 %% References
-% E. Lyman and D.M. Zuckerman, Biophys. J. 91, 164 (2006).
-% E. Lyman and D.M. Zuckerman, J. Phys. Chem. B 11, 12876 (2007).
+% [1] E. Lyman and D.M. Zuckerman, Biophys. J. 91, 164 (2006).
+% [2] E. Lyman and D.M. Zuckerman, J. Phys. Chem. B 11, 12876 (2007).
 
 %% preparation
 nstep = size(trj, 1);
@@ -54,12 +66,18 @@ end
 
 fprintf('%d clusters were identified.\n', icount);
 
+index_firsthalf = ((1:nstep) <= nstep/2);
+index_secondhalf = ~index_firsthalf;
 if nargout > 2
   kcluster = max(indexOfCluster);
-  population = zeros(kcluster, 1);
+  population = zeros(kcluster, 2);
   for icluster = 1:kcluster
-    population(icluster) = sum(indexOfCluster == icluster);
+    population(icluster, 1) = sum(indexOfCluster(index_firsthalf) == icluster);
   end
-  population = population ./ nstep;
+  population(:, 1) = population(:, 1) ./ sum(index_firsthalf);
+  for icluster = 1:kcluster
+    population(icluster, 2) = sum(indexOfCluster(index_secondhalf) == icluster);
+  end
+  population(:, 2) = population(:, 2) ./ sum(index_secondhalf);
 end
 
