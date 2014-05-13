@@ -42,9 +42,6 @@ function [rmsd, trj, vel, Ucell] = superimpose(ref, trj, index, mass, vel, isdec
 % W. Kabsch, "A discussion of the solution for the best rotation to relate two sets of vectors." 
 % Acta Cryst A34, 827-828 (1978)
 % 
-%% TODO
-% implementation of the Quaternion Characteristic Polynomial method
-%
 
 %% preparation
 natom3 = size(ref, 2);
