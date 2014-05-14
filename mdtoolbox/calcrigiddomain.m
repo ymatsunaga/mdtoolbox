@@ -81,8 +81,12 @@ while true
   % trial move
   iatom = randomwalk(iatom, natom);
   idomain = indexOfDomain(iatom);
-  jatom = randomwalk(iatom, natom);
-  idomain_try = indexOfDomain(jatom);
+
+  %jatom = randomwalk(iatom, natom);
+  %idomain_try = indexOfDomain(jatom);
+
+  idomain_try = randi(ndomain);
+
   %idomain_try = mod(idomain, ndomain) + 1;
 
   % elasticity
