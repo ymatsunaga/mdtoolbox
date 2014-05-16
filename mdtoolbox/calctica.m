@@ -12,7 +12,7 @@ function [projection, mode, lambda] = calctica(trj, lagtime)
 % * trj         - trajectory of coordinates [nstep x 3natom]
 % * lagtime     - lag time in the unit of steps. The default is 1.
 %                 [scalar integer]
-% * projection  - projections to the modes (projection of the trajectory on to principal modes) [nstep x 3natom]
+% * projection  - projections to the modes (projection of the trajectory on to tICA modes) [nstep x 3natom]
 % * mode        - tICA modes (normalized eigenvectors) [nstep x n]
 % * lambda      - corresponding eigenvalues in descending order [n x 1]
 %
@@ -27,6 +27,10 @@ function [projection, mode, lambda] = calctica(trj, lagtime)
 %% See also
 % calcpca
 % 
+%% References
+% [1]	Y. Naritomi and S. Fuchigami, J Chem Phys 134, 065101 (2011).
+% [2] C. R. Schwantes and V. S. Pande, J. Chem. Theory Comput. 9, 2000 (2013).
+%
 
 %% setup
 if ~exist('lagtime', 'var')
