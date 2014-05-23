@@ -8,6 +8,14 @@ function [projection, mode, variances] = calcpca(trj)
 %# [projection, mode, variances] = calcpca(trj);
 %
 %% Description
+% This routine performs principal component analysis (PCA)
+% The PCA identifies degrees of freedom which have large
+% variances. 
+%
+% It is noted that this routine DOES NOT apply any preprocesses to
+% the input trajectory, such as centering, or regularization. 
+% Thus, the user may need to perform such processs before calling
+% this routine. 
 %
 % * trj        - trajectory of coordinates [nstep x 3natom]
 % * projection - principal components (projection of the trajectory on to principal modes) [nstep x 3natom]

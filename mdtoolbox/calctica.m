@@ -8,6 +8,17 @@ function [projection, mode, lambda] = calctica(trj, lagtime)
 %# [projection, mode, lambda] = calctica(trj);
 %
 %% Description
+% This routine performs time-structure based Independent Component
+% Analysis (tICA). The tICA identifies degrees of freedom which are
+% most important in slow conformational transition.
+% The algorithm of the tICA is based on solving a eigenvalue
+% problem of time-lagges covariance matrix. The user needs to
+% specify the laggtime for the calculation of the covariance matrix.
+%
+% It is noted that this routine DOES NOT apply any preprocesses to
+% the input trajectory, such as centering, or regularization. 
+% Thus, the user may need to perform such processs before calling
+% this routine. 
 %
 % * trj         - trajectory of coordinates [nstep x 3natom]
 % * lagtime     - lag time in the unit of steps. The default is 1.
@@ -28,7 +39,7 @@ function [projection, mode, lambda] = calctica(trj, lagtime)
 % calcpca
 % 
 %% References
-% [1]	Y. Naritomi and S. Fuchigami, J Chem Phys 134, 065101 (2011).
+% [1]	Y. Naritomi and S. Fuchigami, J. Chem. Phys. 134, 065101 (2011).
 % [2] C. R. Schwantes and V. S. Pande, J. Chem. Theory Comput. 9, 2000 (2013).
 %
 
