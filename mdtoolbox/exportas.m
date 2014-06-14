@@ -1,18 +1,19 @@
 function exportas(basename, style)
 %% exportas
-% export fig, eps, png, tiff files of the current figure
+% export fig, eps, png, tiff, illustrator files of the current figure
 %
 %% Syntax
 % exportas(basename)
 % exportas(basename, style)
 %
 %% Description
-% This code creates fig, eps, png, compressed tiff images.
+% This code creates fig, eps, png, compressed tiff, and illustrator files.
 % For example, exportas('plot') creates the following images:
 % plot.fig
 % plot.eps
 % plot.png
 % plot.tiff
+% plot_ai.eps
 %
 % By default, these image are created in WYSWIG style, 
 % i.e, you get the same pixels and sizes as the figure window.
@@ -78,6 +79,9 @@ if strncmpi(style, 'default', numel('default'))
   f = [basename '.tiff'];
   print('-dtiff', f);
 
+  f = [basename '_ai.eps'];
+  print('-depsc2', '-tiff', f);
+
 else
   % single or double column width with 300 ppi
   set(gcf, 'PaperPositionMode', 'manual');
@@ -100,6 +104,9 @@ else
   
   f = [basename '.tiff'];
   print('-dtiff', sprintf('-r%d', ppi), f);
+
+  f = [basename '.ai'];
+  print('-depsc2', '-tiff', sprintf('-r%d', ppi), f);
 
 end
 
