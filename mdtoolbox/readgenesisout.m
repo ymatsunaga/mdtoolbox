@@ -58,70 +58,39 @@ cleaner = onCleanup(@() fclose(fid));
 label = {};
 ilabel = 0;
 
-while 1 
+while 1
   line = strtrim(fgetl(fid));
 
-  if regexp(line, '\[STEP5\] Perform Molecular Dynamics Simulation')
-    while 1
-      line = strtrim(fgetl(fid));
-
-      if regexp(line, '^DYNA.*:')
-        matchend = regexp(line, '^DYNA.*:', 'end');
-        line = strtrim(line((matchend+1):end));
-        while ~isempty(line)
-          [tmp, line] = strtok(line);
-          tmp = strrep(tmp, '-', '_');
-          ilabel = ilabel + 1;
-          label{ilabel} = lower(tmp);
-        end
-      else
-        if ilabel > 0
-          break
-        end
-      end
-      
-    end % end of while loop
-  end % end of if STEP5 found
-
-  if ilabel > 0
+  if strncmp(line, 'INFO:', numel('INFO:'))
+    [~, line] = strtok(line);
+    while ~isempty(line)
+      [tmp, line] = strtok(line);
+      tmp = strrep(tmp, '-', '_'); % '-' cannnot be used as a filed name in MATLAB
+      ilabel = ilabel + 1;
+      label{ilabel} = lower(tmp);
+    end
     break
   end
-
 end
 
 %% parse data
-ilabel = 0;
 data = [];
-data_each = zeros(1, numel(label));
 
 while ~feof(fid)
   line = strtrim(fgetl(fid));
-  
-  if regexp(line, '^DYNA.*>')
-    matchend = regexp(line, '^DYNA.*>', 'end');
-    line = strtrim(line((matchend+1):end));
-    data_each2 = regexp(line, regexp_getdata, 'match');
-    for i = 1:numel(data_each2)
-      ilabel = ilabel + 1;
-      data_each(ilabel) = str2num(data_each2{i});
-    end
-  end
-  
-  if ilabel == numel(label)
-    data = [data; data_each];
-    ilabel = 0;
-  end
 
+  if strncmp(line, 'INFO:', numel('INFO:'))
+    [~, line] = strtok(line);
+    ene_line = cellfun(@str2num, regexp(strtrim(line), '\s*', 'split'));
+    data = [data; ene_line];
+  end
 end
 
 % delete zero-th step
-% if data(1, 1) == 0
-%   data(1, :) = [];
-% end
+data(1, :) = [];
 
 ene = struct;
 for ilabel = 1:numel(label)
   ene = setfield(ene, label{ilabel}, data(:, ilabel));
 end
-
 
