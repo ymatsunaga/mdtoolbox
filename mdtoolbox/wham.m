@@ -1,21 +1,22 @@
-function [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_kn, fhandle_k, temperature, edge_m)
+function [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, temperature, edge_m)
 %% wham
 % calculate (dimensionless relative) free energies of umbrella-windows and (unbiased) density of states in data-bins by using the WHAM
 %
 %% Syntax
-%# [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_kn, fhandle_k, temperature)
-%# [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_kn, fhandle_k, temperature, edge_m)
+%# [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, temperature)
+%# [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, temperature, edge_m)
 %
 %% Description
 %
-% * edge_m      - edges of data-bins
-%                 [double M]
+% * data_k      - cell of trajectories in a space where histograms are counted
+%                 [cell K x 1]
 % * fhandle_k   - cell of function handles which represent biased potentials
-%                 [cell K]
-% * data_kn     - cell of trajectories in a space where histograms are counted
-%                 [cell K]
-% * kbt         - Temperature in Kelvin
+%                 [cell K x 1]
+% * temperature - Temperature in Kelvin
 %                 [double scalar]
+% * edge_m      - edges of data-bins
+%                 [double 1 x M or M x 1]
+%
 % * f_k         - dimensionless free energies of umbrella-windows
 %                 [double K x 1]
 % * log_prob_m  - log of unbiased density of states in data-bins (prob(m) = exp(-kbt*U(x_m))/Z(kbt) * dx_m)
@@ -51,21 +52,21 @@ KB = 0.00198719168260038;
 TOLERANCE = 10^(-8);
 
 % convert from array to cell
-if ~iscell(data_kn)
-  K = size(data_kn, 1);
-  t = data_kn;
-  data_kn = cell(K, 1);
-  for k = 1:size(data_kn, 1)
-    data_kn{k} = t(k, :);
+if ~iscell(data_k)
+  K = size(data_k, 1);
+  t = data_k;
+  data_k = cell(K, 1);
+  for k = 1:size(data_k, 1)
+    data_k{k} = t(k, :);
   end
 end
 
 % K: number of umbrella-windows
-K = numel(data_kn); 
+K = numel(data_k);
 
 % check consistency of the number of umbrella-windows
 if K ~= numel(fhandle_k)
-  error('# of umbrella-windows do not match... data has %d windows. fhandle has %d windows.', numel(data_kn), numel(fhandle_k));
+  error('# of umbrella-windows do not match... data has %d windows. fhandle has %d windows.', numel(data_k), numel(fhandle_k));
 end
 
 %% calculate histogram (h_km)
@@ -73,8 +74,8 @@ end
 if ~exist('edge_m', 'var') || isempty(edge_m)
   % M: number of data-bins
   M = 100;
-  edge_min = min(cellfun(@min, data_kn));
-  edge_max = max(cellfun(@max, data_kn));
+  edge_min = min(cellfun(@min, data_k));
+  edge_max = max(cellfun(@max, data_k));
   edge_m = linspace(edge_min, edge_max+(M*eps), M+1)';
 else
   % M: number of data-bins
@@ -84,7 +85,7 @@ center_m = 0.5 * (edge_m(2:end) + edge_m(1:(end-1)));
   
 h_km = zeros(K, M);
 for k = 1:K
-  h_m = histc(data_kn{k}, edge_m);
+  h_m = histc(data_k{k}, edge_m);
   h_km(k, :) = h_m(1:(end-1))';
 end
 
