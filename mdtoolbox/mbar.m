@@ -1,21 +1,17 @@
-function f_k = mbar(u_kn, fhandle_k, data_kn, tolerance)
+function f_k = mbar(u_kl, tolerance)
 %% mbar
 % calculate the free energy differences of umbrella-windowed systems by using the Multistate Bennet Acceptance Ratio Method (MBAR)
 %
 %% Syntax
-%# f_k = mbar(u_kn, fhandle_k, data_kn)
-%# f_k = mbar(u_kn, fhandle_k, data_kn, tolerance)
+%# f_k = mbar(u_kl)
+%# f_k = mbar(u_kl, tolerance)
 %
 %% Description
 %
-% * u_kn      - unbiased (dimensionless) potential energy of n-th snapshot from k-th umbrella-windows
-%               [cell nwindow x 1]
-% * fhandle_k - function handle of biased (dimensionless) potential for k-th umbrella-window
-%               [cell nwindow x 1]
-% * data_kn   - coordinates relevant to biased potentials
-%               [cell nwindow x 1]
+% * u_kl      - reduced potential energy of umbrella simulation k evaluated at umbrella l
+%               [cell numbrella x numbrella]
 % * f_k       - (dimensionless) free energies of umbrella-windows
-%               [double K x 1]
+%               [double numbrella x 1]
 % 
 %% Example
 %#
@@ -35,14 +31,13 @@ function f_k = mbar(u_kn, fhandle_k, data_kn, tolerance)
 
 %% preparation
 % K: number of umbrella windows
-K = numel(u_kn); 
-assert(K == numel(fhandle_k), 'the numbers of umbrella windows in u_kn and fhandle do not match...');
-assert(K == numel(data_kn), 'the numbers of umbrella windows in u_kn and data_kn do not match...');
+[K, L] = size(u_kl);
+assert(K == L, 'the numbers of rows and columns of u_kl should be same...');
 
 % N_k: number of data in k-th umbrella window
 N_k = zeros(K, 1);
 for k = 1:K
-  N_k(k) = size(u_kn{k}, 1);
+  N_k(k) = size(u_kl{k, 1}, 1);
 end
 N_max = max(N_k);
 
@@ -51,15 +46,14 @@ if ~exist('tolerance', 'var') || isempty(tolerance)
   tolerance = 10^(-8);
 end
 
-%% calculate energies evaluated at different umbrella windows
+% conversion from cell (u_kl) to array (u_kln)
 u_kln = zeros(K, K, N_max);
 for k = 1:K
   for l = 1:K
-    for n = 1:N_k(k);
-      u_kln(k, l, n) = u_kn{k}(n) + fhandle_k{l}(data_kn{k}(n, :));
-    end
+    u_kln(k, l, 1:N_k(k)) = u_kl{k, l};
   end
 end
+clear u_kl;
 
 %% solve the MBAR equation by self-consistent iteration
 f_k = zeros(K, 1);

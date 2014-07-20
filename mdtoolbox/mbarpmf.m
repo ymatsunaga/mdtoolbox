@@ -1,22 +1,22 @@
-function pmf_i = mbarpmf(u_kn, fhandle_k, data_kn, bin_kn, f_k)
+function pmf_i = mbarpmf(u_kl, bin_k, f_k, u_k)
 %% mbarpmf
 % calculate the potential of mean force of bins by using the Multistate Bennet Acceptance Ratio Method (MBAR)
 %
 %% Syntax
-%# pmf = mbarpmf(u_kn, fhandle_k, data_kn, bin_kn, f_k)
+%# pmf = mbarpmf(u_kl, bin_k, f_k)
+%# pmf = mbarpmf(u_kl, bin_k, f_k, u_k)
 %
 %% Description
 %
-% * u_kn      - unbiased (dimensionless) potential energy of n-th snapshot from k-th umbrella-windows
-%               [cell nwindow x 1]
-% * fhandle_k - function handle of biased (dimensionless) potential for k-th umbrella-window
-%               [cell nwindow x 1]
-% * data_kn   - coordinates relevant to biased potentials
-%               [cell nwindow x 1]
-% * bin_kn    - cell of binned trajectories in the order parameter space where PMF is calculated
-%               [cell nwindow x 1]
-% * f_k       - (dimensionless) free energies of umbrella-windows
-%               [double K x 1]
+% * u_kl      - reduced potential energy of umbrella simulation k evaluated at umbrella l
+%               [cell numbrella x numbrella]
+% * bin_k     - binned trajectories of umbrella simulation k
+%               [cell numbrella x 1]
+% * f_k       - reduced free energies of umbrella k
+%               [double numbrella x 1]
+% * u_k       - reduced potential energy umbrella simulation k under the condition where PMF is evaluated 
+%               [cell numbrella x 1]
+%               If omitted, u_k = 0 is assumed
 % 
 %% Example
 %#
@@ -36,44 +36,40 @@ function pmf_i = mbarpmf(u_kn, fhandle_k, data_kn, bin_kn, f_k)
 
 %% preparation
 % K: number of umbrella windows
-K = numel(u_kn); 
-assert(K == numel(fhandle_k), 'the numbers of umbrella windows in u_kn and fhandle do not match...');
-assert(K == numel(bin_kn), 'the numbers of umbrella windows in u_kn and fhandle do not match...');
+[K, L] = size(u_kl); 
+assert(K == L, 'the numbers of rows and columns of u_kl should be same...');
 
 % N_k: number of data in k-th umbrella window
 N_k = zeros(K, 1);
 for k = 1:K
-  N_k(k) = size(u_kn{k}, 1);
+  N_k(k) = size(u_kl{k, 1}, 1);
 end
 N_max = max(N_k);
 
-u_cell_kn = u_kn;
-u_kn = zeros(K, N_max);
-for k = 1:K
-  for n = 1:N_k(k);
-    u_kn(k, n) = u_cell_kn{k}(n);
-  end
-end
-clear u_cell_kn;
-
-bin_cell_kn = bin_kn;
-bin_kn = zeros(K, N_max);
-for k = 1:K
-  for n = 1:N_k(k);
-    bin_kn(k, n) = bin_cell_kn{k}(n);
-  end
-end
-clear bin_cell_kn;
-
-%% calculate energies evaluated at different umbrella windows
+% conversion from cell (u_kl) to array (u_kln)
 u_kln = zeros(K, K, N_max);
 for k = 1:K
   for l = 1:K
-    for n = 1:N_k(k);
-      u_kln(k, l, n) = u_kn(k, n) + fhandle_k{l}(data_kn{k}(n, :));
-    end
+    u_kln(k, l, 1:N_k(k)) = u_kl{k, l};
   end
 end
+clear u_kl;
+
+% conversion from cell (u_k) to array (u_kn)
+u_kn = zeros(K, N_max);
+if exist('u_k', 'var') && ~isempty(u_k);
+  for k = 1:K
+    u_kn(k, 1:N_k(k)) = u_k{k};
+  end
+  clear u_k;
+end
+
+% conversion from cell (bin_k) to array (bin_kn)
+bin_kn = zeros(K, N_max);
+for k = 1:K
+  bin_kn(k, 1:N_k(k)) = bin_k{k};
+end
+clear bin_k;
 
 %% calc PMF
 log_w_kn = zeros(K, N_max);
