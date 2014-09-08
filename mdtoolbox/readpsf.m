@@ -6,11 +6,15 @@ function psf = readpsf(filename)
 %# psf = readpsf(filename);
 %
 %% Description
-% This code supports both charmm-type and xplor-type psf.
+% This code supports both charmm-type and xplor-type psf formats.
 % Output is a strucure variable. 
 %
 % * filename  - input filename of psf
 % * psf       - structure data 
+%           isPSF: logical
+%           isEXT: logical
+%          isCMAP: logical
+%          isCHEQ: logical
 %           title: [ntitlex80 char]
 %         atom_id: [natomx1 double]
 %    segment_name: [natomx4 char]
@@ -43,7 +47,7 @@ function psf = readpsf(filename)
 %# psf = readpsf('jac.psf');
 %# psf = readpsf('jac_xplor.psf');
 %
-%% References
+%% References for PSF format
 % NAMD Tutorial
 % http://www.ks.uiuc.edu/Training/Tutorials/namd/namd-tutorial-unix-html/node21.html
 % User Manual for EGO_VIII 
@@ -59,26 +63,26 @@ assert(fid > 0, 'Could not open file.');
 cleaner = onCleanup(@() fclose(fid));
 
 %% parse file
-isPSF = false;
-isEXT = false;
-isCMAP = false;
-isCHEQ = false;
+psf.isPSF = false;
+psf.isEXT = false;
+psf.isCMAP = false;
+psf.isCHEQ = false;
 
 line = fgetl(fid);
 line_size = numel(line);
-if strcmpi(line(1:3), 'PSF'); isPSF = true; end;
+%if strcmpi(line(1:3), 'PSF'); psf.isPSF = true; end;
 for i=1:4:(line_size-3)
-  if strcmpi(line(i:(i+3)), 'PSF '); isPSF = true; end;
-  if strcmpi(line(i:(i+3)), 'EXT '); isEXT = true; end;
-  if strcmpi(line(i:(i+3)), 'CMAP'); isCMAP = true; end;
-  if strcmpi(line(i:(i+3)), 'CHEQ'); isCHEQ = true; end;
+  if strcmpi(line(i:(i+3)), 'PSF '); psf.isPSF = true; end;
+  if strcmpi(line(i:(i+3)), 'EXT '); psf.isEXT = true; end;
+  if strcmpi(line(i:(i+3)), 'CMAP'); psf.isCMAP = true; end;
+  if strcmpi(line(i:(i+3)), 'CHEQ'); psf.isCHEQ = true; end;
 end
 
-if ~isPSF
+if ~psf.isPSF
   error('Sorry, this seems not be a PSF file')
 end
 
-if isEXT
+if psf.isEXT
   fmt_atom = '%10d %8s %8d %8s %8s %4s %14f%14f%8d%*[^\n]';
   fmt_list = '%10d';
 else
