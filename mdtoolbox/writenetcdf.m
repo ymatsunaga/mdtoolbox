@@ -12,7 +12,7 @@ function writenetcdf(filename, trj, box, title)
 % This code puts trajectories into a netcdf file. 
 %
 % * filename  - output dcd trajectory filename
-% * trj       - trajectory [nstep x natom3 double]
+% * trj       - trajectory [nstep x natom3 double or single]
 % * box       - box size [nstep x 3 double]
 % * title     - title [chars]
 %
@@ -71,7 +71,9 @@ end
 [nstep, natom3] = size(trj);
 natom = natom3 / 3;
 
-trj = single(trj);
+if ~isa(trj, 'single');
+  trj = single(trj);
+end
 trj = trj';
 trj = reshape(trj, 3, natom, nstep);
 
