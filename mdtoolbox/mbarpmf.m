@@ -6,6 +6,7 @@ function [pmf_i, w_k] = mbarpmf(u_kl, bin_k, f_k, u_k)
 %# pmf = mbarpmf(u_kl, bin_k, f_k)
 %# pmf = mbarpmf(u_kl, bin_k, f_k, u_k)
 %# [pmf, w_k] = mbarpmf(u_kl, bin_k, f_k, u_k)
+%# [~, w_k] = mbarpmf(u_kl, [], f_k, u_k)
 %
 %% Description
 %
