@@ -87,7 +87,7 @@ while ~feof(fid)
 end
 
 % delete zero-th step
-data(1, :) = [];
+%data(1, :) = [];
 
 ene = struct;
 for ilabel = 1:numel(label)
