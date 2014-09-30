@@ -108,7 +108,7 @@ if nargout > 1
   % conversion from array (log_w_kn) to cell (w_k)
   w_k = {};
   for k = 1:K
-    w_k{k} = log_w_kn(k, 1:N_k(k));
+    w_k{k} = exp(log_w_kn(k, 1:N_k(k)));
   end
 end
 
