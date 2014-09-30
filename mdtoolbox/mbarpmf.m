@@ -1,10 +1,11 @@
-function pmf_i = mbarpmf(u_kl, bin_k, f_k, u_k)
+function [pmf_i, w_k] = mbarpmf(u_kl, bin_k, f_k, u_k)
 %% mbarpmf
 % calculate the potential of mean force of bins by using the Multistate Bennet Acceptance Ratio Method (MBAR)
 %
 %% Syntax
 %# pmf = mbarpmf(u_kl, bin_k, f_k)
 %# pmf = mbarpmf(u_kl, bin_k, f_k, u_k)
+%# [pmf, w_k] = mbarpmf(u_kl, bin_k, f_k, u_k)
 %
 %% Description
 %
@@ -17,6 +18,10 @@ function pmf_i = mbarpmf(u_kl, bin_k, f_k, u_k)
 % * u_k       - reduced potential energy umbrella simulation k under the condition where PMF is evaluated 
 %               [cell numbrella x 1]
 %               If omitted, u_k = 0 is assumed
+% * pmf       - potential mean force of each bin
+%               [double ngrid x 1]
+% * w_k       - weight for each snapshot used for the calculation of pmf
+%               [cell numbrella x 1]
 % 
 %% Example
 %#
@@ -65,34 +70,47 @@ if exist('u_k', 'var') && ~isempty(u_k);
 end
 
 % conversion from cell (bin_k) to array (bin_kn)
-bin_kn = zeros(K, N_max);
-for k = 1:K
-  bin_kn(k, 1:N_k(k)) = bin_k{k};
+if ~isempty(bin_k)
+  bin_kn = zeros(K, N_max);
+  for k = 1:K
+    bin_kn(k, 1:N_k(k)) = bin_k{k};
+  end
+  clear bin_k;
 end
-clear bin_k;
 
 %% calc PMF
 log_w_kn = zeros(K, N_max);
-for j = 1:K
-  log_w_kn(j, 1:N_k(j)) = 1;
+for k = 1:K
+  log_w_kn(k, 1:N_k(k)) = 1;
 end
 index = log_w_kn > 0;
 
 log_w_kn = mbar_log_wi_jn(N_k, f_k, u_kln, u_kn, K, N_max);
 log_w_n  = log_w_kn(index);
 
-nbin   = max(bin_kn(:));
-pmf_i  = zeros(nbin, 1);
-for ibin = 1:nbin
-  lindex_ibin = (bin_kn(index) == ibin);
-  if any(lindex_ibin)
-    pmf_i(ibin) = - logsumexp(log_w_n(lindex_ibin));
-  else
-    pmf_i(ibin) = NaN;
+if isempty(bin_k)
+  pmf_i = [];
+else
+  nbin   = max(bin_kn(:));
+  pmf_i  = zeros(nbin, 1);
+  for ibin = 1:nbin
+    lindex_ibin = (bin_kn(index) == ibin);
+    if any(lindex_ibin)
+      pmf_i(ibin) = - logsumexp(log_w_n(lindex_ibin));
+    else
+      pmf_i(ibin) = NaN;
+    end
+  end
+  %pmf_i = pmf_i - pmf_i(1);
+end
+
+if nargout > 1
+  % conversion from array (log_w_kn) to cell (w_k)
+  w_k = {};
+  for k = 1:K
+    w_k{k} = log_w_kn(k, 1:N_k(k));
   end
 end
-%pmf_i = pmf_i - pmf_i(1);
-
 
 %% logsumexp (input should be vector)
 function s = logsumexp(x)
