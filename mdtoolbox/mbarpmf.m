@@ -71,7 +71,9 @@ if exist('u_k', 'var') && ~isempty(u_k);
 end
 
 % conversion from cell (bin_k) to array (bin_kn)
-if ~isempty(bin_k)
+if isempty(bin_k)
+  bin_kn = [];
+else
   bin_kn = zeros(K, N_max);
   for k = 1:K
     bin_kn(k, 1:N_k(k)) = bin_k{k};
@@ -89,7 +91,7 @@ index = log_w_kn > 0;
 log_w_kn = mbar_log_wi_jn(N_k, f_k, u_kln, u_kn, K, N_max);
 log_w_n  = log_w_kn(index);
 
-if isempty(bin_k)
+if isempty(bin_kn)
   pmf_i = [];
 else
   nbin   = max(bin_kn(:));
