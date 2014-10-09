@@ -21,7 +21,7 @@ function [pmf_i, w_k] = mbarpmf(u_kl, bin_k, f_k, u_k)
 %               If omitted, u_k = 0 is assumed
 % * pmf       - potential mean force of each bin
 %               [double ngrid x 1]
-% * w_k       - weight for each snapshot used for the calculation of pmf
+% * w_k       - (normalized) weight for each snapshot used for the calculation of pmf
 %               [cell numbrella x 1]
 % 
 %% Example
@@ -109,11 +109,10 @@ end
 
 if nargout > 1
   % conversion from array (log_w_kn) to cell (w_k)
-  log_w_kn = exp(log_w_kn);
-  log_w_kn = log_w_kn./sum(log_w_kn(:));
+  s = logsumexp(log_w_n);
   w_k = {};
   for k = 1:K
-    w_k{k} = log_w_kn(k, 1:N_k(k))';
+    w_k{k} = exp((log_w_kn(k, 1:N_k(k)) - s))';
   end
 end
 
