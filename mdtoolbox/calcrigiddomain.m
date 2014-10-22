@@ -110,7 +110,7 @@ while true
   if mod(icount, 10000) == 0
     fprintf('Trial = %d  T = %f  F = %f\n', icount, temperature, F);
   end
-  temperature = 0.99999*temperature; %exponential scheduling
+  temperature = 0.999999*temperature; % exponential scheduling
   icount = icount + 1;
   F_history = [F_history; F];
   if F < F_best
@@ -122,7 +122,7 @@ while true
     break;
   end
 end
-indexOfDomain = indexOfDomain_best;
+indexOfDomain = indexOfDomain_best; % greedy approach
 
 %% output pymol script
 %F = calcF(indexOfDomain, elasticity, connectivity, ndomain, alpha, Rc);
