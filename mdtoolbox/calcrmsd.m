@@ -57,5 +57,11 @@ x_diff = bsxfun(@minus, trj(:, 1:3:end), ref(1:3:end));
 y_diff = bsxfun(@minus, trj(:, 2:3:end), ref(2:3:end));
 z_diff = bsxfun(@minus, trj(:, 3:3:end), ref(3:3:end));
 
-rmsd = sqrt(sum((mass.*(x_diff.^2 + y_diff.^2 + z_diff.^2)), 2)./sum(mass));
+diff = x_diff.^2 + y_diff.^2 + z_diff.^2;
+diff = bsxfun(@times, mass, diff);
+diff = sum(diff, 2);
+diff = diff./sum(mass);
+diff = sqrt(diff);
+
+rmsd = diff;
 
