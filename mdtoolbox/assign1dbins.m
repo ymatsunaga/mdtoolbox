@@ -1,13 +1,13 @@
-function [index, center, edge] = assign1dbins(data, nbin)
+function [index, center, edge] = assign1dbins(data, edge)
 %% assign1dbins
 % assign bin indices to the given data by binning their values
 %
 %% Syntax
-%# index = assign1dbins(data, nbin);
-%# [index, center, edge] = assign1dbins(nbin, data)
-%#
 %# index = assign1dbins(data, edge);
-%# [index, center] = assign1dbins(nbin, edge)
+%# [index, center] = assign1dbins(data, edge)
+%#
+%# index = assign1dbins(data, nbin);
+%# [index, center, edge] = assign1dbins(data, nbin)
 %
 %% Description
 % This routine assigns bin indices to the given data by binning
@@ -15,20 +15,20 @@ function [index, center, edge] = assign1dbins(data, nbin)
 % values. For example min(data) belongs to the 1st bin, and
 % max(data) belongs to the last bin.
 %
-% * nbin   - the number of bins
-%            [integer scalar]
-% * data   - some trajectory or data set to be assigned 
+% * data   - data to be assigned 
 %            [double nstep x 1]
+% * edge   - edges of bins
+%            [double nstep+1 x 1]
 % * index  - indices of bins.
 %            [integer nstep x 1]
 % * center - centers of bins
 %            [double nstep x 1]
-% * edge   - edges of bins
-%            [double nstep+1 x 1]
+% * nbin   - the number of bins
+%            [integer scalar]
 %
 %% Example
-%# data = rand(10000, 2);
-%# [index, center, edge] = assign1dbins(10, data(:, 1));
+%# data = rand(100000, 2);
+%# [index, center] = assign1dbins(data(:, 1), 0:0.1:1);
 %# scatter(data(:, 1), data(:, 2), 5, index, 'filled');
 % 
 %% See also
@@ -39,20 +39,19 @@ if isrow(data)
   data = data';
 end
 
-if ~exist('nbin', 'var') || isempty(nbin)
-  nbin = 100;
+if ~exist('edge', 'var') || isempty(edge)
+  edge = 10;
 end
 
-if numel(nbin) == 1
+if numel(edge) == 1
+  nbin = edge;
   data_min = min(data(:, 1));
   data_max = max(data(:, 1));
   edge = linspace(data_min, data_max + nbin*eps, nbin+1);
 else
-  edge = nbin;
+  nbin = numel(edge) - 1;
 end
-clear nbin;
 
 [~, index] = histc(data, edge);
-center = edge + 0.5*(edge(2) - edge(1));
-center(end) = [];
+center = 0.5*(edge(2:end) + edge(1:(end-1)));
 

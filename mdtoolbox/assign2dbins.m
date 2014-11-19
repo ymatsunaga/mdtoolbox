@@ -1,46 +1,76 @@
-function [bin_kn_2d,data0,nbins_found,bin_indices] = assign2dbins(data_kn,nbins,data_subsampled,data_subsampled_2d)
+function [index, center_x, center_y, edge_x, edge_y] = assign2dbins(data, edge_x, edge_y)
 %% assign2dbins
+% assign 1-dimensional indices to the 2-dimensional data
 %
 %% Syntax
+%# index = assign2dbins(data);
+%# index = assign2dbins(data, edge_x, edge_y);
+%# [index, center_x, center_y] = assign2dbins(data, edge_x, edge_y);
 %#
+%# index = assign2dbins(data, nbin_x, nbin_y);
+%# [index, center_x, center_y, edge_x, edge_y] = assign1dbins(data, nbin)
 %
 %% Description
+% This routine assigns 1-dimensional bin indices to the given data
+% in 2-dimensional space. 
+%
+% * data     - data to be assigned 
+%              [double nstep x 1]
+% * edge_x   - edges for bins in the 1st dimension
+%              [double nstep+1 x 1]
+% * edge_y   - edges for bins in the 2nd dimension
+%              [double nstep+1 x 1]
+% * index    - indices of bins.
+%              [integer nstep x 1]
+% * center_x - centers of bins in the 1st dimension
+%              [double nstep x 1]
+% * center_y - centers of bins in the 2nd dimension
+%              [double nstep x 1]
+% * nbin_x   - the number of bins in the 1st dimension
+%              [integer scalar]
+% * nbin_y   - the number of bins in the 2nd dimension
+%              [integer scalar]
 %
 %% Example
-%#
+%# data = rand(100000, 2);
+%# [index, center, edge] = assign2dbins(data, 0:0.2:1, 0:0.5:1);
+%# scatter(data(:, 1), data(:, 2), 5, index, 'filled');
 % 
 %% See also
-%
-%% References
+% assign1dbins, assignvoronoi
 %
 
-[K, N_max] = size(data_kn);
-data_min = min(data_subsampled);
-data_max = max(data_subsampled);
-%data_min = 28;
-%data_max = 40;
-edges = linspace(data_min, data_max, nbins+1);
-edges(end) = inf;
-[h, bin_kn] = histc(data_kn, edges);
-
-bin_kn_2d = bin_kn;
-nbins_found = 0;
-bin_indices = [];
-for k = 1:K
-  for n = 1:nbins
-    %in_bin = (bin_kn(k,:) == n);
-    [h, bin_subsampled] = histc(data_subsampled_2d{k}, edges);
-    in_bin = (bin_subsampled == n);
-    bin_count = sum(in_bin);
-    if (bin_count > 0)
-      nbins_found = nbins_found + 1;
-      in_bin = (bin_kn(k, :) == n);
-      bin_kn_2d(k, in_bin) = nbins_found;
-      bin_indices = [bin_indices; [k n]];
-    end
-  end
+if isrow(data)
+  data = data';
 end
 
-edges(end) = [];
-data0 = edges + 0.5*(edges(2) - edges(1));
+if (~exist('edge_x', 'var') || isempty(edge_x))
+  edge_x = 10;
+end
+
+if (~exist('edge_y', 'var') || isempty(edge_y))
+  edge_y = 10;
+end
+
+if numel(edge_x) == 1
+  nbin_x = edge_x;
+  data_min = min(data(:, 1));
+  data_max = max(data(:, 1));
+  edge_x = linspace(data_min, data_max + nbin_x*eps, nbin_x+1);
+else
+  nbin_x = numel(edge_x) - 1;
+end
+
+if numel(edge_y) == 1
+  nbin_y = edge_y;
+  data_min = min(data(:, 2));
+  data_max = max(data(:, 2));
+  edge_y = linspace(data_min, data_max + nbin_y*eps, nbin_y+1);
+else
+  nbin_y = numel(edge_y) - 1;
+end
+
+[index_x, center_x] = assign1dbins(data(:, 1), edge_x);
+[index_y, center_y] = assign1dbins(data(:, 2), edge_y);
+index = nbin_y*(index_x-1) + index_y;
 
