@@ -1,10 +1,10 @@
-function landscape(xi, yi, data, level)
+function gobj = landscape(xi, yi, data, level)
 %% landscape
 % draws 2-dimensional free energy surface and its contour lines
 %
 %% Syntax
 %# landscape(xi, yi, data)
-%# landscape(xi, yi, data, level, level_max)
+%# gobj = landscape(xi, yi, data, level, level_max)
 %
 %% Description
 %
@@ -12,6 +12,7 @@ function landscape(xi, yi, data, level)
 % * yi    - regularly spaced grids in y-axis [m x 1 or 1 x m double vector]
 % * data  - free energy data [m x n double array]
 % * level - contour levels [doulbe vector]
+% * gobj  - graphics object (formerly called as 'handle graphics')
 %
 %% Example
 %#
@@ -28,7 +29,7 @@ level_max = max(level);
 %% plot
 data2 = data;
 data2(data2 > level_max) = NaN;
-pcolor(xi, yi, data2);
+gobj = pcolor(xi, yi, data2);
 shading flat;
 colorbar;
 axis([min(xi) max(xi) min(yi) max(yi)]);
@@ -36,6 +37,6 @@ axis xy;
 formatplot2;
 
 hold on;
-contour(xi, yi, data2, level, 'linecolor', 'black');
+gobj = contour(xi, yi, data2, level, 'linecolor', 'black');
 hold off;
 

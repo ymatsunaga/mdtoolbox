@@ -1,10 +1,10 @@
-function plotcolor(x, y, c, varargin)
+function gobj = plotcolor(x, y, c, varargin)
 %% plotcolor
 % plot colored lines according to the input vector c
 %
 %% Syntax
 %# plotcolor(x, y, c)
-%# plotcolor(x, y, c, LineseriesProperties)
+%# gobj = plotcolor(x, y, c, LineseriesProperties)
 %
 %% Description
 %
@@ -12,6 +12,7 @@ function plotcolor(x, y, c, varargin)
 % * y        - values in the y-axis [n x 1 double]
 % * c        - values for the line color [n x 1 double]
 % * varargin - Lineseries Properties such as 'LineWidth', 2.
+% * gobj     - graphics object (formerly called as 'handle graphics')
 %
 %% Example
 %# parm = readparm('ak.parm');
@@ -53,11 +54,11 @@ rgb(rgb > 1) = 1;
 %% plot lines
 if numel(varargin) < 2
   for i = 2:nstep
-    line([x(i-1) x(i)], [y(i-1) y(i)], 'Color', rgb(i-1, :));
+    gobj = line([x(i-1) x(i)], [y(i-1) y(i)], 'Color', rgb(i-1, :));
   end
 else
   for i = 2:nstep
-    line([x(i-1) x(i)], [y(i-1) y(i)], 'Color', rgb(i-1, :), varargin{:});
+    gobj = line([x(i-1) x(i)], [y(i-1) y(i)], 'Color', rgb(i-1, :), varargin{:});
   end
 end
 
