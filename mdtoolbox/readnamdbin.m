@@ -26,10 +26,10 @@ function [crd, nAtom] = readnamdbin(filename, nAtomLimit)
 %
 
 if ~exist('nAtomLimit', 'var')
-  nAtomLimit = 10^10;
+  nAtomLimit = 10^8;
 end
 
-fid = fopen(filename,'r', 'l');
+fid = fopen(filename,'r', 'b');
 
 % check endian and read nAtom
 iCheckEndian = fread(fid, 1, 'int32');
