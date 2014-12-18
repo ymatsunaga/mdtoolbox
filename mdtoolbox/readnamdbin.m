@@ -26,7 +26,7 @@ function [crd, nAtom] = readnamdbin(filename, nAtomLimit)
 %
 
 if ~exist('nAtomLimit', 'var')
-  nAtomLimit = 10^9;
+  nAtomLimit = 10^10;
 end
 
 fid = fopen(filename,'r', 'l');
@@ -49,7 +49,10 @@ nAtom = iCheckEndian;
 
 % coordinates or velocities
 crd = fread(fid, nAtom*3, 'double');
-
 fclose(fid);
 
+% convert to row vector
+if iscolumn(crd)
+  crd = crd';
+end
 
