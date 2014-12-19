@@ -1,4 +1,4 @@
-function writepdb(filename, pdb, trj, format_type)
+function writepdb(filename, pdb, trj, format_type, bfactor)
 %% writepdb
 % write Protein Data Bank (PDB) file
 %
@@ -8,6 +8,7 @@ function writepdb(filename, pdb, trj, format_type)
 %# writepdb(filename, pdb, trj);
 %# writepdb(filename, pdb, crd, format_type);
 %# writepdb(filename, pdb, [], format_type);
+%# writepdb(filename, pdb, [], format_type, bfactor);
 %
 %% Description
 % This code writes only just ATOM or HETATM records. 
@@ -87,10 +88,19 @@ if nargin < 4
   format_type = 'default';
 end
 
+is_bfactor = false;
+if (nargin > 4) && (numel(trj) ~= 0)
+  is_bfactor = true;
+end
+
 %% open file
 fid = fopen(filename, 'w');
 assert(fid > 0, 'Could not open file.');
 cleaner = onCleanup(@() fclose(fid));
+
+if strncmpi(format_type, 'namd', numel('namd'))
+  fprintf(fid, 'CRYST1    0.000    0.000    0.000  90.00  90.00  90.00 P 1           1\n');
+end
 
 %% write file
 for istep = 1:nstep
@@ -124,7 +134,11 @@ for istep = 1:nstep
       fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+2));
       fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+3));
       fprintf(fid, '%6.2f', pdb.occupancy(iatom));
-      fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
+      if is_bfactor
+        fprintf(fid, '%6.2f', bfactor(istep, iatom));
+      else
+        fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
+      end
       fprintf(fid, '%1s', ' ');
       fprintf(fid, '%1s', ' ');
       fprintf(fid, '%1s', ' ');
@@ -141,9 +155,6 @@ for istep = 1:nstep
       
     elseif strncmpi(format_type, 'namd', numel('namd'))
       % NAMD format
-      if(istep == 1) 
-        fprintf(fid, 'CRYST1    0.000    0.000    0.000  90.00  90.00  90.00 P 1           1\n');
-      end
       fprintf(fid, '%6s', pdb.record(iatom, :));
       if pdb.serial(iatom) < 100000
         fprintf(fid, '%5d', pdb.serial(iatom));
@@ -170,7 +181,11 @@ for istep = 1:nstep
       fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+2));
       fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+3));
       fprintf(fid, '%6.2f', pdb.occupancy(iatom));
-      fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
+      if is_bfactor
+        fprintf(fid, '%6.2f', bfactor(istep, iatom));
+      else
+        fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
+      end
       fprintf(fid, '%1s', ' ');
       fprintf(fid, '%1s', ' ');
       fprintf(fid, '%1s', ' ');
@@ -221,7 +236,11 @@ for istep = 1:nstep
       fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+2));
       fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+3));
       fprintf(fid, '%6.2f', pdb.occupancy(iatom));
-      fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
+      if is_bfactor
+        fprintf(fid, '%6.2f', bfactor(istep, iatom));
+      else
+        fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
+      end
       fprintf(fid, '%1s', ' ');
       fprintf(fid, '%1s', ' ');
       fprintf(fid, '%1s', ' ');
