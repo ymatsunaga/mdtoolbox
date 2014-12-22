@@ -225,6 +225,7 @@ Pymbar is distributed under the GNU General Public License.
 --
 I/O routines for DX (OpenDX) format files, readdx.m and writedx.m are
 a derivative work of dx2mat.m and mat2dx.m originaly written by Evan. 
+dx2mat.m and mat2dx.m are licensed under the BSD license. 
 
   Author: Evan
 
