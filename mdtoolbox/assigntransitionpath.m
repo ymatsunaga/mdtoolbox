@@ -1,26 +1,27 @@
 function [index_A2B, index_B2A] = assigntransitionpath(data, regionA, regionB)
 %% assigntransitionpath
-% assign the portion of transition path in given data
+% assign the portion of forward/backward transition paths in given 1-dimensional data
 %
 %% Syntax
-%# logical_index = assigntransitionpath(data, regionA, regionB)
+%# [index_A2B, index_B2A] = assigntransitionpath(data, regionA, regionB)
 %
 %% Description
-% This routine assigns the portion of transition path in given
-% data. 
+% This routine assigns the portion of forward/backward transition
+% paths in given 1-dimensional data. 
 %
 % * data     - 1-dimensional trajectory or data set to be assigned 
 %              [nstep x 1 double]
-% * indexA2B - logical indices for transition path from A to B
-%              if index(i) == 1, i-th step belongs to transition path
-%              [nstep x 1 logical index]
-% * indexB2A - logical indices for transition path from B to A
-%              if index(i) == 1, i-th step belongs to transition path
-%              [nstep x 1 logical index]
-% * regionA  - upper bound for state A (reactant state)
- %             [scalar double]
-% * regionB  - lower bound for state B (product state)
+% * regionA  - upper bound for state A (reactant)
 %              [scalar double]
+% * regionB  - lower bound for state B (product)
+%              [scalar double]
+%
+% * indexA2B - logical indices for transition path from A (reactant) to B (product)
+%              if index(i) == 1, i-th step belongs to transition path
+%              [nstep x 1 logical index]
+% * indexB2A - logical indices for transition path from B (product) to A (reactant)
+%              if index(i) == 1, i-th step belongs to transition path
+%              [nstep x 1 logical index]
 %
 %% Example
 %# [index_AtoB, index_BtoA] = assigntransitionpath(rmsd, 2, 8);
