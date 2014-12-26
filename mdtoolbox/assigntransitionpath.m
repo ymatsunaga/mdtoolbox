@@ -16,10 +16,10 @@ function [index_A2B, index_B2A] = assigntransitionpath(data, regionA, regionB)
 % * regionB  - lower bound for state B (product)
 %              [scalar double]
 %
-% * indexA2B - logical indices for transition path from A (reactant) to B (product)
+% * indexA2B - logical indices for forward transition path from A (reactant) to B (product)
 %              if index(i) == 1, i-th step belongs to transition path
 %              [nstep x 1 logical index]
-% * indexB2A - logical indices for transition path from B (product) to A (reactant)
+% * indexB2A - logical indices for backward transition path from B (product) to A (reactant)
 %              if index(i) == 1, i-th step belongs to transition path
 %              [nstep x 1 logical index]
 %
