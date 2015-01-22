@@ -66,12 +66,18 @@ assert(numel(index_I2AB) == numel(index_AB2I), ['inward and outward crossing eve
 
 %% check wheather I state index is transition path or not
 for i = 1:numel(index_AB2I)
-  istep_before = index_AB2I(i);
-  jstep_before = index_I2AB(i);
-  if indexA(istep_before) && indexB(jstep_before)
-    index_A2B((istep_before+1):(jstep_before)) = true;
-  elseif indexB(istep_before) && indexA(jstep_before)
-    index_B2A((istep_before+1):(jstep_before)) = true;
+  istep = index_AB2I(i);
+  jstep = index_I2AB(i);
+  if indexA(istep) && indexB(jstep+1)
+    index_A2B((istep+1):(jstep)) = true;
+  elseif indexB(istep) && indexA(jstep+1)
+    index_B2A((istep+1):(jstep)) = true;
+  % elseif indexA(istep) && indexA(jstep+1)
+  %   disp('A -> I -> A')
+  % elseif indexB(istep) && indexB(jstep+1)
+  %   disp('B -> I -> B')
+  % else
+  %   error('assignment error');
   end
 end
 
