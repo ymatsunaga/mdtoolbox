@@ -31,7 +31,7 @@ data2 = data;
 data2(data2 > level_max) = NaN;
 gobj = pcolor(xi, yi, data2);
 shading flat;
-colorbar;
+%colorbar;
 axis([min(xi) max(xi) min(yi) max(yi)]);
 axis xy;
 formatplot2;
