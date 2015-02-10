@@ -4,6 +4,7 @@ function bond = calcbond(trj, pair)
 %
 %% Syntax
 %# bond = calcbond(trj);
+%# bond = calcbond(trj, pair);
 %
 %% Description
 % Calculate distances from the input trajectory of Cartesian coordinates.
