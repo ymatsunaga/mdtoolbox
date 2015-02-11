@@ -10,15 +10,15 @@ function index3 = to3(index)
 % Useful for the operation of Cartesian coordinates. 
 %
 % * index  - array of integers 
-%            (e.g., [1 3])
+%            (Ex. [1 3])
 %            or
 %            logcal indexing
-%            (e.g., logical([1 0 1]))
+%            (Ex. logical([1 0 1]))
 % * index3 - array of integers 
-%            (e.g., [1 2 3 7 8 9])
+%            (Ex. [1 2 3 7 8 9])
 %            or
 %            logical indexing
-%            (e.g., logical[1 1 1 0 0 0 1 1 1])
+%            (Ex. logical[1 1 1 0 0 0 1 1 1])
 %
 %% Example
 %# pdb = readpdb('ak.pdb');
@@ -26,7 +26,6 @@ function index3 = to3(index)
 %# index3 = to3(index);
 %# trj = trj(:,index3);
 % 
-
 
 if islogical(index)
   index3 = false(1, numel(index)*3);

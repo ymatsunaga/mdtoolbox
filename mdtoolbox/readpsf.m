@@ -47,7 +47,7 @@ function psf = readpsf(filename)
 %# psf = readpsf('jac.psf');
 %# psf = readpsf('jac_xplor.psf');
 %
-%% References for PSF format
+%% References
 % NAMD Tutorial
 % http://www.ks.uiuc.edu/Training/Tutorials/namd/namd-tutorial-unix-html/node21.html
 % User Manual for EGO_VIII 

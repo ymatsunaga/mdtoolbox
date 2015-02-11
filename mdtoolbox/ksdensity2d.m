@@ -1,6 +1,39 @@
-function [f, xi, yi] = ksdensity2d(data, xi, yi, weight, bw)
-%% [f, xi, yi] = ksdensity2d(data, xi, yi, weight, bw)
+function [f, xi, yi] = ksdensity2d(data, xi, yi, bandwidth, weight)
+%% ksdensity2d
+% compute 2-dimensional kernel density estimate from 2-d data
 %
+%% Syntax
+%# f = ksdensity2d(data);
+%# [f, xi, yi] = ksdensity2d(data);
+%# f = ksdensity2d(data, xi, yi);
+%# f = ksdensity2d(data, xi, yi, bandwidth);
+%# f = ksdensity2d(data, xi, yi, bandwidth, weight);
+%
+%% Description
+% Compute 2-dimensional kernel density estimate from 
+% scattered 2-dimensional data.
+% For the kernel function, Gaussian function is used. 
+% The bandwidth can be specfied as an argument, 
+% otherwise automatically determined from data and grids. 
+%
+% * data      - scattered 2-dimensional data [nstep x 2 double]
+% * xi        - equally spaced grid in the x-axis on which
+%               the density is estimated [1 x nx double]
+% * yi        - equally spaced grid in the y-axis on which
+%               the density is estimated [1 x ny double]
+% * bandwidth - bandwidth of the Gaussian kernel function
+%               [1 x 2 double]
+% * weight    - weights of observables in data. 
+%               By default, uniform weight is used. 
+%               [nstep x 1 double]
+%               
+%% Example
+%# data = randn(1000, 2);
+%# [f, xi, yi] = ksdensity2d(data);
+%# surf(xi, yi, f);
+%
+%% See also
+% ksdensity3d
 %
 
 %% setup
@@ -11,50 +44,53 @@ if ~exist('xi', 'var') || isempty(xi)
 elseif iscolumn(xi)
   xi = xi';
 end
-nx = numel(xi);
 
 if ~exist('yi', 'var') || isempty(yi)
   yi = linspace(min(data(:, 2)), max(data(:, 2)), 100);
 elseif iscolumn(yi)
   yi = yi';
 end
-ny = numel(yi);
 
 if ~exist('weight', 'var') || isempty(weight)
   weight = ones(nstep, 1);
 end
 weight = weight./sum(weight);
 
-if ~exist('bw', 'var') || isempty(bw)
-  bw = zeros(2, 1);
+if ~exist('bandwidth', 'var') || isempty(bandwidth)
+  bandwidth = zeros(2, 1);
   
   sig = median(abs(xi - median(xi)))/0.6745;
   if sig <= 0, sig = max(xi) - min(xi); end
   if sig > 0
-    bw(1) = sig * (1/nstep)^(1/6);
+    bandwidth(1) = sig * (1/nstep)^(1/6);
   else
-    bw(1) = 1;
+    bandwidth(1) = 1;
   end
 
   sig = median(abs(yi - median(yi))) / 0.6745;
   if sig <= 0, sig = max(yi) - min(yi); end
   if sig > 0
-    bw(2) = sig * (1/nstep)^(1/6);
+    bandwidth(2) = sig * (1/nstep)^(1/6);
   else
-    bw(2) = 1;
+    bandwidth(2) = 1;
   end
 end
-bw
+
+fprintf('bandwidth in x-axis: %f\n', bandwidth(1));
+fprintf('bandwidth in y-axis: %f\n', bandwidth(2));
+
+nx = numel(xi);
+ny = numel(yi);
 
 %% compute the kernel density estimates
-diffx2 = (bsxfun(@minus, data(:, 1), xi)./bw(1)).^2;
-diffy2 = (bsxfun(@minus, data(:, 2), yi)./bw(2)).^2;
-gaussx = exp(-0.5 * diffx2)./(sqrt(2*pi).*bw(1));
-gaussy = exp(-0.5 * diffy2)./(sqrt(2*pi).*bw(2));
+dx2 = (bsxfun(@minus, data(:, 1), xi)./bandwidth(1)).^2;
+dy2 = (bsxfun(@minus, data(:, 2), yi)./bandwidth(2)).^2;
+gaussx = exp(-0.5 * dx2)./(sqrt(2*pi).*bandwidth(1));
+gaussy = exp(-0.5 * dy2)./(sqrt(2*pi).*bandwidth(2));
 
-f = zeros(ny, nx);
+f = zeros(nx, ny);
 for istep = 1:nstep
-  t2 = bsxfun(@times, gaussx(istep, :), gaussy(istep, :)');
+  t2 = bsxfun(@times, gaussx(istep, :)', gaussy(istep, :));
   f = f + t2*weight(istep);
 end
 
