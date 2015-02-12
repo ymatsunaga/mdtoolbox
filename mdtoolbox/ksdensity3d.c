@@ -227,14 +227,15 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     if (gaussz != NULL) {
       free(gaussz);
     }
-    if (alloc_bandwidth) {
-      free(bandwidth);
-    }
-    if (alloc_weight) {
-      free(weight);
-    }
 
-  } /* omp pragma parallel */
+  } /* pragma omp parallel */
+
+  if (alloc_bandwidth) {
+    free(bandwidth);
+  }
+  if (alloc_weight) {
+    free(weight);
+  }
 
   /* exit(EXIT_SUCCESS); */
 }
