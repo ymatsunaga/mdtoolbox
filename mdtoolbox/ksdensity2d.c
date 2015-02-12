@@ -115,7 +115,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   #pragma omp parallel \
   default(none) \
     private(istep, ix, ix_min, ix_max, iy, iy_min, iy_max, dx, dy, gaussx, gaussy, f_private) \
-    shared(nstep, grid_x, grid_y, dgrid_x, dgrid_y, rx, ry, data, bandwidth, weight, f, nx, ny, nz, alloc_bandwidth, alloc_weight)
+    shared(nstep, grid_x, grid_y, dgrid_x, dgrid_y, rx, ry, data, bandwidth, weight, f, nx, ny, alloc_bandwidth, alloc_weight)
   {
     f_private = (double *) malloc(nx*ny*sizeof(double));
     gaussx    = (double *) malloc(nx*sizeof(double));
