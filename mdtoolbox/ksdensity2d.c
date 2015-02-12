@@ -13,7 +13,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   double  *data;
   double  *grid_x;
   double  *grid_y;
-  double  *grid_z;
   double  *bandwidth;
   double  *weight;
 
@@ -22,23 +21,22 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   /* working variables */
   int     nstep;
-  int     nx, ny, nz;
-  double  dx, dy, dz;
-  double  dgrid_x, dgrid_y, dgrid_z;
-  int     dims[3];
+  int     nx, ny;
+  double  dx, dy;
+  double  dgrid_x, dgrid_y;
+  int     dims[2];
   int     i, j, istep;
-  int     ix, iy, iz;
+  int     ix, iy;
   int     ix_min, ix_max;
   int     iy_min, iy_max;
-  int     iz_min, iz_max;
-  double  rx, ry, rz;
-  double  *gaussx, *gaussy, *gaussz;
+  double  rx, ry;
+  double  *gaussx, *gaussy;
   double  *f_private;
   int     alloc_bandwidth;
   int     alloc_weight;
 
   /* check inputs and outputs */
-  if (nrhs < 5) {
+  if (nrhs < 4) {
     mexErrMsgTxt("MEX: Not enough input arguments. MEX version requires both grids and bandwidth.");
   }
 
@@ -50,38 +48,32 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   data      = mxGetPr(prhs[0]);
   grid_x    = mxGetPr(prhs[1]);
   grid_y    = mxGetPr(prhs[2]);
-  grid_z    = mxGetPr(prhs[3]);
-  bandwidth = mxGetPr(prhs[4]);
+  bandwidth = mxGetPr(prhs[3]);
 
   nstep = mxGetM(prhs[0]);
   nx    = mxGetNumberOfElements(prhs[1]);
   ny    = mxGetNumberOfElements(prhs[2]);
-  nz    = mxGetNumberOfElements(prhs[3]);
   dims[0] = nx;
   dims[1] = ny;
-  dims[2] = nz;
 
   #ifdef DEBUG
     mexPrintf("MEX: nstep = %d\n", nstep);
     mexPrintf("MEX: nx    = %d\n", nx);
     mexPrintf("MEX: ny    = %d\n", ny);
-    mexPrintf("MEX: nz    = %d\n", nz);
   #endif
 
   /* setup: bandwidth */
   dgrid_x = grid_x[1] - grid_x[0];
   dgrid_y = grid_y[1] - grid_y[0];
-  dgrid_z = grid_z[1] - grid_z[0];
 
   /* setup: bandwidth */
   bandwidth = NULL;
-  if (nrhs > 4) {
-    if (mxGetNumberOfElements(prhs[4]) != 0) {
+  if (nrhs > 3) {
+    if (mxGetNumberOfElements(prhs[3]) != 0) {
       alloc_bandwidth = 0; /* not allocated */
-      bandwidth = mxGetPr(prhs[4]);
+      bandwidth = mxGetPr(prhs[3]);
       rx = bandwidth[0]*5.0;
       ry = bandwidth[1]*5.0;
-      rz = bandwidth[2]*5.0;
     }
   }
   if (bandwidth == NULL) {
@@ -92,14 +84,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
   mexPrintf("MEX: bandwidth in x-axis: %f\n", bandwidth[0]);
   mexPrintf("MEX: bandwidth in y-axis: %f\n", bandwidth[1]);
-  mexPrintf("MEX: bandwidth in z-axis: %f\n", bandwidth[2]);
 
   /* setup: weight */
   weight = NULL;
-  if (nrhs > 5) {
-    if (mxGetNumberOfElements(prhs[5]) != 0) {
+  if (nrhs > 4) {
+    if (mxGetNumberOfElements(prhs[4]) != 0) {
       alloc_weight = 0; /* not allocated */
-      weight = mxGetPr(prhs[5]);
+      weight = mxGetPr(prhs[4]);
     }
   }
   if (weight == NULL) {
@@ -111,33 +102,28 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
 
   /* setup: f */
-  plhs[0] = mxCreateNumericArray(3, dims, mxDOUBLE_CLASS, mxREAL);
+  plhs[0] = mxCreateNumericArray(2, dims, mxDOUBLE_CLASS, mxREAL);
   f = mxGetPr(plhs[0]);
 
   for (ix = 0; ix < nx; ix++) {
     for (iy = 0; iy < ny; iy++) {
-      for (iz = 0; iz < nz; iz++) {
-        f[iz*ny*nx + iy*nx + ix] = 0.0;
-      }
+      f[iy*nx + ix] = 0.0;
     }
   }
 
   /* calculation */
   #pragma omp parallel \
   default(none) \
-    private(istep, ix, ix_min, ix_max, iy, iy_min, iy_max, iz, iz_min, iz_max, dx, dy, dz, gaussx, gaussy, gaussz, f_private) \
-    shared(nstep, grid_x, grid_y, grid_z, dgrid_x, dgrid_y, dgrid_z, rx, ry, rz, data, bandwidth, weight, f)
+    private(istep, ix, ix_min, ix_max, iy, iy_min, iy_max, dx, dy, gaussx, gaussy, f_private) \
+    shared(nstep, grid_x, grid_y, dgrid_x, dgrid_y, rx, ry, data, bandwidth, weight, f)
   {
-    f_private = (double *) malloc(nx*ny*nz*sizeof(double));
+    f_private = (double *) malloc(nx*ny*sizeof(double));
     gaussx    = (double *) malloc(nx*sizeof(double));
     gaussy    = (double *) malloc(ny*sizeof(double));
-    gaussz    = (double *) malloc(nz*sizeof(double));
 
     for (ix = 0; ix < nx; ix++) {
       for (iy = 0; iy < ny; iy++) {
-        for (iz = 0; iz < nz; iz++) {
-          f_private[iz*ny*nx + iy*nx + ix] = 0.0;
-        }
+        f_private[iy*nx + ix] = 0.0;
       }
     }
 
@@ -146,9 +132,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     }
     for (iy = 0; iy < ny; iy++) {
       gaussy[iy] = 0.0;
-    }
-    for (iz = 0; iz < nz; iz++) {
-      gaussz[iz] = 0.0;
     }
 
     #pragma omp for
@@ -176,21 +159,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         gaussy[iy] = exp(-0.5*dy*dy)/(sqrt(2*M_PI)*bandwidth[1]);
       }
 
-      dz = data[istep + nstep*2] - grid_z[0];
-      iz_min = (int) ((dz - rz)/dgrid_z);
-      iz_min = iz_min > 0 ? iz_min : 0;
-      iz_max = ((int) ((dz + rz)/dgrid_z)) + 1;
-      iz_max = iz_max < nz ? iz_max : nz;
-     for (iz = iz_min; iz < iz_max; iz++) {
-        dz = (grid_z[iz] - data[istep + nstep*2])/bandwidth[2];
-        gaussz[iz] = exp(-0.5*dz*dz)/(sqrt(2*M_PI)*bandwidth[2]);
-      }
-
       for (ix = ix_min; ix < ix_max; ix++) {
         for (iy = iy_min; iy < iy_max; iy++) {
-          for (iz = iz_min; iz < iz_max; iz++) {
-            f_private[iz*ny*nx + iy*nx + ix] += weight[istep]*gaussx[ix]*gaussy[iy]*gaussz[iz];
-          }
+          f_private[iy*nx + ix] += weight[istep]*gaussx[ix]*gaussy[iy];
         }
       }
 
@@ -200,18 +171,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
       for (iy = iy_min; iy < iy_max; iy++) {
         gaussy[iy] = 0.0;
       }
-      for (iz = iz_min; iz < iz_max; iz++) {
-        gaussz[iz] = 0.0;
-      }
 
     } /* pragma omp for */
 
     #pragma omp critical
     for (ix = 0; ix < nx; ix++) {
       for (iy = 0; iy < ny; iy++) {
-        for (iz = 0; iz < nz; iz++) {
-          f[iz*ny*nx + iy*nx + ix] += f_private[iz*ny*nx + iy*nx + ix];
-        }
+        f[iy*nx + ix] += f_private[iy*nx + ix];
       }
     }
 
@@ -223,9 +189,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     }
     if (gaussy != NULL) {
       free(gaussy);
-    }
-    if (gaussz != NULL) {
-      free(gaussz);
     }
     if (alloc_bandwidth) {
       free(bandwidth);
