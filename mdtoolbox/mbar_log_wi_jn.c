@@ -80,9 +80,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   /* calculation */
   #pragma omp parallel \
-  default(none) \
-  private(k, n, l, max_log_term, u_k, u_l, log_term, term_sum, log_sum) \
-  shared(K, N_k, u_kln, u_kn, FlogN, log_wi_jn)
+    default(none)                                                       \
+    private(k, n, l, max_log_term, u_k, u_l, log_term, term_sum, log_sum) \
+    shared(K, N_k, u_kln, u_kn, FlogN, log_wi_jn)
   {
     log_term = (double *) malloc(K*sizeof(double));
 
