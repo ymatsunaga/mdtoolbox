@@ -3,7 +3,8 @@ function make(target)
 %% mex files list
 mex_list{1} = 'superimpose.c'; % least-squares fitting routine
 mex_list{2} = 'mbar_log_wi_jn.c'; % mbar auxiliary function;
-mex_list{3} = 'ksdensity3d.c'; % 3-d radial distribution function;
+mex_list{3} = 'ksdensity3d.c'; % 3-d kernel density estimator;
+mex_list{3} = 'ksdensity2d.c'; % 2-d kernel density estimator;
 
 %% setup
 if (~exist('target', 'var')) | isempty(target)
