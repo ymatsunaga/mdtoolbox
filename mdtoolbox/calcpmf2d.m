@@ -1,45 +1,72 @@
-function [z, xi, yi] = calcpmf2d(x, nbin)
+function [pmf, xi, yi] = calcpmf2d(data, xi, yi, bandwidth, box, weight)
 %% calcpmf2d
-% calculate 2D potential of mean force from the scattered 2D-data (using kernel density estimator)
+% calculate 2D potential of mean force from scattered 2D-data by using kernel density estimator
 %
 %% Syntax
 % [pmf, xi, yi] = calcpmf2d(data)
-% [pmf, xi, yi] = calcpmf2d(data, nbin)
+% pmf = calcpmf2d(data, xi, yi)
+% pmf = calcpmf2d(data, xi, yi)
+% pmf = calcpmf2d(data, xi, yi, box)
+% pmf = calcpmf2d(data, xi, yi, box, weight)
+% pmf = calcpmf2d(data, xi, yi,  [], weight)
 %
 %% Description
 %
+% * data      - 2-dimensional scattered data
+%               [nstep x 2 double array]
+% * xi        - equally spaced grid in x-axis
+%               [n x 1 or 1 x n double]
+% * yi        - equally spaced grid in y-axis 
+%               [m x 1 or 1 x m double]
+% * bandwidth - bandwidth of the Gaussian kernel function
+%               [1 x 2 double]
+% * box       - PBC box size if data is periodic.
+%               If not given or empty, data is considered to be non-periodic. 
+%               [1 x 2 double]
+% * weight    - weights of observables in data. 
+%               By default, uniform weight is used. 
+%               [nstep x 1 double]
+% * pmf       - 2-dimensional potential of mean force
+%               [m x n double array]
+%
 %% Example
-%# load p.mat;
-%# nbin = 256;
-%# [z, xi, yi] = calcpmf2d(p(:,[1 2]), nbin);
-%# imagesc(xi,yi,z); axis xy;
-%# xlabel('PC1','FontSize',45); ylabel('PC2','FontSize',45); colorbar; plot_format
+%# xi = -180:2:180; % grids in x-axis
+%# yi = -180:2:180; % grids in y-axis
+%# pmf = calcpmf2d([phi psi], xi, yi, [3.0 3.0], [360 360]);
+%# s   = getconstants(); % get Boltzmann constant in kcal/mol/K
+%# T   = 300.0;          % set temperature
+%# pmf = s.KB*T*pmf;     % convert unit from KBT to kcal/mol
+%# landscape(xi, yi, pmf, 0:0.25:6);
 %
 %% See also
-% calcpmf2d
+% calcpmf
 %
-%% References
-% Kernel density estimation via diffusion
-% Z. I. Botev, J. F. Grotowski, and D. P. Kroese (2010)
-% Annals of Statistics, Volume 38, Number 5, pages 2916-2957. 
-% 
 
-xd = x(:,1);
-yd = x(:,2);
-
-if ~exist('nbin', 'var') || isempty(nbin)
-  nbin = 256;
+%% setup
+if ~exist('xi', 'var')
+  xi = [];
 end
 
-xi = linspace(min(xd),max(xd),nbin);
-yi = linspace(min(yd),max(yd),nbin);
-[bandwidth,z,xi,yi]=kde2d([xd yd],nbin);
-xi = xi(1,:);
-yi = yi(:,1)';
+if ~exist('yi', 'var')
+  yi = [];
+end
 
-z(z < realmin) = NaN;
-z = -log(z);
-%z = -log(abs(z));
-z_max = max(max(-z));
-z = z + z_max;
+if ~exist('bandwidth', 'var')
+  bandwidth = [];
+end
+
+if ~exist('box', 'var')
+  box = [];
+end
+
+if ~exist('weight', 'var')
+  weight = [];
+end
+
+%% compute 2-dimensional potential of mean force
+pdf = ksdensity2d(data, xi, yi, bandwidth, box, weight);
+pdf(pdf < realmin('single')) = NaN;
+pmf = -log(pdf);
+pmf = pmf - min(pmf(:));
+pmf = pmf';
 

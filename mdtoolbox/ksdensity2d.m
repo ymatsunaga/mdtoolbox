@@ -1,4 +1,4 @@
-function [f, xi, yi] = ksdensity2d(data, xi, yi, bandwidth, weight)
+function [f, xi, yi] = ksdensity2d(data, xi, yi, bandwidth, box, weight)
 %% ksdensity2d
 % compute 2-dimensional kernel density estimate from 2-d data
 %
@@ -23,9 +23,14 @@ function [f, xi, yi] = ksdensity2d(data, xi, yi, bandwidth, weight)
 %               the density is estimated [1 x ny double]
 % * bandwidth - bandwidth of the Gaussian kernel function
 %               [1 x 2 double]
+% * box       - PBC box size if data is periodic.
+%               If not given or empty, data is considered to be non-periodic. 
+%               [1 x 2 double]
 % * weight    - weights of observables in data. 
 %               By default, uniform weight is used. 
 %               [nstep x 1 double]
+% * f         - density estiamtes in 2-dimensional space
+%               [nx x ny double]
 %               
 %% Example
 %# data = randn(1000, 2);
@@ -51,10 +56,8 @@ elseif iscolumn(yi)
   yi = yi';
 end
 
-if ~exist('weight', 'var') || isempty(weight)
-  weight = ones(nstep, 1);
-end
-weight = weight./sum(weight);
+nx = numel(xi);
+ny = numel(yi);
 
 if ~exist('bandwidth', 'var') || isempty(bandwidth)
   bandwidth = zeros(2, 1);
@@ -74,17 +77,39 @@ if ~exist('bandwidth', 'var') || isempty(bandwidth)
   else
     bandwidth(2) = 1;
   end
+  
+  fprintf('bandwidth in x-axis: %f\n', bandwidth(1));
+  fprintf('bandwidth in y-axis: %f\n', bandwidth(2));
+elseif numel(bandwidth) == 1
+  bandwidth = [bandwidth bandwidth];
+
+  fprintf('bandwidth in x-axis: %f\n', bandwidth(1));
+  fprintf('bandwidth in y-axis: %f\n', bandwidth(2));
 end
 
-fprintf('bandwidth in x-axis: %f\n', bandwidth(1));
-fprintf('bandwidth in y-axis: %f\n', bandwidth(2));
+if ~exist('box', 'var') || isempty(box)
+  is_box = false;
+else
+  is_box = true;
+end
 
-nx = numel(xi);
-ny = numel(yi);
+if ~exist('weight', 'var') || isempty(weight)
+  weight = ones(nstep, 1);
+end
+weight = weight./sum(weight);
 
 %% compute the kernel density estimates
-dx2 = (bsxfun(@minus, data(:, 1), xi)./bandwidth(1)).^2;
-dy2 = (bsxfun(@minus, data(:, 2), yi)./bandwidth(2)).^2;
+if is_box
+  dx = bsxfun(@minus, data(:, 1), xi);
+  dx = dx - round(dx./box(1))*box(1);
+  dx2 = (dx./bandwidth(1)).^2;
+  dy = bsxfun(@minus, data(:, 2), yi);
+  dy = dy - round(dy./box(2))*box(2);
+  dy2 = (dy./bandwidth(2)).^2;
+else
+  dx2 = (bsxfun(@minus, data(:, 1), xi)./bandwidth(1)).^2;
+  dy2 = (bsxfun(@minus, data(:, 2), yi)./bandwidth(2)).^2;
+end
 gaussx = exp(-0.5 * dx2)./(sqrt(2*pi).*bandwidth(1));
 gaussy = exp(-0.5 * dy2)./(sqrt(2*pi).*bandwidth(2));
 
