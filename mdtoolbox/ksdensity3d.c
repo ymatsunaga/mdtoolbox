@@ -15,6 +15,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   double  *grid_y;
   double  *grid_z;
   double  *bandwidth;
+  double  *box;
   double  *weight;
 
   /* outputs */
@@ -34,8 +35,16 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   double  rx, ry, rz;
   double  *gaussx, *gaussy, *gaussz;
   double  *f_private;
+  int     is_box;
   int     alloc_bandwidth;
   int     alloc_weight;
+
+  int     *ix_array;
+  int     *iy_array;
+  int     *iz_array;
+  int     ix_count;
+  int     iy_count;
+  int     iz_count;
 
   /* check inputs and outputs */
   if (nrhs < 5) {
@@ -51,7 +60,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   grid_x    = mxGetPr(prhs[1]);
   grid_y    = mxGetPr(prhs[2]);
   grid_z    = mxGetPr(prhs[3]);
-  bandwidth = mxGetPr(prhs[4]);
 
   nstep = mxGetM(prhs[0]);
   nx    = mxGetNumberOfElements(prhs[1]);
@@ -90,16 +98,29 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     /* bandwidth = (double *) malloc(3*sizeof(double)); */
     /* mexErrMsgTxt("MEX: In MEX version, please specify bandwidth explicitly"); */
   }
-  mexPrintf("MEX: bandwidth in x-axis: %f\n", bandwidth[0]);
-  mexPrintf("MEX: bandwidth in y-axis: %f\n", bandwidth[1]);
-  mexPrintf("MEX: bandwidth in z-axis: %f\n", bandwidth[2]);
+
+  #ifdef DEBUG
+    mexPrintf("MEX: bandwidth in x-axis: %f\n", bandwidth[0]);
+    mexPrintf("MEX: bandwidth in y-axis: %f\n", bandwidth[1]);
+    mexPrintf("MEX: bandwidth in z-axis: %f\n", bandwidth[2]);
+  #endif
+
+  /* setup: box */
+  box = NULL;
+  is_box = 0;
+  if (nrhs > 5) {
+    if (mxGetNumberOfElements(prhs[5]) != 0) {
+      is_box = 1; /* box is turned on */
+      box = mxGetPr(prhs[5]);
+    }
+  }
 
   /* setup: weight */
   weight = NULL;
-  if (nrhs > 5) {
-    if (mxGetNumberOfElements(prhs[5]) != 0) {
+  if (nrhs > 6) {
+    if (mxGetNumberOfElements(prhs[6]) != 0) {
       alloc_weight = 0; /* not allocated */
-      weight = mxGetPr(prhs[5]);
+      weight = mxGetPr(prhs[6]);
     }
   }
   if (weight == NULL) {
@@ -123,112 +144,241 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
 
   /* calculation */
-  #pragma omp parallel \
-  default(none) \
-    private(istep, ix, ix_min, ix_max, iy, iy_min, iy_max, iz, iz_min, iz_max, dx, dy, dz, gaussx, gaussy, gaussz, f_private) \
-    shared(nstep, grid_x, grid_y, grid_z, dgrid_x, dgrid_y, dgrid_z, rx, ry, rz, data, bandwidth, weight, f, nx, ny, nz, alloc_bandwidth, alloc_weight)
-  {
-    f_private = (double *) malloc(nx*ny*nz*sizeof(double));
-    gaussx    = (double *) malloc(nx*sizeof(double));
-    gaussy    = (double *) malloc(ny*sizeof(double));
-    gaussz    = (double *) malloc(nz*sizeof(double));
+  if (is_box) {
 
-    for (ix = 0; ix < nx; ix++) {
-      for (iy = 0; iy < ny; iy++) {
-        for (iz = 0; iz < nz; iz++) {
-          f_private[iz*ny*nx + iy*nx + ix] = 0.0;
-        }
-      }
-    }
+    #pragma omp parallel \
+    default(none) \
+      private(istep, ix, ix_min, ix_max, iy, iy_min, iy_max, iz, iz_min, iz_max, dx, dy, dz, gaussx, gaussy, gaussz, f_private, ix_count, iy_count, iz_count, ix_array, iy_array, iz_array) \
+      shared(nstep, grid_x, grid_y, grid_z, dgrid_x, dgrid_y, dgrid_z, rx, ry, rz, data, bandwidth, weight, f, nx, ny, nz, alloc_bandwidth, alloc_weight, box)
+    {
+      f_private = (double *) malloc(nx*ny*nz*sizeof(double));
+      gaussx    = (double *) malloc(nx*sizeof(double));
+      gaussy    = (double *) malloc(ny*sizeof(double));
+      gaussz    = (double *) malloc(nz*sizeof(double));
+      ix_array  = (int *) malloc(nx*sizeof(int));
+      iy_array  = (int *) malloc(ny*sizeof(int));
+      iz_array  = (int *) malloc(nz*sizeof(int));
 
-    for (ix = 0; ix < nx; ix++) {
-      gaussx[ix] = 0.0;
-    }
-    for (iy = 0; iy < ny; iy++) {
-      gaussy[iy] = 0.0;
-    }
-    for (iz = 0; iz < nz; iz++) {
-      gaussz[iz] = 0.0;
-    }
-
-    #pragma omp for
-    for (istep = 0; istep < nstep; istep++) {
-
-      dx = data[istep + nstep*0] - grid_x[0];
-      ix_min = (int) ((dx - rx)/dgrid_x);
-      ix_min = ix_min > 0 ? ix_min : 0;
-      ix_max = ((int) ((dx + rx)/dgrid_x)) + 1;
-      ix_max = ix_max < nx ? ix_max : nx;
-      /* mexPrintf("MEX: ix_min = %d\n", ix_min); */
-      /* mexPrintf("MEX: ix_max = %d\n", ix_max); */
-      for (ix = ix_min; ix < ix_max; ix++) {
-        dx = (grid_x[ix] - data[istep + nstep*0])/bandwidth[0];
-        gaussx[ix] = exp(-0.5*dx*dx)/(sqrt(2*M_PI)*bandwidth[0]);
-      }
-
-      dy = data[istep + nstep*1] - grid_y[0];
-      iy_min = (int) ((dy - ry)/dgrid_y);
-      iy_min = iy_min > 0 ? iy_min : 0;
-      iy_max = ((int) ((dy + ry)/dgrid_y)) + 1;
-      iy_max = iy_max < ny ? iy_max : ny;
-      for (iy = iy_min; iy < iy_max; iy++) {
-        dy = (grid_y[iy] - data[istep + nstep*1])/bandwidth[1];
-        gaussy[iy] = exp(-0.5*dy*dy)/(sqrt(2*M_PI)*bandwidth[1]);
-      }
-
-      dz = data[istep + nstep*2] - grid_z[0];
-      iz_min = (int) ((dz - rz)/dgrid_z);
-      iz_min = iz_min > 0 ? iz_min : 0;
-      iz_max = ((int) ((dz + rz)/dgrid_z)) + 1;
-      iz_max = iz_max < nz ? iz_max : nz;
-     for (iz = iz_min; iz < iz_max; iz++) {
-        dz = (grid_z[iz] - data[istep + nstep*2])/bandwidth[2];
-        gaussz[iz] = exp(-0.5*dz*dz)/(sqrt(2*M_PI)*bandwidth[2]);
-      }
-
-      for (ix = ix_min; ix < ix_max; ix++) {
-        for (iy = iy_min; iy < iy_max; iy++) {
-          for (iz = iz_min; iz < iz_max; iz++) {
-            f_private[iz*ny*nx + iy*nx + ix] += weight[istep]*gaussx[ix]*gaussy[iy]*gaussz[iz];
+      for (ix = 0; ix < nx; ix++) {
+        for (iy = 0; iy < ny; iy++) {
+          for (iz = 0; iz < nz; iz++) {
+            f_private[iz*ny*nx + iy*nx + ix] = 0.0;
           }
         }
       }
 
-      for (ix = ix_min; ix < ix_max; ix++) {
+      for (ix = 0; ix < nx; ix++) {
         gaussx[ix] = 0.0;
       }
-      for (iy = iy_min; iy < iy_max; iy++) {
+      for (iy = 0; iy < ny; iy++) {
         gaussy[iy] = 0.0;
       }
-      for (iz = iz_min; iz < iz_max; iz++) {
+      for (iz = 0; iz < nz; iz++) {
         gaussz[iz] = 0.0;
       }
 
-    } /* pragma omp for */
+      #pragma omp for
+      for (istep = 0; istep < nstep; istep++) {
 
-    #pragma omp critical
-    for (ix = 0; ix < nx; ix++) {
-      for (iy = 0; iy < ny; iy++) {
+        ix_count = 0;
+        for (ix = 0; ix < nx; ix++) {
+          dx = data[istep + nstep*0] - grid_x[ix];
+          dx = dx - round(dx/box[0])*box[0];
+          if (abs(dx) < rx) {
+            dx = dx/bandwidth[0];
+            gaussx[ix_count] = exp(-0.5*dx*dx)/(sqrt(2*M_PI)*bandwidth[0]);
+            ix_array[ix_count] = ix;
+            ix_count++;
+          }
+        }
+
+        iy_count = 0;
+        for (iy = 0; iy < ny; iy++) {
+          dy = data[istep + nstep*1] - grid_y[iy];
+          dy = dy - round(dy/box[1])*box[1];
+          if (abs(dy) < ry) {
+            dy = dy/bandwidth[1];
+            gaussy[iy_count] = exp(-0.5*dy*dy)/(sqrt(2*M_PI)*bandwidth[1]);
+            iy_array[iy_count] = iy;
+            iy_count++;
+          }
+        }
+
+        iz_count = 0;
         for (iz = 0; iz < nz; iz++) {
-          f[iz*ny*nx + iy*nx + ix] += f_private[iz*ny*nx + iy*nx + ix];
+          dz = data[istep + nstep*2] - grid_z[iz];
+          dz = dz - round(dz/box[2])*box[2];
+          if (abs(dz) < rz) {
+            dz = dz/bandwidth[2];
+            gaussz[iz_count] = exp(-0.5*dz*dz)/(sqrt(2*M_PI)*bandwidth[2]);
+            iz_array[iz_count] = iz;
+            iz_count++;
+          }
+        }
+
+        for (ix = 0; ix < ix_count; ix++) {
+          for (iy = 0; iy < iy_count; iy++) {
+            for (iz = 0; iz < iz_count; iz++) {
+              f_private[iz_array[iz]*ny*nx + iy_array[iy]*nx + ix_array[ix]] += weight[istep]*gaussx[ix]*gaussy[iy]*gaussz[iz];
+            }
+          }
+        }
+
+        for (ix = 0; ix < nx; ix++) {
+          gaussx[ix] = 0.0;
+        }
+        for (iy = 0; iy < ny; iy++) {
+          gaussy[iy] = 0.0;
+        }
+        for (iz = 0; iz < nz; iz++) {
+          gaussz[iz] = 0.0;
+        }
+
+      } /* pragma omp for */
+
+      #pragma omp critical
+      for (ix = 0; ix < nx; ix++) {
+        for (iy = 0; iy < ny; iy++) {
+          for (iz = 0; iz < nz; iz++) {
+            f[iz*ny*nx + iy*nx + ix] += f_private[iz*ny*nx + iy*nx + ix];
+          }
         }
       }
-    }
 
-    if (f_private != NULL) {
-      free(f_private);
-    }
-    if (gaussx != NULL) {
-      free(gaussx);
-    }
-    if (gaussy != NULL) {
-      free(gaussy);
-    }
-    if (gaussz != NULL) {
-      free(gaussz);
-    }
+      if (f_private != NULL) {
+        free(f_private);
+      }
+      if (gaussx != NULL) {
+        free(gaussx);
+      }
+      if (gaussy != NULL) {
+        free(gaussy);
+      }
+      if (gaussz != NULL) {
+        free(gaussz);
+      }
+      if (ix_array != NULL) {
+        free(ix_array);
+      }
+      if (iy_array != NULL) {
+        free(iy_array);
+      }
+      if (iz_array != NULL) {
+        free(iz_array);
+      }
 
-  } /* pragma omp parallel */
+    } /* pragma omp parallel */
+
+  } else {
+
+    #pragma omp parallel \
+    default(none) \
+      private(istep, ix, ix_min, ix_max, iy, iy_min, iy_max, iz, iz_min, iz_max, dx, dy, dz, gaussx, gaussy, gaussz, f_private) \
+      shared(nstep, grid_x, grid_y, grid_z, dgrid_x, dgrid_y, dgrid_z, rx, ry, rz, data, bandwidth, weight, f, nx, ny, nz, alloc_bandwidth, alloc_weight)
+    {
+      f_private = (double *) malloc(nx*ny*nz*sizeof(double));
+      gaussx    = (double *) malloc(nx*sizeof(double));
+      gaussy    = (double *) malloc(ny*sizeof(double));
+      gaussz    = (double *) malloc(nz*sizeof(double));
+
+      for (ix = 0; ix < nx; ix++) {
+        for (iy = 0; iy < ny; iy++) {
+          for (iz = 0; iz < nz; iz++) {
+            f_private[iz*ny*nx + iy*nx + ix] = 0.0;
+          }
+        }
+      }
+
+      for (ix = 0; ix < nx; ix++) {
+        gaussx[ix] = 0.0;
+      }
+      for (iy = 0; iy < ny; iy++) {
+        gaussy[iy] = 0.0;
+      }
+      for (iz = 0; iz < nz; iz++) {
+        gaussz[iz] = 0.0;
+      }
+
+      #pragma omp for
+      for (istep = 0; istep < nstep; istep++) {
+
+        dx = data[istep + nstep*0] - grid_x[0];
+        ix_min = (int) ((dx - rx)/dgrid_x);
+        ix_min = ix_min > 0 ? ix_min : 0;
+        ix_max = ((int) ((dx + rx)/dgrid_x)) + 1;
+        ix_max = ix_max < nx ? ix_max : nx;
+        /* mexPrintf("MEX: ix_min = %d\n", ix_min); */
+        /* mexPrintf("MEX: ix_max = %d\n", ix_max); */
+        for (ix = ix_min; ix < ix_max; ix++) {
+          dx = (grid_x[ix] - data[istep + nstep*0])/bandwidth[0];
+          gaussx[ix] = exp(-0.5*dx*dx)/(sqrt(2*M_PI)*bandwidth[0]);
+        }
+
+        dy = data[istep + nstep*1] - grid_y[0];
+        iy_min = (int) ((dy - ry)/dgrid_y);
+        iy_min = iy_min > 0 ? iy_min : 0;
+        iy_max = ((int) ((dy + ry)/dgrid_y)) + 1;
+        iy_max = iy_max < ny ? iy_max : ny;
+        for (iy = iy_min; iy < iy_max; iy++) {
+          dy = (grid_y[iy] - data[istep + nstep*1])/bandwidth[1];
+          gaussy[iy] = exp(-0.5*dy*dy)/(sqrt(2*M_PI)*bandwidth[1]);
+        }
+
+        dz = data[istep + nstep*2] - grid_z[0];
+        iz_min = (int) ((dz - rz)/dgrid_z);
+        iz_min = iz_min > 0 ? iz_min : 0;
+        iz_max = ((int) ((dz + rz)/dgrid_z)) + 1;
+        iz_max = iz_max < nz ? iz_max : nz;
+        for (iz = iz_min; iz < iz_max; iz++) {
+          dz = (grid_z[iz] - data[istep + nstep*2])/bandwidth[2];
+          gaussz[iz] = exp(-0.5*dz*dz)/(sqrt(2*M_PI)*bandwidth[2]);
+        }
+
+        for (ix = ix_min; ix < ix_max; ix++) {
+          for (iy = iy_min; iy < iy_max; iy++) {
+            for (iz = iz_min; iz < iz_max; iz++) {
+              f_private[iz*ny*nx + iy*nx + ix] += weight[istep]*gaussx[ix]*gaussy[iy]*gaussz[iz];
+            }
+          }
+        }
+
+        for (ix = ix_min; ix < ix_max; ix++) {
+          gaussx[ix] = 0.0;
+        }
+        for (iy = iy_min; iy < iy_max; iy++) {
+          gaussy[iy] = 0.0;
+        }
+        for (iz = iz_min; iz < iz_max; iz++) {
+          gaussz[iz] = 0.0;
+        }
+
+      } /* pragma omp for */
+
+      #pragma omp critical
+      for (ix = 0; ix < nx; ix++) {
+        for (iy = 0; iy < ny; iy++) {
+          for (iz = 0; iz < nz; iz++) {
+            f[iz*ny*nx + iy*nx + ix] += f_private[iz*ny*nx + iy*nx + ix];
+          }
+        }
+      }
+
+      if (f_private != NULL) {
+        free(f_private);
+      }
+      if (gaussx != NULL) {
+        free(gaussx);
+      }
+      if (gaussy != NULL) {
+        free(gaussy);
+      }
+      if (gaussz != NULL) {
+        free(gaussz);
+      }
+
+    } /* pragma omp parallel */
+
+  } /* is_box */
 
   if (alloc_bandwidth) {
     free(bandwidth);

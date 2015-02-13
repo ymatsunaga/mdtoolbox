@@ -8,10 +8,13 @@ function gobj = landscape(xi, yi, data, level)
 %
 %% Description
 %
-% * xi    - regularly spaced grids in x-axis [n x 1 or 1 x n double vector]
-% * yi    - regularly spaced grids in y-axis [m x 1 or 1 x m double vector]
-% * data  - free energy data [m x n double array]
-% * level - contour levels [doulbe vector]
+% * xi    - equally spaced grid in x-axis
+%           [n x 1 or 1 x n double]
+% * yi    - equally spaced grid in y-axis 
+%           [m x 1 or 1 x m double]
+% * data  - 2-dimensional free energy data 
+%           [m x n double array]
+% * level - contour levels [double vector]
 % * gobj  - graphics object (formerly called as 'handle graphics')
 %
 %% Example

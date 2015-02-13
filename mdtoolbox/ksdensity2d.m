@@ -6,8 +6,9 @@ function [f, xi, yi] = ksdensity2d(data, xi, yi, bandwidth, box, weight)
 %# f = ksdensity2d(data);
 %# [f, xi, yi] = ksdensity2d(data);
 %# f = ksdensity2d(data, xi, yi);
-%# f = ksdensity2d(data, xi, yi, bandwidth);
-%# f = ksdensity2d(data, xi, yi, bandwidth, weight);
+%# f = ksdensity2d(data, xi, yi, bandwidth, box);
+%# f = ksdensity2d(data, xi, yi, bandwidth, box, weight);
+%# f = ksdensity2d(data, xi, yi, bandwidth, [],  weight);
 %
 %% Description
 % Compute 2-dimensional kernel density estimate from 
@@ -80,11 +81,13 @@ if ~exist('bandwidth', 'var') || isempty(bandwidth)
   
   fprintf('bandwidth in x-axis: %f\n', bandwidth(1));
   fprintf('bandwidth in y-axis: %f\n', bandwidth(2));
+
 elseif numel(bandwidth) == 1
   bandwidth = [bandwidth bandwidth];
 
   fprintf('bandwidth in x-axis: %f\n', bandwidth(1));
   fprintf('bandwidth in y-axis: %f\n', bandwidth(2));
+
 end
 
 if ~exist('box', 'var') || isempty(box)

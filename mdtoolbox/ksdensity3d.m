@@ -1,4 +1,4 @@
-function [f, xi, yi, zi] = ksdensity3d(data, xi, yi, zi, bandwidth, weight)
+function [f, xi, yi, zi] = ksdensity3d(data, xi, yi, zi, bandwidth, box, weight)
 %% ksdensity3d
 % compute 3-dimensional kernel density estimate from 3-d data
 %
@@ -7,7 +7,9 @@ function [f, xi, yi, zi] = ksdensity3d(data, xi, yi, zi, bandwidth, weight)
 %# [f, xi, yi, zi] = ksdensity3d(data);
 %# f = ksdensity3d(data, xi, yi, zi);
 %# f = ksdensity3d(data, xi, yi, zi, bandwidth);
-%# f = ksdensity3d(data, xi, yi, zi, bandwidth, weight);
+%# f = ksdensity3d(data, xi, yi, zi, bandwidth, box);
+%# f = ksdensity3d(data, xi, yi, zi, bandwidth, box, weight);
+%# f = ksdensity3d(data, xi, yi, zi, bandwidth, [],  weight);
 %
 %% Description
 % Compute 3-dimensional kernel density estimate from 
@@ -25,9 +27,14 @@ function [f, xi, yi, zi] = ksdensity3d(data, xi, yi, zi, bandwidth, weight)
 %               the density is estimated [1 x ny double]
 % * bandwidth - bandwidth of the Gaussian kernel function
 %               [1 x 3 double]
+% * box       - PBC box size if data is periodic.
+%               If not given or empty, data is considered to be non-periodic. 
+%               [1 x 3 double]
 % * weight    - weights of observables in data. 
 %               By default, uniform weight is used. 
 %               [nstep x 1 double]
+% * f         - density estiamtes in 3-dimensional space
+%               [nx x ny x nz double]
 %               
 %% Example
 %# data = randn(1000, 3);
@@ -59,10 +66,9 @@ elseif iscolumn(zi)
   zi = zi';
 end
 
-if ~exist('weight', 'var') || isempty(weight)
-  weight = ones(nstep, 1);
-end
-weight = weight./sum(weight);
+nx = numel(xi);
+ny = numel(yi);
+nz = numel(zi);
 
 if ~exist('bandwidth', 'var') || isempty(bandwidth)
   bandwidth = zeros(3, 1);
@@ -90,20 +96,47 @@ if ~exist('bandwidth', 'var') || isempty(bandwidth)
   else
     bandwidth(3) = 1;
   end
+
+  fprintf('bandwidth in x-axis: %f\n', bandwidth(1));
+  fprintf('bandwidth in y-axis: %f\n', bandwidth(2));
+  fprintf('bandwidth in z-axis: %f\n', bandwidth(3));
+
+elseif numel(bandwidth) == 1
+  bandwidth = [bandwidth bandwidth bandwidth];
+
+  fprintf('bandwidth in x-axis: %f\n', bandwidth(1));
+  fprintf('bandwidth in y-axis: %f\n', bandwidth(2));
+  fprintf('bandwidth in z-axis: %f\n', bandwidth(3));
+
 end
 
-fprintf('bandwidth in x-axis: %f\n', bandwidth(1));
-fprintf('bandwidth in y-axis: %f\n', bandwidth(2));
-fprintf('bandwidth in z-axis: %f\n', bandwidth(3));
+if ~exist('box', 'var') || isempty(box)
+  is_box = false;
+else
+  is_box = true;
+end
 
-nx = numel(xi);
-ny = numel(yi);
-nz = numel(zi);
+if ~exist('weight', 'var') || isempty(weight)
+  weight = ones(nstep, 1);
+end
+weight = weight./sum(weight);
 
 %% compute the kernel density estimates
-dx2 = (bsxfun(@minus, data(:, 1), xi)./bandwidth(1)).^2;
-dy2 = (bsxfun(@minus, data(:, 2), yi)./bandwidth(2)).^2;
-dz2 = (bsxfun(@minus, data(:, 3), zi)./bandwidth(3)).^2;
+if is_box
+  dx = bsxfun(@minus, data(:, 1), xi);
+  dx = dx - round(dx./box(1))*box(1);
+  dx2 = (dx./bandwidth(1)).^2;
+  dy = bsxfun(@minus, data(:, 2), yi);
+  dy = dy - round(dy./box(2))*box(2);
+  dy2 = (dy./bandwidth(2)).^2;
+  dz = bsxfun(@minus, data(:, 3), zi);
+  dz = dz - round(dz./box(3))*box(3);
+  dz2 = (dz./bandwidth(3)).^2;
+else
+  dx2 = (bsxfun(@minus, data(:, 1), xi)./bandwidth(1)).^2;
+  dy2 = (bsxfun(@minus, data(:, 2), yi)./bandwidth(2)).^2;
+  dz2 = (bsxfun(@minus, data(:, 3), zi)./bandwidth(3)).^2;
+end
 gaussx = exp(-0.5 * dx2)./(sqrt(2*pi).*bandwidth(1));
 gaussy = exp(-0.5 * dy2)./(sqrt(2*pi).*bandwidth(2));
 gaussz = exp(-0.5 * dz2)./(sqrt(2*pi).*bandwidth(3));
