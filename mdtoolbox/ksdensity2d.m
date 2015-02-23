@@ -98,8 +98,8 @@ end
 
 if ~exist('weight', 'var') || isempty(weight)
   weight = ones(nstep, 1);
+  weight = weight./sum(weight);
 end
-weight = weight./sum(weight);
 
 %% compute the kernel density estimates
 if is_box

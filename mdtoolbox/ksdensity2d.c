@@ -55,7 +55,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   data      = mxGetPr(prhs[0]);
   grid_x    = mxGetPr(prhs[1]);
   grid_y    = mxGetPr(prhs[2]);
-  bandwidth = mxGetPr(prhs[3]);
 
   nstep = mxGetM(prhs[0]);
   nx    = mxGetNumberOfElements(prhs[1]);
