@@ -72,6 +72,12 @@ bandwidth1 = [sigma1 sigma1 sigma1];
 fprintf('message: sigma1 of %f A is used\n', sigma1);
 fprintf('message: sigma2 of %f A is used\n', sigma2);
 
+if ~exist('weight', 'var') || isempty(weight)
+  weight = ones(nstep, 1);
+  weight = weight./sum(weight);
+end
+
+
 %% compute k-space Gaussian split Ewald
 % pre-allocation
 data = zeros(natom, 3);
@@ -119,11 +125,10 @@ for istep = 1:nstep
   energy(istep) = energy(istep) * coefficient;
 
   % 4'': mesh interpolation if needed
-  %potential = interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'linear');
-  potential = potential + interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'cubic');
+  %potential = potential + weight*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'linear');
+  potential = potential + weight(istep)*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'cubic');
 end
 
-potential = potential./nstep;
 potential = permute(potential, [2,1,3]);
 
 %%%%%% 3D FFT routines
