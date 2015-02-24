@@ -110,16 +110,16 @@ for istep = 1:nstep
   gamma_mod(1, 1, 1) = 0;
   f = f.*gamma_mod;
 
-  %% 4: inverse FFT and get the on-mesh potential
+  % 4: inverse FFT and get the on-mesh potential
   potential_gse = ifft3d(f);
 
-  %% 4': compute reciprocal energy
+  % 4': compute reciprocal energy
   d2 = d2.*potential_gse;
   energy(istep) = 0.5 * abs((xi_gse(2)-xi_gse(1)) * (yi_gse(2)-yi_gse(1)) * (zi_gse(2)-zi_gse(1))) * sum(d2(:));
   energy(istep) = energy(istep) * coefficient;
 
-  %% 4'': mesh interpolation if needed
-  %potential = interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query);
+  % 4'': mesh interpolation if needed
+  %potential = interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'linear');
   potential = potential + interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'cubic');
 end
 
