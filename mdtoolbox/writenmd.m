@@ -25,7 +25,9 @@ function writenmd(filename, crd, mode, nmode)
 %# crd = crd(to3(index_ca));
 %# crd = decenter(crd);
 %# emode = anm(crd, 12.0);
-%# writenmd(filename, crd, mode, 10)
+%# writenmd('anm_mode.nmd', crd, mode, 10)
+%# In VMD
+%# nmwiz load anm_mode.nmd
 %
 %% See also
 % anm, calcpca
