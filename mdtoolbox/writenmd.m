@@ -66,7 +66,8 @@ fprintf(fid, '\n');
 for imode = 1:nmode
   fprintf(fid, 'mode');
   fprintf(fid, ' %d', imode);
-  fprintf(fid, ' %f', norm(mode(:, imode)));
+  %fprintf(fid, ' %f', norm(mode(:, imode)));
+  fprintf(fid, ' %f', 1.0);
   for i = 1:natom3
     fprintf(fid, ' %f', mode(i, imode));
   end
