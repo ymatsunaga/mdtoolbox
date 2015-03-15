@@ -1,18 +1,15 @@
 function [pmf, xi, yi] = calcpmf2d(data, xi, yi, bandwidth, box, weight)
 %% calcpmf2d
-% calculate 2D potential of mean force from scattered 2D-data by using kernel density estimator
+% calculate 2D potential of mean force from 2D-data by using kernel density estimator
 %
 %% Syntax
 % [pmf, xi, yi] = calcpmf2d(data)
 % pmf = calcpmf2d(data, xi, yi)
-% pmf = calcpmf2d(data, xi, yi)
-% pmf = calcpmf2d(data, xi, yi, box)
-% pmf = calcpmf2d(data, xi, yi, box, weight)
-% pmf = calcpmf2d(data, xi, yi,  [], weight)
+% pmf = calcpmf2d(data, xi, yi, bandwidth, box, weight)
 %
 %% Description
 %
-% * data      - 2-dimensional scattered data
+% * data      - 2-dimensional data
 %               [nstep x 2 double array]
 % * xi        - equally spaced grid in x-axis
 %               [n x 1 or 1 x n double]
@@ -39,7 +36,7 @@ function [pmf, xi, yi] = calcpmf2d(data, xi, yi, bandwidth, box, weight)
 %# landscape(xi, yi, pmf, 0:0.25:6);
 %
 %% See also
-% calcpmf
+% calcpmf, ksdensity2d
 %
 
 %% setup
