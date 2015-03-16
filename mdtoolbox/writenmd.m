@@ -1,10 +1,11 @@
-function writenmd(filename, crd, mode, nmode)
+function writenmd(filename, crd, mode, resid, chainid)
 %% writenmd
 % write nmd format file for Normal Mode Wizard in VMD
 %
 %% Syntax
-%# writenmd(filename, crd, mode)
-%# writenmd(filename, crd, mode, nmode)
+%# writenmd(filename, crd, mode);
+%# writenmd(filename, crd, mode, resid);
+%# writenmd(filename, crd, mode, resid, chainid);
 %
 %% Description
 % Output NMD file for visualization of Normal Mode
@@ -15,19 +16,18 @@ function writenmd(filename, crd, mode, nmode)
 % * filename  - output nmd filename
 % * crd       - coordinates [1 x natom3 double]
 % * mode      - mode information [nstep3 x n double]
-% * nmode     - number of modes to be written [integer]
-%               if omitted, all modes in 'mode' is written.
+% * resids    - residue numbers [optional] [nstep3 x m char]
+% * chainids  - chain identifiers [optional] [nstep3 x 1 integer]
 %
 %% Example
 %# [pdb, crd] = readpdb('lys.pdb');
 %# index_ca = selectname(pdb.name, 'CA');
 %# pdb = substruct(pdb, index_ca);
 %# crd = crd(to3(index_ca));
-%# crd = decenter(crd);
-%# emode = anm(crd, 12.0);
-%# writenmd('anm_mode.nmd', crd, mode, 10)
+%# mode = anm(crd, 8.0);
+%# writenmd('anm.nmd', crd, mode)
 %# In VMD
-%# nmwiz load anm_mode.nmd
+%# nmwiz load anm.nmd
 %
 %% See also
 % anm, calcpca
@@ -44,11 +44,19 @@ if exist(filename, 'file')
 end
 
 %% setup
+is_resid   = false;
+is_chainid = false;
+
 natom3 = numel(crd);
 natom  = natom3/3;
+nmode = size(mode, 2);
 
-if ~exist('nmode', 'var') || isempty(nmode)
-  nmode = size(mode, 2);
+if exist('resid', 'var')
+  is_resid = true;
+end
+
+if exist('chainid', 'var')
+  is_chainid = true;
 end
 
 %% open file
@@ -57,11 +65,28 @@ assert(fid > 0, 'Could not open file.');
 cleaner = onCleanup(@() fclose(fid));
 
 %% write data
+
 fprintf(fid, 'coordinates');
 for i = 1:natom3
   fprintf(fid, ' %f', crd(i));
 end
 fprintf(fid, '\n');
+
+if is_chainid
+  fprintf(fid, 'chids');
+  for i = 1:natom
+    fprintf(fid, ' %s', chainid(i, :));
+  end
+  fprintf(fid, '\n');
+end
+
+if is_resid
+  fprintf(fid, 'resnums');
+  for i = 1:natom
+    fprintf(fid, ' %d', resid(i));
+  end
+  fprintf(fid, '\n');
+end
 
 for imode = 1:nmode
   fprintf(fid, 'mode');
