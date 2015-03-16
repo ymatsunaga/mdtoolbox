@@ -1,9 +1,9 @@
-function [energy, potential, force, xi, yi, zi] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
+function [energy, potential, density, xi, yi, zi] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
 %% calcgse
-% compute smooth (or reciprocal) electrostatic potential, energy, and force using k-space Gaussian split Ewald
+% compute smooth (or reciprocal) electrostatic energy, density, and average potential using k-space Gaussian split Ewald
 %
 %% Syntax
-%# [energy, potential, force, xi, yi, zi] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
+%# [energy, potential, density, xi, yi, zi] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
 %
 %% Description
 %
@@ -13,7 +13,7 @@ function [energy, potential, force, xi, yi, zi] = calcgse(trj, charge, box, xi, 
 %# xi = -32:32;
 %# yi = -32:32;
 %# zi = -32:32;
-%# [energy, potential, force] = calcgse(trj, psf.charge, box, xi, yi, zi);
+%# [energy, potential, density] = calcgse(trj, psf.charge, box, xi, yi, zi);
 %# 
 %
 %% See alo
@@ -25,10 +25,10 @@ coefficient = 332.0716;     % CHARMM
 %coefficient = 332.05221729; % AMBER
 %coefficient = 332.0636930;  % GROMACS
 
-nstep  = size(trj, 1);
-natom  = numel(charge);
-energy = [];
-force  = [];
+nstep   = size(trj, 1);
+natom   = numel(charge);
+energy  = [];
+density = [];
 
 if ~exist('trj', 'var') || isempty(trj)
   error('trj is required');
@@ -83,7 +83,7 @@ end
 data = zeros(natom, 3);
 potential = zeros(numel(yi), numel(xi), numel(zi));
 energy = zeros(nstep, 1);
-force = zeros(1, 3*natom);
+density = zeros(numel(yi), numel(xi), numel(zi));
 
 for istep = 1:nstep
   % determine grids
@@ -126,6 +126,7 @@ for istep = 1:nstep
 
   % 4'': mesh interpolation if needed
   %potential = potential + weight*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'linear');
+  density   = density   + weight(istep)*interp3(xi_gse, yi_gse, zi_gse, d1,            xi_query, yi_query, zi_query, 'cubic');
   potential = potential + weight(istep)*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'cubic');
 end
 
