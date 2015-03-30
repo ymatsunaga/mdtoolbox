@@ -1,4 +1,4 @@
-function [z, xi] = calcpmf(data, xi, bandwidth, box, weight)
+function [pmf, xi] = calcpmf(data, xi, bandwidth, box, weight)
 %% calcpmf
 % calculate 1D potential of mean force from the 1D-data by using kernel density estimator
 %
