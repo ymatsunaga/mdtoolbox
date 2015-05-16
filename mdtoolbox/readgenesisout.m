@@ -55,10 +55,11 @@ assert(fid > 0, 'Could not open file.');
 cleaner = onCleanup(@() fclose(fid));
 
 %% parse label
+is_INFO_found = false;
 label = {};
 ilabel = 0;
 
-while 1
+while ~feof(fid)
   line = strtrim(fgetl(fid));
 
   if strncmp(line, 'INFO:', numel('INFO:'))
@@ -69,28 +70,66 @@ while 1
       ilabel = ilabel + 1;
       label{ilabel} = lower(tmp);
     end
+    is_INFO_found = true;
     break
   end
 end
 
 %% parse data
 data = [];
+data_remd1 = [];
+data_remd2 = [];
 
-while ~feof(fid)
-  line = strtrim(fgetl(fid));
+fseek(fid, 0, 'bof');
+if is_INFO_found
 
-  if strncmp(line, 'INFO:', numel('INFO:'))
-    [~, line] = strtok(line);
-    ene_line = cellfun(@str2num, regexp(strtrim(line), '\s*', 'split'));
-    data = [data; ene_line];
+  while ~feof(fid)
+    line = strtrim(fgetl(fid));
+
+    if strncmp(line, 'INFO:', numel('INFO:'))
+      if ~strncmp(line(13:end), 'STEP', numel('STEP'))
+        [~, line] = strtok(line);
+        ene_line = cellfun(@str2num, regexp(strtrim(line), '\s*', 'split'));
+        data = [data; ene_line];
+      end
+    end
+  end
+
+else
+    
+  while ~feof(fid)
+    line = strtrim(fgetl(fid));
+
+    if strncmp(line, 'RepIDtoParmID:', numel('RepIDtoParmID:'))
+      [~, line] = strtok(line);
+      data_line = cellfun(@str2num, regexp(strtrim(line), '\s*', 'split'));
+      data_remd1 = [data_remd1; data_line];
+    end
+
+    if strncmp(line, 'ParmIDtoRepID:', numel('ParmIDtoRepID:'))
+      [~, line] = strtok(line);
+      data_line = cellfun(@str2num, regexp(strtrim(line), '\s*', 'split'));
+      data_remd2 = [data_remd2; data_line];
+    end
+  end
+
+end
+
+ene = struct;
+
+if ~isempty(data)
+  % delete zero-th step
+  %data(1, :) = [];
+  for ilabel = 1:numel(label)
+    ene = setfield(ene, label{ilabel}, data(:, ilabel));
   end
 end
 
-% delete zero-th step
-%data(1, :) = [];
+if ~isempty(data_remd1)
+  ene = setfield(ene, 'repid2parmid', data_remd1);
+end
 
-ene = struct;
-for ilabel = 1:numel(label)
-  ene = setfield(ene, label{ilabel}, data(:, ilabel));
+if ~isempty(data_remd2)
+  ene = setfield(ene, 'parmid2repid', data_remd2);
 end
 
