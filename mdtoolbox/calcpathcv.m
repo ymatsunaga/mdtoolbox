@@ -20,10 +20,19 @@ function [progress, distance] = calcpathcv(path, data, lambda)
 %              [nstep x 1 double]
 %
 %% Example
+%# path = [0.25 0.3; 0.5 0.6; 0.75 0.3];
 %# data = rand(100000, 2);
-%# [progress, distance] = calcpathcv([0.3 0.5; 0.6 0.5; 0.9 0.5], data);
+%# [progress, distance] = calcpathcv(path, data);
+%# subplot(1, 2, 1);
 %# scatter(data(:, 1), data(:, 2), 20, progress, 'filled');
+%# hold on;
+%# scatter(path(:, 1), path(:, 2), 200, 'k', 'filled');
+%# axis square; 
+%# subplot(1, 2, 2);
 %# scatter(data(:, 1), data(:, 2), 20, distance, 'filled');
+%# hold on;
+%# scatter(path(:, 1), path(:, 2), 200, 'k', 'filled');
+%# axis square;
 % 
 %% References
 % D. Branduardi, F. L. Gervasio, and M. Parrinello, 
@@ -56,8 +65,6 @@ lambda = 2.3/d_pathpoints;
 %% calculate CVs
 for i = 1:m
   dev = bsxfun(@minus, path(i, :), data);
-  m
-  whos dev
   d(:, i) = sum(dev.^2, 2);
 end
 
