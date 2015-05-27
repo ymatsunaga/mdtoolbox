@@ -56,10 +56,10 @@ d = zeros(nstep, m);
 %% determine lambda parameter
 d_pathpoints = 0;
 for i = 1:(m-1)
-  d_pathpoints = d_pathpoints + sum((path(i,:) - path(m-1,:)).^2);
+  d_pathpoints = d_pathpoints + sqrt(sum((path(i+1,:) - path(i,:)).^2));
 end
 d_pathpoints = d_pathpoints/(m-1);
-lambda = 2.3/d_pathpoints;
+lambda = 2.3/(d_pathpoints.^2);
 %lambda = 1.5/d_pathpoints;
 
 %% calculate CVs
@@ -69,8 +69,12 @@ for i = 1:m
 end
 
 if nargout > 0
+  log_m = log(1:m);
   for istep = 1:nstep
-    progress(istep, 1) = sum((1:m).*exp(-lambda*d(istep, :)), 2) ./ sum(exp(-lambda*d(istep, :)), 2);
+    log_numerator   = logsumexp(log_m - lambda*d(istep, :));
+    log_denominator = logsumexp(      - lambda*d(istep, :));
+    progress(istep, 1) = exp(log_numerator - log_denominator);
+    %progress(istep, 1) = sum((1:m).*exp(-lambda*d(istep, :)), 2) ./ sum(exp(-lambda*d(istep, :)), 2);
   end
 end
 
@@ -80,7 +84,7 @@ if nargout > 1
   end
 end
 
-%% logsumexp (input should be a vector)
+%% logsumexp (input should be a column or row vector)
 function s = logsumexp(x)
 max_x = max(x);
 exp_x = exp(x - max_x);
