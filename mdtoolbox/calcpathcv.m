@@ -66,7 +66,6 @@ for i = 1:m
 end
 
 log_m = log(1:m);
-whos log_m d
 log_numerator   = logsumexp_array(bsxfun(@minus, log_m, lambda*d));
 log_denominator = logsumexp_array(-lambda*d);
 progress = exp(log_numerator - log_denominator);
