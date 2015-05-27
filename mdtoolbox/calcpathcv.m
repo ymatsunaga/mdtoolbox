@@ -1,6 +1,6 @@
-function [progress, distance] = calcpathcv(path, data, lambda)
+function [progress, distance] = calcpathcv(path, data)
 %% calcpathcv
-% calculate the progress of the pathway as well as the distance from the closest point along the pathway
+% calculate the progress of the pathway and the distance from the closest point along the pathway
 %
 %% Syntax
 %# [progress, distance] = calcpathcv(path, data);
@@ -46,14 +46,11 @@ function [progress, distance] = calcpathcv(path, data, lambda)
 [m, ndim1] = size(path);
 [nstep, ndim2] = size(data);
 assert(ndim1 == ndim2, 'dimensions of path and data do not match...');
-ndim = ndim1;
 
 %% calculation
-progress = zeros(nstep, 1);
-distance = zeros(nstep, 1);
 d = zeros(nstep, m);
 
-%% determine lambda parameter
+% determine lambda parameter
 d_pathpoints = 0;
 for i = 1:(m-1)
   d_pathpoints = d_pathpoints + sqrt(sum((path(i+1,:) - path(i,:)).^2));
@@ -62,31 +59,23 @@ d_pathpoints = d_pathpoints/(m-1);
 lambda = 2.3/(d_pathpoints.^2);
 %lambda = 1.5/d_pathpoints;
 
-%% calculate CVs
+% calculate pathway CVs
 for i = 1:m
   dev = bsxfun(@minus, path(i, :), data);
   d(:, i) = sum(dev.^2, 2);
 end
 
-if nargout > 0
-  log_m = log(1:m);
-  for istep = 1:nstep
-    log_numerator   = logsumexp(log_m - lambda*d(istep, :));
-    log_denominator = logsumexp(      - lambda*d(istep, :));
-    progress(istep, 1) = exp(log_numerator - log_denominator);
-    %progress(istep, 1) = sum((1:m).*exp(-lambda*d(istep, :)), 2) ./ sum(exp(-lambda*d(istep, :)), 2);
-  end
-end
+log_m = log(1:m);
+whos log_m d
+log_numerator   = logsumexp_array(bsxfun(@minus, log_m, lambda*d));
+log_denominator = logsumexp_array(-lambda*d);
+progress = exp(log_numerator - log_denominator);
 
-if nargout > 1
-  for istep = 1:nstep
-    distance(istep, 1) = - (1/lambda) * logsumexp(-lambda*d(istep, :));
-  end
-end
+distance = - (1/lambda) * logsumexp_array(-lambda*d);
 
-%% logsumexp (input should be a column or row vector)
-function s = logsumexp(x)
-max_x = max(x);
-exp_x = exp(x - max_x);
-s = log(sum(exp_x)) + max_x;
+%% logsumexp_array (input should be an array matrix, summed over the 2nd dimension)
+function s = logsumexp_array(x)
+max_x = max(x, [], 2);
+exp_x = exp(bsxfun(@minus, x, max_x));
+s = log(sum(exp_x, 2)) + max_x;
 
