@@ -45,82 +45,117 @@ if ~exist('header', 'var') || isempty(header)
   header.title1 = title1;
   header.title2 = title2;
   header.nAtom = natom;
-  header.rstfile_type = 2;
-  header.iseed = 777;
-  header.num_deg_freedom = natom*3 - 6;
-  header.thermostat_friction = 0;
-  header.barostat_friction = [0 0 0];
+  if exist('crd', 'var') &&  ~isempty(crd)
+    if exist('vel', 'var') &&  ~isempty(vel)
+      header.rstfile_type = 2;
+      header.iseed = 777;
+      header.num_deg_freedom = natom*3 - 3;
+      header.thermostat_friction = 0.0;
+      header.barostat_friction = [0.0 0.0 0.0];
+      header.nrandom = 0;
+      header.random = [];
+    else
+      header.rstfile_type = 1;
+      header.energy = 0.0;
+      header.delta = 0.0;
+    end
+  end
 end
 
+%% open file
+assert(ischar(filename), 'Please specify valid filename for the first argument')
 fid = fopen(filename, 'w', 'l');
+assert(fid > 0, 'Could not open file.');
+cleaner = onCleanup(@() fclose(fid));
 
-fwrite(fid, 80, 'int32');
-fwrite(fid, header.title1(1:80), '*char');
-fwrite(fid, 80, 'int32');
-%88
+%% type == minimization
+if header.rstfile_type == 1
 
-fwrite(fid, 80, 'int32');
-fwrite(fid, header.title2(1:80), '*char');
-fwrite(fid, 80, 'int32');
-%88 + 88
+%% type == MD
+elseif header.rstfile_type == 2
+  fwrite(fid, 80, 'int32');
+  fwrite(fid, header.title1(1:80), '*char');
+  fwrite(fid, 80, 'int32');
+  %88
 
-fwrite(fid, 4, 'int32');
-fwrite(fid, header.nAtom, 'int32');
-fwrite(fid, 4, 'int32');
-%88 + 88 + 12
+  fwrite(fid, 80, 'int32');
+  fwrite(fid, header.title2(1:80), '*char');
+  fwrite(fid, 80, 'int32');
+  %88 + 88
 
-fwrite(fid, 4, 'int32');
-fwrite(fid, header.rstfile_type, 'int32');
-fwrite(fid, 4, 'int32');
-%88 + 88 + 12 + 12
+  fwrite(fid, 4, 'int32');
+  fwrite(fid, header.nAtom, 'int32');
+  fwrite(fid, 4, 'int32');
+  %88 + 88 + 12
 
-fwrite(fid, 8, 'int32');
-fwrite(fid, header.iseed, 'int32');
-fwrite(fid, header.num_deg_freedom, 'int32');
-fwrite(fid, 8, 'int32');
-%88 + 88 + 12 + 12 + 16
+  fwrite(fid, 4, 'int32');
+  fwrite(fid, header.rstfile_type, 'int32');
+  fwrite(fid, 4, 'int32');
+  %88 + 88 + 12 + 12
 
-fwrite(fid, 24, 'int32');
-fwrite(fid, box(1), 'double');
-fwrite(fid, box(2), 'double');
-fwrite(fid, box(3), 'double');
-fwrite(fid, 24, 'int32');
-%88 + 88 + 12 + 12 + 16 + 28
+  fwrite(fid, 8, 'int32');
+  fwrite(fid, header.iseed, 'int32');
+  fwrite(fid, header.num_deg_freedom, 'int32');
+  fwrite(fid, 8, 'int32');
+  %88 + 88 + 12 + 12 + 16
 
-fwrite(fid, 8, 'int32');
-fwrite(fid, header.thermostat_friction, 'double');
-fwrite(fid, 8, 'int32');
-%88 + 88 + 12 + 12 + 16 + 28 + 12
+  fwrite(fid, 24, 'int32');
+  fwrite(fid, box(1), 'double');
+  fwrite(fid, box(2), 'double');
+  fwrite(fid, box(3), 'double');
+  fwrite(fid, 24, 'int32');
+  %88 + 88 + 12 + 12 + 16 + 28
 
-fwrite(fid, 24, 'int32');
-fwrite(fid, header.barostat_friction, 'double');
-fwrite(fid, 24, 'int32');
-%88 + 88 + 12 + 12 + 16 + 28 + 12 + 12
+  fwrite(fid, 8, 'int32');
+  fwrite(fid, header.thermostat_friction, 'double');
+  fwrite(fid, 8, 'int32');
+  %88 + 88 + 12 + 12 + 16 + 28 + 12
 
-fwrite(fid, 8*header.nAtom, 'int32');
-fwrite(fid, crd(1:3:end), 'double');
-fwrite(fid, 8*header.nAtom, 'int32');
+  fwrite(fid, 24, 'int32');
+  fwrite(fid, header.barostat_friction, 'double');
+  fwrite(fid, 24, 'int32');
+  %88 + 88 + 12 + 12 + 16 + 28 + 12 + 12
 
-fwrite(fid, 8*header.nAtom, 'int32');
-fwrite(fid, crd(2:3:end), 'double');
-fwrite(fid, 8*header.nAtom, 'int32');
+  fwrite(fid, 8*header.nAtom, 'int32');
+  fwrite(fid, crd(1:3:end), 'double');
+  fwrite(fid, 8*header.nAtom, 'int32');
 
-fwrite(fid, 8*header.nAtom, 'int32');
-fwrite(fid, crd(3:3:end), 'double');
-fwrite(fid, 8*header.nAtom, 'int32');
+  fwrite(fid, 8*header.nAtom, 'int32');
+  fwrite(fid, crd(2:3:end), 'double');
+  fwrite(fid, 8*header.nAtom, 'int32');
 
-fwrite(fid, 8*header.nAtom, 'int32');
-fwrite(fid, vel(1:3:end), 'double');
-fwrite(fid, 8*header.nAtom, 'int32');
+  fwrite(fid, 8*header.nAtom, 'int32');
+  fwrite(fid, crd(3:3:end), 'double');
+  fwrite(fid, 8*header.nAtom, 'int32');
 
-fwrite(fid, 8*header.nAtom, 'int32');
-fwrite(fid, vel(2:3:end), 'double');
-fwrite(fid, 8*header.nAtom, 'int32');
+  fwrite(fid, 8*header.nAtom, 'int32');
+  fwrite(fid, vel(1:3:end), 'double');
+  fwrite(fid, 8*header.nAtom, 'int32');
 
-fwrite(fid, 8*header.nAtom, 'int32');
-fwrite(fid, vel(3:3:end), 'double');
-fwrite(fid, 8*header.nAtom, 'int32');
+  fwrite(fid, 8*header.nAtom, 'int32');
+  fwrite(fid, vel(2:3:end), 'double');
+  fwrite(fid, 8*header.nAtom, 'int32');
 
-fclose(fid);
+  fwrite(fid, 8*header.nAtom, 'int32');
+  fwrite(fid, vel(3:3:end), 'double');
+  fwrite(fid, 8*header.nAtom, 'int32');
 
+  fwrite(fid, 4, 'int32');
+  fwrite(fid, header.nrandom, 'int32');
+  fwrite(fid, 4, 'int32');
+
+  if header.nrandom > 0
+    fwrite(fid, 8*header.nrandom, 'int32');
+    fwrite(fid, header.random, 'double');
+    fwrite(fid, 8*header.nrandom, 'int32');
+  end
+
+%% type == REMD
+elseif header.rstfile_type == 3
+  error('REMD type is not supported');
+  
+else
+  error(sprintf('%d is undefined type', header.rstfile_type));
+
+end
 
