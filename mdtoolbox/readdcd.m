@@ -196,7 +196,7 @@ end
 
 coordblocksize = (4*2 + 4*header.natom)*3;
 
-nstep = (filesize - headersize) / (extrablocksize + coordblocksize);
+nstep = floor(filesize - headersize) / (extrablocksize + coordblocksize);
 
 if ~exist('index', 'var') || isempty(index)
   index = 1:header.natom;
