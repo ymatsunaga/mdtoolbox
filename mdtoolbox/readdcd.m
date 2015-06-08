@@ -51,18 +51,17 @@ if exist('index', 'var') && ~isempty(index)
 end
 
 %% open file
-assert(ischar(filename), 'Please specify valid filename as the first argument')
-fid = fopen(filename, 'r', 'l');
+assert(ischar(filename), 'Please specify valid filename for the first argument');
+fid = fopen(filename, 'r', 'l'); % try little-endian
 assert(fid > 0, 'Could not open file.');
-cleaner = onCleanup(@() fclose(fid));
 
 % check the size of file
 fseek(fid, 0, 'eof');
-eof = ftell(fid);
+filesize = ftell(fid); % get file size in byte
 fseek(fid, 0, 'bof');
 
 %% read block 1 (header)
-% read blocksize1 and check endian (seek=0)
+% read blocksize1 and check endian (seek=0 byte)
 header.blocksize1 = fread(fid, 1, 'int32');
 if header.blocksize1 ~= 84
   fclose(fid);
@@ -86,65 +85,67 @@ if header.blocksize1 ~= 84
   error('file may not be a dcd file.');
 end
 
-% header (4 chars) either "CORD" or "VELD" (seek=4)
+cleaner = onCleanup(@() fclose(fid));
+
+% header (4 chars) either "CORD" or "VELD" (seek=4 byte)
 header.hdr = fread(fid, 4, 'char');
 header.hdr = char(header.hdr)';
 
-% the total # of frames (snapshots) (seek=8)
+% the total # of frames (snapshots) (seek=8 byte)
 header.nset = fread(fid, 1, 'int32');
 
-% starting time-step (seek=12)
+% starting time-step (seek=12 byte)
 header.istrt = fread(fid, 1, 'int32');
 
-% frequency to save trajectory (seek=16)
+% frequency to save trajectory (seek=16 byte)
 header.nsavc = fread(fid, 1, 'int32');
 
-% the total # of simulation step (seek=20)
+% the total # of simulation step (seek=20 byte)
 header.nstep = fread(fid, 1, 'int32');
 
-% null4 (int*4) (seek=24)
+% null4 (int*4) (seek=24 byte)
 header.null4 = fread(fid, 4, 'int32');
 
-% # of degrees of freedom (seek=40)
+% # of degrees of freedom (seek=40 byte)
 header.nfreat = fread(fid, 1, 'int32');
 
-% step-size of simulation (seek=44)
+% step-size of simulation (seek=44 byte)
 header.delta = fread(fid, 1, 'float32');
 
-% null9 (int*9) (seek=48)
+% null9 (int*9) (seek=48 byte)
 header.null9 = fread(fid, 9, 'int32');
 
-% version (seek=84)
+% version (seek=84 byte)
 header.version = fread(fid, 1, 'int32');
 
-% charmm extention format
+% charmm extension format
 if header.version > 0
   header.is_charmm = true;
 end
 
-% delta is double presicion in xplor format
+% delta is double precision in xplor format
 if ~header.is_charmm
   cof = ftell(fid);
 
-  % reread delta in doulbe precision
+  % reread delta in double precision
   fseek(fid, 44, -1);
   header.delta = fread(fid, 1, 'float64');
   
   fseek(fid, cof, -1);
 end  
 
-% check charmm extentions
+% check charmm extensions
 if header.is_charmm
   cof = ftell(fid);
 
-  % charmm extrablock extention
+  % charmm extrablock extension
   fseek(fid, 48, -1);
   n = fread(fid, 1, 'int32');
   if n == 1
     header.is_charmm_extrablock = true;
   end
 
-  % charmm 4dims extention
+  % charmm 4dims extension
   fseek(fid, 52, -1);
   n = fread(fid, 1, 'int32');
   if n == 1
@@ -185,68 +186,27 @@ blocksize3 = fread(fid, 1, 'int32');
 assert(header.blocksize3 == blocksize3, 'blocksize3 values are not consistent');
 
 %% read coordinates
-% read 1st step
-% here, we determine 'natom' from the first step data, not header
+headersize = ftell(fid);
 
-% read charmm extrablock (unitcell info)
 if header.is_charmm_extrablock
-  blocksize = fread(fid, 1, 'int32');
-  dummy = fread(fid, 6, 'float64');
-  blocksize = fread(fid, 1, 'int32');
+  extrablocksize = 4*2 + 8*6;
+else
+  extrablocksize = 0;
 end
 
-% read x coordinates
-blocksize = fread(fid, 1, 'int32');
-x = fread(fid, blocksize/4, 'float32');
-blocksize = fread(fid, 1, 'int32');
+coordblocksize = (4*2 + 4*header.natom)*3;
 
-% read y coordinates 
-blocksize = fread(fid, 1, 'int32');
-y = fread(fid, blocksize/4, 'float32');
-blocksize = fread(fid, 1, 'int32');
+nstep = (filesize - headersize) / (extrablocksize + coordblocksize);
 
-% read z coordinates 
-blocksize = fread(fid, 1, 'int32');
-z = fread(fid, blocksize/4, 'float32');
-blocksize = fread(fid, 1, 'int32');
-  
-% ignore charmm 4dims extention
-if header.is_charmm_4dims
-  blocksize = fread(fid, 1, 'int32');
-  fseek(fid, blocksize, 0);
-  blocksize = fread(fid, 1, 'int32');
-end
-
-natom = numel(x);
 if ~exist('index', 'var') || isempty(index)
-  index = 1:natom;
+  index = 1:header.natom;
 end
 
-% buffer size is about 1 GByte
-nblock = ceil(10^9 / (8*numel(index)*3));
-if nblock < 3
-  nblock = 3;
-end
-
-trj_buffer = zeros(nblock, numel(index)*3);
-box_buffer = zeros(nblock, 3);
-
-istep = 1;
-if header.is_charmm_extrablock
-  box_buffer(istep, :) = dummy([1 3 6])';
-end
-trj_buffer(istep, 1:3:end) = x(index)';
-trj_buffer(istep, 2:3:end) = y(index)';
-trj_buffer(istep, 3:3:end) = z(index)';
-istep = istep + 1;
+trj = zeros(nstep, numel(index)*3);
+box = zeros(nstep, 3);
 
 % read next steps
-while 1
-  cof = ftell(fid);
-  if eof == cof
-    break;
-  end
-  
+for istep = 1:nstep
   % read charmm extrablock (unitcell info)
   if header.is_charmm_extrablock
     blocksize = fread(fid, 1, 'int32');
@@ -269,7 +229,7 @@ while 1
   z = fread(fid, blocksize/4, 'float32');
   blocksize = fread(fid, 1, 'int32');
   
-  % ignore charmm 4dims extention
+  % ignore charmm 4dims extension
   if header.is_charmm_4dims
     blocksize = fread(fid, 1, 'int32');
     fseek(fid, blocksize, 0);
@@ -277,26 +237,10 @@ while 1
   end
 
   if header.is_charmm_extrablock
-    box_buffer(istep, :) = dummy([1 3 6])';
+    box(istep, :) = dummy([1 3 6])';
   end
-  trj_buffer(istep, 1:3:end) = x(index)';
-  trj_buffer(istep, 2:3:end) = y(index)';
-  trj_buffer(istep, 3:3:end) = z(index)';
-  istep = istep + 1;
-
-  if istep > nblock
-    if header.is_charmm_extrablock
-      box = [box; box_buffer];
-    end
-    trj = [trj; trj_buffer];
-    istep = 1;
-  end
-end
-
-if istep > 1
-  if header.is_charmm_extrablock
-    box = [box; box_buffer(1:(istep-1),:)];
-  end
-  trj = [trj; trj_buffer(1:(istep-1),:)];
+  trj(istep, 1:3:end) = x(index)';
+  trj(istep, 2:3:end) = y(index)';
+  trj(istep, 3:3:end) = z(index)';
 end
 
