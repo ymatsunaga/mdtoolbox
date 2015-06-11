@@ -7,7 +7,10 @@ function index3 = to3(index)
 %
 %% Description
 % This code converts 1...N atom-index to 1...3N xyz-index.
-% Useful for the operation of Cartesian coordinates. 
+% Typically used for selecting subsets of trajectory 
+% from atom index
+% Either logical indexing or normal indexing (integer array) is
+% allowed for input. 
 %
 % * index  - array of integers 
 %            (Ex. [1 3])
