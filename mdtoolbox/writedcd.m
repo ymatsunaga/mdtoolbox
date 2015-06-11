@@ -9,9 +9,9 @@ function writedcd(filename, trj, box, header)
 %# writedcd(filename, trj, [], header);
 %
 %% Description
-% This code puts trajectories into a dcd file. 
+% This code outputs input trajectory into a dcd file. 
 % If header information is not given, 
-% default values are assumed. 
+% default values used appropriately. 
 %
 % * filename  - output dcd trajectory filename
 % * trj       - trajectory [nstep x natom3 double]
@@ -27,7 +27,7 @@ function writedcd(filename, trj, box, header)
 %% See also
 % readdcd
 %
-%% References
+%% References for dcd format
 % MolFile Plugin http://www.ks.uiuc.edu/Research/vmd/plugins/molfile/dcdplugin.html
 % CafeMol Manual http://www.cafemol.org/doc.php
 % EGO_VIII Manual http://www.lrz.de/~heller/ego/manual/node93.html
@@ -100,7 +100,7 @@ else
 end
 
 %% open file
-assert(ischar(filename), 'Please specify valid filename as the first argument')
+assert(ischar(filename), 'Please specify valid filename for the first argument')
 fid = fopen(filename, 'w');
 assert(fid > 0, 'Could not open file.');
 cleaner = onCleanup(@() fclose(fid));
