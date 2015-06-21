@@ -1,15 +1,15 @@
-function parm = readparm(filename)
-%% readamberparm
+function parm = readprmtop(filename)
+%% readprmtop
 % read amber parameter/topology file
 %
 %% Syntax
-%# parm = readamberparm(filename)
+%# prmtop = readprmtop(filename)
 %
 %% Description
 % Output is a strucure variable. 
 %
-% * fname     - input filename of psf
-% * parm      - structure data 
+% * fname     - input filename of prmtop
+% * prmtop    - structure data 
 %                         title: [20x4 char]
 %                         natom: double
 %                        ntypes: double
@@ -79,7 +79,7 @@ function parm = readparm(filename)
 %                        screen: [natomx1 double]
 % 
 %% Example
-%# parm = readpsf('ak.parm');
+%# prmtop = readpsf('ak.prmtop');
 %
 %% See also
 % readpsf
