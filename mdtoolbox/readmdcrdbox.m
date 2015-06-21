@@ -1,12 +1,12 @@
-function [trj, box, title] = readambertrjbox(natom, filename, index)
-%% readambertrjbox
+function [trj, box, title] = readmdcrdbox(natom, filename, index)
+%% readmdcrdbox
 % read amber ascii-format trajectory file including box size
 %
 %% Syntax
-%# trj = readambertrj(natom, filename);
-%# trj = readambertrj(natom, filename, index_atom);
-%# [trj, box] = readambertrj(natom, filename, index_atom);
-%# [trj, box, title] = readambertrj(natom, filename, index_atom);
+%# trj = readmdcrdbox(natom, filename);
+%# trj = readmdcrdbox(natom, filename, index_atom);
+%# [trj, box] = readmdcrdbox(natom, filename, index_atom);
+%# [trj, box, title] = readmdcrdbox(natom, filename, index_atom);
 %
 %% Description
 % The XYZ coordinates of atoms are read into 'trj' variable
@@ -22,11 +22,11 @@ function [trj, box, title] = readambertrjbox(natom, filename, index)
 % * title      - title characters [chars]
 %
 %% Example
-%# trj = readambertrj('ak.trj');
+%# trj = readmdcrdbox('ak.trj');
 %
 %% See also
-% readambertrj
-% writeambertrj
+% readmdcrd
+% writemdcrd
 % 
 %% References
 % http://ambermd.org/formats.html#trajectory

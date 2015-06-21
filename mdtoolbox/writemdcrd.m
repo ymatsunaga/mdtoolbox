@@ -1,18 +1,16 @@
-function writeambertrj(filename, trj, box, title)
-%% writeambertrj
+function writemdcrd(filename, trj, box, title)
+%% writemdcrd
 % write amber ascii-format trajectory format file
 %
 %% Syntax
-%# writeambertrj(filename, trj)
-%# writeambertrj(filename, trj, box)
-%# writeambertrj(filename, trj, box, title)
-%# writeambertrj(filename, trj, [], title)
+%# writemdcrd(filename, trj)
+%# writemdcrd(filename, trj, box)
+%# writemdcrd(filename, trj, box, title)
+%# writemdcrd(filename, trj, [], title)
 %
 %% Description
-% This code puts trajectories into 
-% an amber trajectory format file. 
-% If box information is given, 
-% box sizes are appended.
+% This code puts trajectories into an amber trajectory format file. 
+% If box information is given, box sizes are appended.
 %
 % * filename  - output dcd trajectory filename
 % * trj       - trajectory [nstep x natom3 double]
@@ -21,13 +19,13 @@ function writeambertrj(filename, trj, box, title)
 %
 %% Example
 %# natom = 3343;
-%# trj = readambertrj(natom, '4ake.trj');
+%# trj = readmdcrd(natom, '4ake.trj');
 %# trj(:, 1:3:end) = trj(:, 1:3:end) + 1.5;
-%# writeambertrj('4ake_translated.trj', trj, [], 'translated in x axis')
+%# writemdcrd('4ake_translated.trj', trj, [], 'translated in x axis')
 %
 %% See also
-% readambertrj
-% readambertrjbox
+% readmdcrd
+% readmdcrdbox
 %
 %% References
 % http://ambermd.org/formats.html#trajectory
