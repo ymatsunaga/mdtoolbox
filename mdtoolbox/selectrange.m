@@ -1,6 +1,6 @@
 function logical_index = selectrange(crd, index, rcut, box)
 %% selectrange
-% used for atom selection. Finds all the atoms within cutoff distance from indexed atoms
+% used for atom selection. Finds all the atoms within cutoff distance of indexed atom coordinates
 %
 %% Syntax
 %# logical_index = selectrange(crd, index, rcut); %Non-PBC

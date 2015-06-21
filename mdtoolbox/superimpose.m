@@ -37,10 +37,11 @@ function [rmsd, trj, vel, Ucell] = superimpose(ref, trj, index, mass, vel, isdec
 % superimpose2d meanstructure
 %
 %% References
-% W. Kabsch, "A solution for the best rotation to relate two sets of vectors." 
-% Acta Cryst A32, 922-923 (1976)
-% W. Kabsch, "A discussion of the solution for the best rotation to relate two sets of vectors." 
-% Acta Cryst A34, 827-828 (1978)
+% m-file version (superimpose.m) using Kabsch's method:
+% W. Kabsch, "A solution for the best rotation to relate two sets of vectors." Acta. Cryst. A32, 922-923 (1976)
+% W. Kabsch, "A discussion of the solution for the best rotation to relate two sets of vectors." Acta. Cryst. A34, 827-828 (1978)
+% mex-file version (suserimpose.c) using the QCP method
+% P. Liu, D. K. Agrafiotis, and D. L. Theobald, J. Comput. Chem. 31, 1561-1563 (2010).
 % 
 
 %% preparation
