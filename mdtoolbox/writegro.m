@@ -40,6 +40,7 @@ function writegro(filename, gro, trj)
 % http://manual.gromacs.org/current/online/gro.html
 %
 %% TODO
+% velocities
 % time step in title
 % multiple steps
 %

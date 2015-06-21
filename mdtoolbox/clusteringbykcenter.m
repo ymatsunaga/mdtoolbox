@@ -1,6 +1,6 @@
 function [indexOfCluster_out, indexOfCenter_out, distPointCenter_out] = clusteringbykcenter(trj, kcluster, mass, nReplicates)
-%% clusteringbykmeans_msd
-% K-center clustering by using rmsd measure
+%% clusteringbykcenter
+% K-center clustering by using RMSD metric
 %
 %% Syntax
 %# indexOfCluster = clusteringbykcenter(trj, kcluster)
@@ -81,5 +81,4 @@ for ireplica = 1:nReplicates
     distPointCenter_out = distPointCenter;
   end
 end
-
 

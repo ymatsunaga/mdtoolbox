@@ -1,6 +1,6 @@
 function rmsd = calcrmsd(ref, trj, index, mass)
 %% calcrmsd
-% calculate root mean square deviation of atomic positions
+% calculate root mean square deviation (RMSD) of atomic positions
 %
 %% Syntax
 %# rmsd = calcrmsd(ref, trj);

@@ -34,11 +34,11 @@ if ~exist('scale', 'var') || ~exist('resolution', 'var') || ~exist('radius', 'va
 end
 
 %% write vectors
-nmode = size(pcs,2);
-for i=1:nmode
+nmode = size(pcs, 2);
+for i = 1:nmode
   %outfilename = [filename,int2str(i),'.tcl'];
   outfilename = sprintf('%s%d.tcl', basename, i);
-  fid = fopen(outfilename,'w');
+  fid = fopen(outfilename, 'w');
   
   fprintf(fid,'# define vector drawing function.\n');
   fprintf(fid,'# contrary to the example from the users guide, the vector is\n');

@@ -38,6 +38,7 @@ function [gro, crd, vel] = readgro(filename, index)
 % http://manual.gromacs.org/current/online/gro.html
 %
 %% TODO
+% velocities
 % time step in title
 % multiple steps
 %

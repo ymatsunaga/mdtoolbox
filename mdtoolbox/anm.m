@@ -17,8 +17,8 @@ function [emode, frequency, covar, covar_atom] = anm(crd, cutoff)
 %
 % Also, the covariance matrix of the Cartesian xyz coordinates is
 % calculated from the pseudo inverse of hessian matrix. 
-% In the calculation, the spring constant of 1.0 kcal/mol/A^1, 
-% and kBT = 1.0 kcal/mol/K are assumed.
+% In the calculation, the spring constant of 1.0 kcal/mol/A^2, 
+% and kBT = 1.0 kcal/mol are assumed.
 %
 % * crd         - coordinates of atoms. 
 %                 [double natom3]

@@ -13,7 +13,7 @@ function [projection, mode, lambda] = calctica(trj, lagtime)
 % most important in slow conformational transition.
 % The algorithm of the tICA is based on solving a eigenvalue
 % problem of time-lagges covariance matrix. The user needs to
-% specify the laggtime for the calculation of the covariance matrix.
+% specify the lagtime for the calculation of the covariance matrix.
 %
 % It is noted that this routine DOES NOT apply any preprocesses to
 % the input trajectory, such as centering, or regularization. 

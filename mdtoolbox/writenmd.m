@@ -51,11 +51,11 @@ natom3 = numel(crd);
 natom  = natom3/3;
 nmode = size(mode, 2);
 
-if exist('resid', 'var')
+if exist('resid', 'var') && ~isempty(resid)
   is_resid = true;
 end
 
-if exist('chainid', 'var')
+if exist('chainid', 'var') && ~isempty(chainid)
   is_chainid = true;
 end
 

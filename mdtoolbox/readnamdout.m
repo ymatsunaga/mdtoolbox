@@ -55,7 +55,7 @@ while 1
     [~, line] = strtok(line);
     while ~isempty(line)
       [tmp, line] = strtok(line);
-      tmp = strrep(tmp, '-', '_'); % '-' cannnot be used as a filed name
+      tmp = strrep(tmp, '-', '_'); % '-' cannnot be used as a filed name in MATLAB
       ilabel = ilabel + 1;
       label{ilabel} = lower(tmp);
     end
