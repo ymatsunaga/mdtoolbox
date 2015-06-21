@@ -1,5 +1,5 @@
 function str_union = addstruct(str1, str2)
-%% substruct
+%% addstruct
 % create a structure by making the union of arrays of two structure variables
 %
 %% Syntax
