@@ -51,7 +51,7 @@ nbin  = numel(center);
 count  = zeros(1, nbin);
 count1 = zeros(1, nbin);
 if islogical(index_atom1) & islogical(index_atom2)
-  npair = nnz(index_atom1)*(nnz(index_atom2)) - nnz(index_atom1 & index_atom2);
+  npair = nnz(index_atom1)*nnz(index_atom2) - nnz(index_atom1 & index_atom2);
 else
   if islogical(index_atom1)
     index_atom1 = find(index_atom1);
@@ -59,14 +59,13 @@ else
   if islogical(index_atom2)
     index_atom2 = find(index_atom2);
   end
-  npair = numel(index_atom1)*(numel(index_atom2)-1)/2 - numel(intersect(index_atom1, index_atom2));
+  npair = numel(index_atom1)*numel(index_atom2) - numel(intersect(index_atom1, index_atom2));
 end
 index_atom1 = to3(index_atom1);
 index_atom2 = to3(index_atom2);
 crd1 = zeros(1, nnz(index_atom1));
 crd2 = zeros(1, nnz(index_atom2));
 for istep = 1:nstep
-  istep
   crd1 = trj(istep, index_atom1);
   crd2 = trj(istep, index_atom2);
   [pair, dist] = searchrange(crd1, crd2, rcut, box(istep, :));
