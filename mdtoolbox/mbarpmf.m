@@ -69,14 +69,14 @@ else
       interface = round(linspace(0, N_k(k), nblock+1));
       index_k{k} = (interface(iblock)+1):interface(iblock+1);
     end
-    pmf_i{iblock} = kernelfunction(u_kl, bin_k, f_k, u_k, index_k);
+    pmf_i{iblock} = kernelfunction(u_kl, bin_k, f_k(:, iblock), u_k, index_k);
   end
   pmf_i = cell2mat(pmf_i);
   
   if nblock > 1
     [~, index_min] = min(pmf_i(:, 1));
-    pmf_i = pmf_i - pmf_i(index_min, 1);
-    pmf_i = [mean(pmf_i, 2) std(pmf_i, [], 2)];
+    pmf_i = bsxfun(@minus, pmf_i, pmf_i(index_min, :));
+    pmf_i = [mean(pmf_i, 2) 2*std(pmf_i, [], 2)];
   else
     pmf_i = pmf_i - min(pmf_i);
   end
