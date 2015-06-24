@@ -1,6 +1,5 @@
 MDToolbox
 =========
-
 MDToolbox is a MATLAB toolbox for statistical analysis of molecular
 dynamics (MD) simulation data of biomolecules. It consists of a
 collection of MATLAB functions covering the following types of
@@ -18,18 +17,15 @@ For more information, see the documentation http://mdtoolbox.readthedocs.org/
 
 Reference
 =========
-
 In preparation.
 
 Funding
 =========
-
 Development of MDToolbox is supported by Grant-in-Aid for Young
-Scientists (B) (Grant No. 24770159) from JSPS. 
+Scientists (B) (Grant No. 24770159) from JSPS, Japan.
 
 License
 =========
-
 MDToolbox is licensed under the BSD license. 
 
   Author: Yasuhiro Matsunaga (ymatsunaga@riken.jp)
