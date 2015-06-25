@@ -3,7 +3,7 @@ function [rdf, center] = calcrdf(index_atom1, index_atom2, trj, box, edge)
 % calculate radial distribution function of two atom types specfied index_atom1 and index_atom2
 %
 %% Syntax
-%# [rdf, center] = calcrdf(index_atom1, index_atom2, trj, [], edge);
+%# [rdf, center] = calcrdf(index_atom1, index_atom2, trj, box);
 %# [rdf, center] = calcrdf(index_atom1, index_atom2, trj, box, edge);
 %
 %% Description
