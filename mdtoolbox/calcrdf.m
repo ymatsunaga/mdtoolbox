@@ -70,9 +70,8 @@ for istep = 1:nstep
   crd2 = trj(istep, index_atom2);
   [pair, dist] = searchrange(crd1, crd2, rcut, box(istep, :));
   index_different_pair = (dist > 10.^(-6));
-  count1 = histc(dist(index_different_pair), edge); % for old versions of MATLAB
-  %count1 = histcounts(dist(index_different_pair), edge); % for new versions of MATLAB
-  count = count + count1;
+  count1 = histc(dist(index_different_pair), edge); count = count + count1(1:nbin); % for old versions of MATLAB
+  %count1 = histcounts(dist(index_different_pair), edge); count = count + count1; % for new versions of MATLAB
 end
 
 shell_volume = (4./3) * pi * (edge(2:end).^3 - edge(1:(end-1)).^3);
