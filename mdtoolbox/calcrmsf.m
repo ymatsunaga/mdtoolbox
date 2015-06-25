@@ -13,6 +13,7 @@ function rmsf = calcrmsf(trj, index, nblock)
 %
 % * trj        - trajectory [nstep x (natom*3) double]
 % * index_atom - atom index or logical index specifying atoms to be fitted to the average structure
+% * nblock     - the number of blocks for block averaging
 % * rmsf       - root mean square fluctuatons (RMSF)
 %                if nblock > 1, twice of standard deviation is added in 2nd column for 95% confidence interval
 %
@@ -42,7 +43,7 @@ if ~exist('nblock', 'var') || isempty(nblock)
   nblock = 1;
 end
 
-% evaluate RMSF
+%% evaluate RMSF
 interface = round(linspace(0, nstep, nblock+1));
 rmsf = {};
 for iblock = 1:nblock
