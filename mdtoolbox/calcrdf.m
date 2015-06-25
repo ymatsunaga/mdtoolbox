@@ -70,7 +70,8 @@ for istep = 1:nstep
   crd2 = trj(istep, index_atom2);
   [pair, dist] = searchrange(crd1, crd2, rcut, box(istep, :));
   index_different_pair = (dist > 10.^(-6));
-  count1 = histcounts(dist(index_different_pair), edge);
+  count1 = histc(dist(index_different_pair), edge); % for old versions of MATLAB
+  %count1 = histcounts(dist(index_different_pair), edge); % for new versions of MATLAB
   count = count + count1;
 end
 
