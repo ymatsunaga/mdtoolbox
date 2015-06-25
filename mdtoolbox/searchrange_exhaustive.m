@@ -1,6 +1,6 @@
 function [pair, dist] = searchrange_exhaustive(a, b, rcut, box)
 %% searchrange
-% finds all the atoms in 'crd1' that are within cutoff distance 'rcut' for atoms in 'crd2'
+% finds all atoms of 'crd1' that are within cutoff 'rcut' distance of 'crd2' atoms
 %
 %% Syntax
 %# pair = searchrange(crd1, crd2, rcut) #Non-PBC

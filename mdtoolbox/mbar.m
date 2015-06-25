@@ -10,16 +10,16 @@ function f_k = mbar(u_kl, nblock)
 %
 % * u_kl      - reduced potential energy of umbrella simulation k evaluated at umbrella l
 %               [cell numbrella x numbrella]
-% * nblock    - the number of blocks in each of which free energies are evaluated, default is 1
+% * nblock    - the number of blocks used for error evaluation. default is 1 (no error estimation)
 %               [integer scalar]
 % * f_k       - (dimensionless) free energies of umbrella-windows
 %               [double numbrella x nblock]
 % 
 %% Example
-%#
+% see http://mdtoolbox.readthedocs.org/en/latest/alat_1D_umbrella_mbar.html
 % 
 %% See also
-% mbarpmf mbarexpectation
+% mbarpmf
 %
 %% References
 % [1] M. R. Shirts and J. D. Chodera, J Chem Phys 129, 124105 (2008).
@@ -187,7 +187,6 @@ fprintf('free energies = ');
 fprintf('%f ', f_k);
 fprintf('\n');
 fprintf('\n');
-
 
 %%%%%%%% logsumexp (input should be a vector)
 function s = logsumexp(x)

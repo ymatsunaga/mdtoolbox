@@ -16,7 +16,7 @@ function [trj, box, header] = readdcd(filename, index)
 % [x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom) y(natom) z(natom)].
 %
 % * filename   - input dcd trajectory filename
-% * index_atom - atom index or logical index specifying atoms to be read
+% * index_atom - index or logical index for specifying atoms to be read
 % * trj        - trajectory [nstep x natom3 double]
 % * box        - box size [nstep x 3 double]
 % * header     - structure variable, which has header information 

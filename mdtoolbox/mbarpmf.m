@@ -26,10 +26,10 @@ function [pmf_i, w_k] = mbarpmf(u_kl, bin_k, f_k, u_k)
 %               [cell numbrella x 1]
 % 
 %% Example
-%#
+% see http://mdtoolbox.readthedocs.org/en/latest/alat_1D_umbrella_mbar.html
 % 
 %% See also
-% mbar mbarexpectation
+% mbar
 %
 %% References
 % [1] M. R. Shirts and J. D. Chodera, J Chem Phys 129, 124105 (2008).
