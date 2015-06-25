@@ -36,12 +36,12 @@ function [msd, time, coefficient] = calcmsd(trj, index, ps_per_step, nblock);
 nstep = size(trj, 1);
 
 % index
+natom3 = size(trj, 2);
+natom = natom3/3
 if ~exist('index', 'var') || isempty(index)
   index = 1:natom;
 end
 trj = trj(:, to3(index));
-natom3 = size(trj, 2);
-natom = natom3/3;
 
 % ps_per_step
 if ~exist('ps_per_step', 'var') || isempty(ps_per_step)
