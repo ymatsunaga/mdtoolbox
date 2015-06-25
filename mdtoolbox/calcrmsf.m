@@ -21,7 +21,7 @@ function rmsf = calcrmsf(trj, index, nblock)
 %# rmsf = calcrmsf(trj);
 %# plot(rmsf); xlabel('residue'); ylabel('RMSF [Angstrom]')
 %#
-%# rmsf = calcrmsf(trj);
+%# rmsf = calcrmsf(trj, [], 5);
 %# errorbar(1:nresidue, rmsf(:, 1), rmsf(:, 2)); xlabel('residue'); ylabel('RMSF [Angstrom]')
 %
 %% See alo
