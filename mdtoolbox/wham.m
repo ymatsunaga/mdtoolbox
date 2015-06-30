@@ -1,10 +1,10 @@
-function [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, temperature, edge_m)
+function [f_k, pmf_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, temperature, edge_m, nblock)
 %% wham
-% calculate (dimensionless relative) free energies of umbrella-windows and (unbiased) density of states in data-bins by using the WHAM
+% calculate (dimensionless relative) free energies of umbrella-windows and potential of mean force in data-bins by using the WHAM
 %
 %% Syntax
-%# [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, temperature)
-%# [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, temperature, edge_m)
+%# [f_k, pmf_m, center_m] = wham(data_k, fhandle_k, temperature)
+%# [f_k, pmf_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, temperature, edge_m)
 %
 %% Description
 %
@@ -16,24 +16,27 @@ function [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, te
 %                 [double scalar]
 % * edge_m      - edges of data-bins
 %                 [double 1 x M or M x 1]
+% * nblock      - the number of blocks used for error evaluation. default is 1 (no error estimation)
 %
-% * f_k         - dimensionless free energies of umbrella-windows
+% * f_k         - dimensionless relative free energies of umbrella-windows
 %                 [double K x 1]
-% * log_prob_m  - log of unbiased density of states in data-bins (prob(m) = exp(-kbt*U(x_m))/Z(kbt) * dx_m)
+% * pmf_m       - potential of mean force in data-bins under unbiased condition
 %                 [double 1 x M]
 % 
 %% Example
-%#
+%# see http://mdtoolbox.readthedocs.org/en/latest/alat_1D_umbrella_wham.html
 % 
 %% See also
-% ptwham
+% wham2d ptwham mbar mbarpmf
 %
 %% References
-% [1] J. D. Chodera, W. C. Swope, J. W. Pitera, C. Seok, and  
-%     K. A. Dill, J. Chem. Theory Comput. 3, 26 (2007).
-% [2] S. Kumar, D. Bouzida, R. H. Swendsen, P. A. Kollman, and
+% This function uses the method described in
+% [1] S. Kumar, D. Bouzida, R. H. Swendsen, P. A. Kollman, and
 %     J. M. Rosenberg, J. Comput. Chem. 13, 1011 (1992). 
-% [3] B. Roux, Computer Physics Communications 91, 275 (1995).
+% Also, some parts are based on the following papers:
+% [2] B. Roux, Computer Physics Communications 91, 275 (1995).
+% [3] J. D. Chodera, W. C. Swope, J. W. Pitera, C. Seok, and  
+%     K. A. Dill, J. Chem. Theory Comput. 3, 26 (2007).
 % [4] J. S. Hub, B. L. de Groot, and D. van der Spoel,
 %     J. Chem. Theory Comput. 6, 3713 (2010). 
 %
@@ -45,11 +48,10 @@ function [f_k, log_prob_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, te
 % Also, we assume an array structure whose 
 % rows(k) correspond to umbrella-windows and columns(m) are bins. 
 
-%% preparation
-% Boltzmann constant in kcal/(mol K)
-KB = 0.00198719168260038;
-% Tolerance for the convergence of iterations
-TOLERANCE = 10^(-8);
+%%%%%%%% main
+if ~exist('nblock', 'var') || isempty(nblock)
+  nblock = 1;
+end
 
 % convert from array to cell
 if ~iscell(data_k)
@@ -59,33 +61,82 @@ if ~iscell(data_k)
   for k = 1:size(data_k, 1)
     data_k{k} = t(k, :);
   end
+  clear t;
 end
 
 % K: number of umbrella-windows
 K = numel(data_k);
 
 % check consistency of the number of umbrella-windows
-if K ~= numel(fhandle_k)
-  error('# of umbrella-windows do not match... data has %d windows. fhandle has %d windows.', numel(data_k), numel(fhandle_k));
-end
+K2 = numel(fhandle_k);
+assert(K == K2, sprintf('# of umbrella-windows do not match... data has %d windows. fhandle has %d windows.', K, K2));
 
-%% calculate histogram (h_km)
-% h_km: number of smaples in data-bin (m) from umbrella-window (k)
+% M: number of data-bins
 if ~exist('edge_m', 'var') || isempty(edge_m)
-  % M: number of data-bins
   M = 100;
   edge_min = min(cellfun(@min, data_k));
   edge_max = max(cellfun(@max, data_k));
   edge_m = linspace(edge_min, edge_max+(M*eps), M+1)';
 else
-  % M: number of data-bins
   M = numel(edge_m) - 1;
 end
 center_m = 0.5 * (edge_m(2:end) + edge_m(1:(end-1)));
-  
+
+% N_k: number of samplec in k-th umbrella window
+N_k = zeros(K, 1);
+for k = 1:K
+  N_k(k) = numel(data_k{k});
+end
+
+% WHAM for each block
+index_k = {};
+f_k = {};
+pmf_m = {};
+h_km = {};
+bias_km = {};
+for iblock = 1:nblock
+  for k = 1:K
+    interface = round(linspace(0, N_k(k), nblock+1));
+    index_k{k} = (interface(iblock)+1):interface(iblock+1);
+  end
+  if nblock > 1
+    [f_k{iblock}, pmf_m{iblock}, h_km{iblock}, bias_km{iblock}] ...
+        = kernelfunction(data_k, fhandle_k, temperature, edge_m, center_m, K, M, index_k, iblock);
+  else
+    [f_k{iblock}, pmf_m{iblock}, h_km{iblock}, bias_km{iblock}] ...
+        = kernelfunction(data_k, fhandle_k, temperature, edge_m, center_m, K, M, index_k);
+  end
+  pmf_m{iblock} = pmf_m{iblock}';
+end
+f_k = cell2mat(f_k);
+pmf_m = cell2mat(pmf_m);
+
+if nargout > 1
+  if nblock > 1
+    [~, index_min] = min(pmf_m(:, 1));
+    pmf_m = bsxfun(@minus, pmf_m, pmf_m(index_min, :));
+    pmf_m = [mean(pmf_m, 2) 2*std(pmf_m, [], 2)];
+  else
+    pmf_m = pmf_m - min(pmf_m);
+  end
+end
+
+
+%%%%%%%% kernel function
+function [f_k, pmf_m, h_km, bias_km] = kernelfunction(data_k, fhandle_k, temperature, edge_m, center_m, K, M, index_k, iblock);
+
+%% Boltzmann constant in kcal/(mol K)
+C = getconstants();
+KB = C.KB;
+
+%% Tolerance for the convergence of iterations
+TOLERANCE = 10^(-8);
+
+%% calculate histogram (h_km)
+% h_km: number of samples in data-bin (m) from umbrella-window (k)
 h_km = zeros(K, M);
 for k = 1:K
-  h_m = histc(data_k{k}, edge_m);
+  h_m = histc(data_k{k}(index_k{k}), edge_m);
   h_km(k, :) = h_m(1:(end-1))';
 end
 
@@ -151,7 +202,11 @@ while check_convergence > TOLERANCE
 
   count_iteration = count_iteration + 1;
   if mod(count_iteration, 100) == 0
-    fprintf('%dth iteration  delta = %e  tolerance = %e\n', count_iteration, check_convergence, TOLERANCE);
+    if exist('iblock', 'var')
+      fprintf('[block %d] %dth iteration  delta = %e  tolerance = %e\n', iblock, count_iteration, check_convergence, TOLERANCE);
+    else
+      fprintf('%dth iteration  delta = %e  tolerance = %e\n', count_iteration, check_convergence, TOLERANCE);
+    end
     fprintf('free energies = ');
     fprintf('%f ', f_k);
     fprintf('\n');
@@ -159,9 +214,7 @@ while check_convergence > TOLERANCE
   end
 end
 
-%% bootstrap?
-% f_k_error = 0;
-% prob_m_error = 0;
+pmf_m = - KB * temperature * log_prob_m;
 
 
 %% logsumexp (input should be array. sums over rows)

@@ -19,7 +19,7 @@ function f_k = mbar(u_kl, nblock)
 % see http://mdtoolbox.readthedocs.org/en/latest/alat_1D_umbrella_mbar.html
 % 
 %% See also
-% mbarpmf
+% mbarpmf wham wham2d ptwham
 %
 %% References
 % [1] M. R. Shirts and J. D. Chodera, J Chem Phys 129, 124105 (2008).
@@ -46,7 +46,7 @@ for k = 1:K
   N_k(k) = size(u_kl{k, 1}, 1);
 end
 
-% f_k: evaluate free energies in each block
+% MBAR for each block
 f_k = {};
 index_k = {};
 for iblock = 1:nblock
