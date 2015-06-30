@@ -3,6 +3,7 @@ function [f_k, pmf, center_mx, center_my] = wham2d(data_k, fhandle_k, temperatur
 % calculate 2-dimensional (dimensionless relative) free energies and potential of mean force in 2-dimensional data-bins by using the WHAM
 %
 %% Syntax
+%# [f_k, pmf, center_mx, center_my] = wham2d(data_k, fhandle_k, temperature)
 %# [f_k, pmf, center_mx, center_my] = wham2d(data_k, fhandle_k, temperature, edge_mx, edge_my)
 %
 %% Description
@@ -13,10 +14,10 @@ function [f_k, pmf, center_mx, center_my] = wham2d(data_k, fhandle_k, temperatur
 %                 [cell K x 1]
 % * temperature - Temperature in Kelvin
 %                 [double scalar]
-% * edge_mx     - edges of data-bins in the x-axis
-%                 [double 1 x MX or MX x 1]
-% * edge_my     - edges of data-bins in the y-axis
-%                 [double 1 x MY or MY x 1]
+% * edge_mx     - edges of data-bins in the x-axis (1st dimension of data_k)
+%                 [double vector MX]
+% * edge_my     - edges of data-bins in the y-axis (2nd dimension of data_k)
+%                 [double vector MY]
 % 
 % * f_k         - dimensionless free energies of umbrella-windows in 2-dimensional space
 %                 [double K x 1]
