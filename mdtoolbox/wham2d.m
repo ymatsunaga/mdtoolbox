@@ -119,7 +119,8 @@ M = MX * MY;
 % h_km: number of samples in data-bin (m) from umbrella-window (k)
 h_km = zeros(K, M);
 for k = 1:K
-  h_mx_my = hist3(data_k{k}, {edge_mx, edge_my});
+  %h_mx_my = hist3(data_k{k}, {edge_mx, edge_my});
+  h_mx_my = hist2d(data_k{k}, edge_mx, edge_my);
   h = h_mx_my(1:MX, 1:MY);
   h_km(k, :) = h(:)';
 end
@@ -207,4 +208,29 @@ function s = logsumexp(x)
 max_x = max(x);
 exp_x = exp(bsxfun(@minus, x, max_x));
 s = log(sum(exp_x)) + max_x;
+
+%% 2-dimensional histogram, kind of a 2-d version of histc().
+function [z, center_x, center_y] = hist2d(x, edge_x, edge_y)
+% assing bin-index to samples
+[~, binid_x] = histc(x(:, 1), edge_x);
+[~, binid_y] = histc(x(:, 2), edge_y);
+% eliminate samples outside the specified bin edges(ranges)
+index = (binid_x == 0) | (binid_y == 0);
+index = ~index;
+binid_x = binid_x(index);
+binid_y = binid_y(index);
+% check bin-index is column vector or not
+if ~iscolumn(binid_x)
+  binid_x = binid_x;
+end
+if ~iscolumn(binid_y)
+  binid_y = binid_y;
+end
+% construct histogram with accumulation
+z = accumarray([binid_x binid_y], 1, [(numel(edge_x)-1) (numel(edge_y)-1)]);
+% bin centers
+if nargout > 1
+  center_x = 0.5 * (edge_x(1:(end-1)) + edge_x(2:end));
+  center_y = 0.5 * (edge_y(1:(end-1)) + edge_y(2:end));
+end
 
