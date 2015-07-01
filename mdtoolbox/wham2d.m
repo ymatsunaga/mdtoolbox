@@ -120,9 +120,10 @@ M = MX * MY;
 h_km = zeros(K, M);
 for k = 1:K
   %h_mx_my = hist3(data_k{k}, {edge_mx, edge_my});
+  %h = h_mx_my(1:MX, 1:MY);
+  %h_km(k, :) = h(:)';
   h_mx_my = hist2d(data_k{k}, edge_mx, edge_my);
-  h = h_mx_my(1:MX, 1:MY);
-  h_km(k, :) = h(:)';
+  h_km(k, :) = h_mx_my(:)';
 end
 
 %% calculate counts (N_k)
@@ -221,10 +222,10 @@ binid_x = binid_x(index);
 binid_y = binid_y(index);
 % check bin-index is column vector or not
 if ~iscolumn(binid_x)
-  binid_x = binid_x;
+  binid_x = binid_x';
 end
 if ~iscolumn(binid_y)
-  binid_y = binid_y;
+  binid_y = binid_y';
 end
 % construct histogram with accumulation
 z = accumarray([binid_x binid_y], 1, [(numel(edge_x)-1) (numel(edge_y)-1)]);
