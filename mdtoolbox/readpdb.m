@@ -70,7 +70,8 @@ assert(fid > 0, 'Could not open file.');
 cleaner = onCleanup(@() fclose(fid));
 
 %% read the whole lines into a cell array
-lines = textscan(fid, '%s', 'delimiter', '\n');
+%lines = textscan(fid, '%s', 'delimiter', '\n');
+lines = textscan(fid, '%s', 'delimiter', '\n', 'whitespace', ''); %for octave
 lines = lines{1};
 nline = numel(lines);
 
@@ -113,6 +114,7 @@ pdb.charge     = repmat('90', natom, 1);
 %% read PDB data
 lines = model{1};
 for iatom = 1:natom
+  iatom;
   line = repmat(' ', 1, 80);
   line(1:length(lines{iatom})) = lines{iatom};
   pdb.record(iatom, :)     = line(1:6);
