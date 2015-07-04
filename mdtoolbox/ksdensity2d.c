@@ -164,7 +164,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         for (ix = 0; ix < nx; ix++) {
           dx = data[istep + nstep*0] - grid_x[ix];
           dx = dx - round(dx/box[0])*box[0];
-          if (abs(dx) < rx) {
+          if (fabs(dx) < rx) {
             dx = dx/bandwidth[0];
             gaussx[ix_count] = exp(-0.5*dx*dx)/(sqrt(2*M_PI)*bandwidth[0]);
             ix_array[ix_count] = ix;
@@ -176,7 +176,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         for (iy = 0; iy < ny; iy++) {
           dy = data[istep + nstep*1] - grid_y[iy];
           dy = dy - round(dy/box[1])*box[1];
-          if (abs(dy) < ry) {
+          if (fabs(dy) < ry) {
             dy = dy/bandwidth[1];
             gaussy[iy_count] = exp(-0.5*dy*dy)/(sqrt(2*M_PI)*bandwidth[1]);
             iy_array[iy_count] = iy;
