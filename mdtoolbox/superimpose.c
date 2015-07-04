@@ -90,7 +90,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-
+#include <stdbool.h>
 
 static double
 InnerProduct(double *A, double **coords1, double **coords2, const int len, const double *weight)
@@ -479,7 +479,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   double  *dindex;
   double  *weight;
   double  *vel;
-  bool    *isDecentered;
+  mxLogical *isDecentered;
 
   /* outputs */
   double  *rmsd;
@@ -497,7 +497,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   double  *weight_sub;
   double  **frag_v;
   double  rotmat[9];
-  bool    isDecentered2;
+  bool isDecentered2;
 
   mxArray *mxIsLogical;
   bool    *isLogical;
@@ -611,8 +611,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   isDecentered2 = false;
   if ( nrhs > 5 ) {
     if ( mxGetNumberOfElements(prhs[5]) != 0 ) {
-      isDecentered = (bool*) mxGetData(prhs[5]);
-      isDecentered2 = isDecentered[0];
+      /* isDecentered = (bool*) mxGetData(prhs[5]); */
+      /* isDecentered2 = isDecentered[0]; */
+      isDecentered2 = mxIsLogicalScalarTrue(prhs[5]);
     }
   }
 
