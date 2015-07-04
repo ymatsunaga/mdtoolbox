@@ -91,6 +91,9 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdbool.h>
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 static double
 InnerProduct(double *A, double **coords1, double **coords2, const int len, const double *weight)
