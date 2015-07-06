@@ -1,5 +1,5 @@
 function param = readcharmmparam(filename)
-%% readpsf
+%% readcharmmparam
 % read charmm parameter file
 %
 %% Syntax
