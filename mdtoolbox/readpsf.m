@@ -83,10 +83,12 @@ if ~psf.isPSF
 end
 
 if psf.isEXT
-  fmt_atom = '%10d %8s %8d %8s %8s %4s %14f%14f%8d%*[^\n]';
+  %fmt_atom = '%10d %8s %8d %8s %8s %4s %14f%14f%8d%*[^\n]'; %matlab
+  fmt_atom = '%10d %8s %8d %8s %8s %4s %14f%14f%8d %*f %*f'; %octave
   fmt_list = '%10d';
 else
-  fmt_atom = '%8d %4s %4d %4s %4s %4s %14f%14f%8d%*[^\n]';
+  %fmt_atom = '%8d %4s %4d %4s %4s %4s %14f%14f%8d%*[^\n]'; %matlab
+  fmt_atom = '%8d %4s %4d %4s %4s %4s %14f%14f%8d %*f %*f'; %octave
   fmt_list = '%8d';
 end
 
