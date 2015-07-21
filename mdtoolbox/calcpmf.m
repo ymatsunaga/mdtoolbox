@@ -41,7 +41,7 @@ if ~exist('xi', 'var')
   xi = [];
 end
 
-if ~exist('bandwidth', 'var')
+if ~exist('bandwidth', 'var') || isempty(bandwidth)
   bandwidth = [];
 end
 
@@ -109,9 +109,9 @@ if is_box
 else
   dx2 = (bsxfun(@minus, data(:, 1), xi)./bandwidth(1)).^2;
 end
-%dx2 = exp(-0.5 * dx2)./(sqrt(2*pi).*bandwidth(1));
-%f = sum(bsxfun(@times, dx2, weight));
-f = logsumexp2(-0.5*(bsxfun(@times, dx2, log(weight))));
+dx2 = exp(-0.5 * dx2)./(sqrt(2*pi).*bandwidth(1));
+f = sum(bsxfun(@times, dx2, weight));
+%f = logsumexp2(-0.5*(bsxfun(@times, dx2, log(weight))));
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function s = logsumexp2(x)
