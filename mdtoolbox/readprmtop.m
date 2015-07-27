@@ -116,7 +116,11 @@ while ~feof(fid)
         s_format = regexpi(s_format, '\.', 'split');
         s_format = s_format{1};
       end
-      s_format = ['%' s_format 'e'];
+      if isoctave()
+        s_format = '%e';
+      else
+        s_format = ['%' s_format 'e'];
+      end
       data = fscanf(fid, s_format);
     
     elseif regexpi(s_format, 'F')
@@ -126,13 +130,21 @@ while ~feof(fid)
         s_format = regexpi(s_format, '\.', 'split');
         s_format = s_format{1};
       end
-      s_format = ['%' s_format 'f'];
+      if isoctave()
+        s_format = '%f';
+      else
+        s_format = ['%' s_format 'f'];
+      end
       data = fscanf(fid, s_format);
     
     elseif regexpi(s_format, 'I')
       s_format = regexpi(s_format, 'I', 'split');
       s_format = s_format{end};
-      s_format = ['%' s_format 'd'];
+      if isoctave()
+        s_format = '%d';
+      else
+        s_format = ['%' s_format 'd'];
+      end
       data = fscanf(fid, s_format);
     
     elseif regexpi(s_format, 'a')
@@ -222,18 +234,19 @@ end
 
 
 %% convert excluded_atoms_list to a pair list (just for convenience)
-parm.excluded_pair = zeros(numel(parm.excluded_atoms_list), 2);
-istart = 0;
-for iatom = 1:parm.natom
-  num = parm.number_excluded_atoms(iatom);
-  index = (istart+1):(istart+num);
-  parm.excluded_pair(index, :) = [iatom*ones(num, 1) parm.excluded_atoms_list(index)];
-  istart = istart + num;
+if isfield(parm, 'excluded_atoms_list')
+  parm.excluded_pair = zeros(numel(parm.excluded_atoms_list), 2);
+  istart = 0;
+  for iatom = 1:parm.natom
+    num = parm.number_excluded_atoms(iatom);
+    index = (istart+1):(istart+num);
+    parm.excluded_pair(index, :) = [iatom*ones(num, 1) parm.excluded_atoms_list(index)];
+    istart = istart + num;
+  end
+
+  index = find(parm.excluded_pair(:,2) == 0);
+  parm.excluded_pair(index, :) = [];
 end
-
-index = find(parm.excluded_pair(:,2) == 0);
-parm.excluded_pair(index, :) = [];
-
 
 %% create other elements to be consistent with psf and convenient for atom selection
 natom = numel(parm.charge);
