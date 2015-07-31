@@ -119,7 +119,12 @@ for iatom = 1:natom
   line(1:length(lines{iatom})) = lines{iatom};
   pdb.record(iatom, :)     = line(1:6);
   %pdb.serial(iatom)        = str2num(line(7:11));
-  num = str2num(line(7:12));
+  %index_hex = regexp(line(7:12), '[abcdef]+');
+  if (iatom == 1) || (pdb.serial(iatom-1) < 99999)
+    num = str2num(line(7:12));
+  else
+    num = hex2dec(line(7:12));
+  end
   if isempty(num);
     if iatom > 1
       pdb.serial(iatom)    = pdb.serial(iatom-1) + 1;
