@@ -33,7 +33,8 @@ level_max = max(level);
 data2 = data;
 data2(data2 > level_max) = NaN;
 gobj = pcolor(xi, yi, data2);
-shading flat;
+%shading flat; %MATLAB
+shading interp; %OCTAVE
 %colorbar;
 axis([min(xi) max(xi) min(yi) max(yi)]);
 axis xy;
