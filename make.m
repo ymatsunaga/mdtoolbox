@@ -69,25 +69,25 @@ else
 
   if strncmpi(target, 'all', numel('all'))
     for i = 1:numel(mex_list)
-      commandline = sprintf('CLAGS="-O3" CXXFLAGS="-O3" LDFLAGS="-O3" mkoctfile -v --mex %s', mex_list{i});
+      commandline = sprintf('CFLAGS="-O3" CXXFLAGS="-O3" LDFLAGS="-O3" mkoctfile -v --mex %s', mex_list{i});
       system(commandline);
     end
 
   elseif strncmpi(target, 'verbose', numel('verbose'))
     for i = 1:numel(mex_list)
-      commandline = sprintf('CLAGS="-O3" CXXFLAGS="-O3" LDFLAGS="-O3" mkoctfile -v --mex %s', mex_list{i});
+      commandline = sprintf('CFLAGS="-O3" CXXFLAGS="-O3" LDFLAGS="-O3" mkoctfile -v --mex %s', mex_list{i});
       system(commandline);
     end
 
   elseif strncmpi(target, 'debug', numel('debug'))
     for i = 1:numel(mex_list)
-      commandline = sprintf('CLAGS="-g" CXXFLAGS="-g" LDFLAGS="-g" mkoctfile -v --mex %s', mex_list{i});
+      commandline = sprintf('CFLAGS="-g" CXXFLAGS="-g" LDFLAGS="-g" mkoctfile -v --mex %s', mex_list{i});
       system(commandline);
     end
     
   elseif strncmpi(target, 'openmp', numel('openmp'))
     for i = 1:numel(mex_list)
-      commandline = sprintf('CLAGS="-O3 -fopenmp" CXXFLAGS="-O3 -fopenmp" LDFLAGS="-O3 -fopenmp" mkoctfile -v --mex %s', mex_list{i});
+      commandline = sprintf('CFLAGS="-O3 -fopenmp" CXXFLAGS="-O3 -fopenmp" LDFLAGS="-O3 -fopenmp" mkoctfile -v --mex %s', mex_list{i});
       system(commandline);
     end
 
