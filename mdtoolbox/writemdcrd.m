@@ -13,8 +13,8 @@ function writemdcrd(filename, trj, box, title)
 % If box information is given, box sizes are appended.
 %
 % * filename  - output dcd trajectory filename
-% * trj       - trajectory [nstep x natom3 double]
-% * box       - box size [nstep x 3 double]
+% * trj       - trajectory [nframe x natom3 double]
+% * box       - box size [nframe x 3 double]
 % * title     - title characters [chars]
 %
 %% Example
@@ -40,7 +40,7 @@ end
 
 %% initialization
 natom3 = size(trj, 2);
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 
 if ~exist('title', 'var') || isempty(title)
   title = sprintf('FILENAME=%s CREATED BY MATLAB', filename);
@@ -56,13 +56,13 @@ cleaner = onCleanup(@() fclose(fid));
 
 %% write data
 fprintf(fid, '%s\n', title);
-for istep = 1:nstep
+for iframe = 1:nframe
   for i = 1:10:natom3
-    fprintf(fid, '%8.3f', trj(istep, i:min(i+9,natom3)));
+    fprintf(fid, '%8.3f', trj(iframe, i:min(i+9,natom3)));
     fprintf(fid, '\n');
   end
   if exist('box', 'var') && ~isempty(box)
-    fprintf(fid, '%8.3f', box(istep, :));
+    fprintf(fid, '%8.3f', box(iframe, :));
     fprintf(fid, '\n');
   end
 end

@@ -24,12 +24,12 @@ function gobj = plotcolor(x, y, c, varargin)
 %
 
 %% preparation
-nstep1 = numel(x);
-nstep2 = numel(y);
-nstep3 = numel(c);
-assert(nstep1 == nstep2, 'x and y must be the same size');
-assert(nstep1 == nstep3, 'x and c must be the same size');
-nstep = nstep1;
+nframe1 = numel(x);
+nframe2 = numel(y);
+nframe3 = numel(c);
+assert(nframe1 == nframe2, 'x and y must be the same size');
+assert(nframe1 == nframe3, 'x and c must be the same size');
+nframe = nframe1;
 
 %% determine RGB values from c vector
 % transform c to [0, 1]
@@ -53,14 +53,18 @@ rgb(rgb > 1) = 1;
 
 %% plot lines
 if numel(varargin) < 2
-  for i = 2:nstep
+  for i = 2:nframe
     gobj = line([x(i-1) x(i)], [y(i-1) y(i)], 'Color', rgb(i-1, :));
   end
 else
-  for i = 2:nstep
+  for i = 2:nframe
     gobj = line([x(i-1) x(i)], [y(i-1) y(i)], 'Color', rgb(i-1, :), varargin{:});
   end
 end
 
 caxis([c_min c_max]);
+
+
+
+
 

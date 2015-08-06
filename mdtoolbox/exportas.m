@@ -28,7 +28,7 @@ function exportas(basename, style)
 %% Example
 % plot(randn(1000, 1))
 % formatplot;
-% xlabel('step', 'FontSize', 30)
+% xlabel('frame', 'FontSize', 30)
 % ylabel('value', 'FontSize', 30)
 % exportas('myplot');
 % exportas('myplot_singlecolumn', 'single');

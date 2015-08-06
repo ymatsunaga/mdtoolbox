@@ -12,9 +12,9 @@ function distanceVector = calcdistancevector(trj)
 % (e.g., principal component analysis). 
 %
 % * trj            - trajectory
-%                    [nstep x 3natom]
+%                    [nframe x 3natom]
 % * distanceVector - distance matrix vector
-%                    [nstep x natom(natom-1)/2]
+%                    [nframe x natom(natom-1)/2]
 %
 %% Example
 %# trj = readdcd('bln.dcd');
@@ -40,13 +40,13 @@ function distanceVector = calcdistancevector(trj)
 % calcdistancematrix, calccontactvector
 %
 
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 
-distanceVector = zeros(nstep, natom*(natom-1)/2);
-for istep = 1:nstep
-  distanceMatrix = calcdistancematrix(trj(istep, :));
-  distanceVector(istep, :) = distanceMatrix(triu(true(size(distanceMatrix)), 1))';
+distanceVector = zeros(nframe, natom*(natom-1)/2);
+for iframe = 1:nframe
+  distanceMatrix = calcdistancematrix(trj(iframe, :));
+  distanceVector(iframe, :) = distanceMatrix(triu(true(size(distanceMatrix)), 1))';
 end
 

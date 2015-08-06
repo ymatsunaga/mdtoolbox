@@ -8,7 +8,7 @@ function [E, NA, ND] = calcfret(distance, T, N, R0)
 %% Description
 %
 % * distance   - distance between donor and acceptor dyes (in Angstrom)
-% * T          - length of time-bin (in steps)
+% * T          - length of time-bin (in frames)
 % * N          - total photon counting rate per time-bin
 % * R0         - Forster radius (in Angstrom)
 % * E          - FRET efficiencies in time-bins
@@ -19,8 +19,8 @@ function [E, NA, ND] = calcfret(distance, T, N, R0)
 %# T = 1000;
 %# N = 10;
 %# R0 = 40;
-%# nstep = T*100;
-%# distance = abs(cumsum(randn(nstep,1)) + R0);
+%# nframe = T*100;
+%# distance = abs(cumsum(randn(nframe,1)) + R0);
 %# [E, NA, ND] = calcfret(distance, T, N, R0);
 %# plot(distance)
 %# plot(E)
@@ -31,24 +31,24 @@ function [E, NA, ND] = calcfret(distance, T, N, R0)
 % 
 
 %% setup
-nstep = numel(distance);
+nframe = numel(distance);
 
 %% calculate FRET efficiency
-istep = 1;
+iframe = 1;
 icount = 1;
 
-while (istep+T-1) <= nstep
+while (iframe+T-1) <= nframe
   % generate the total photon counts (N_A + N_B) according to the Poisson distribution
   NA_ND = poissrnd(N);
   % calculate the average FRET efficiency
-  e = mean(1./(1 + (distance(istep:(istep+T-1))./R0).^6));
+  e = mean(1./(1 + (distance(iframe:(iframe+T-1))./R0).^6));
   % generate the acceptor photon counts
   NA(icount) = binornd(NA_ND, e);
   ND(icount) = NA_ND - NA(icount);
   E(icount) = NA(icount)./(NA_ND);
   
   % update local variables
-  istep  = istep + T;
+  iframe = iframe + T;
   icount = icount + 1;
 end
 

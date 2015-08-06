@@ -14,8 +14,8 @@ function writedcd(filename, trj, box, header)
 % default values used appropriately. 
 %
 % * filename  - output dcd trajectory filename
-% * trj       - trajectory [nstep x natom3 double]
-% * box       - box size [nstep x 3 double]
+% * trj       - trajectory [nframe x natom3 double]
+% * box       - box size [nframe x 3 double]
 % * header    - structure variable, which has header information 
 %               [structure]
 %
@@ -41,7 +41,7 @@ if exist(filename, 'file')
 end
 
 %% initialization
-[nstep, natom3] = size(trj);
+[nframe, natom3] = size(trj);
 natom = natom3 / 3;
 
 if ~exist('header', 'var') || isempty(header)
@@ -142,24 +142,24 @@ fwrite(fid, header.blocksize3, 'int32');
 
 %% write coordinates
 dummy = zeros(1, 6);
-for istep = 1:nstep
+for iframe = 1:nframe
   if header.is_charmm_extrablock
     fwrite(fid, 48, 'int32');
-    dummy(1, [1 3 6]) = box(istep, :);
+    dummy(1, [1 3 6]) = box(iframe, :);
     fwrite(fid, dummy, 'float64');
     fwrite(fid, 48, 'int32');
   end
   
   fwrite(fid, natom*4, 'int32');
-  fwrite(fid, trj(istep, 1:3:end), 'float32');
+  fwrite(fid, trj(iframe, 1:3:end), 'float32');
   fwrite(fid, natom*4, 'int32');
 
   fwrite(fid, natom*4, 'int32');
-  fwrite(fid, trj(istep, 2:3:end), 'float32');
+  fwrite(fid, trj(iframe, 2:3:end), 'float32');
   fwrite(fid, natom*4, 'int32');
 
   fwrite(fid, natom*4, 'int32');
-  fwrite(fid, trj(istep, 3:3:end), 'float32');
+  fwrite(fid, trj(iframe, 3:3:end), 'float32');
   fwrite(fid, natom*4, 'int32');
 end
 

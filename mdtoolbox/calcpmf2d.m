@@ -10,7 +10,7 @@ function [pmf, xi, yi] = calcpmf2d(data, xi, yi, bandwidth, box, weight)
 %% Description
 %
 % * data      - 2-dimensional data
-%               [nstep x 2 double array]
+%               [nframe x 2 double array]
 % * xi        - equally spaced grid in x-axis
 %               [n x 1 or 1 x n double]
 % * yi        - equally spaced grid in y-axis 
@@ -22,7 +22,7 @@ function [pmf, xi, yi] = calcpmf2d(data, xi, yi, bandwidth, box, weight)
 %               [1 x 2 double]
 % * weight    - weights of observables in data. 
 %               By default, uniform weight is used. 
-%               [nstep x 1 double]
+%               [nframe x 1 double]
 % * pmf       - 2-dimensional potential of mean force
 %               [m x n double array]
 %

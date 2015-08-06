@@ -11,9 +11,9 @@ function [indexOfCluster, centroid, population] = clusteringbyrandom(trj, radius
 % In this clustering altogithm, cluster centers (reference
 % structures) are randomly chosen from the input trajectory. 
 %
-% * trj             - trajectory to be clustered [nstep x natom3 double]
+% * trj             - trajectory to be clustered [nframe x natom3 double]
 % * radius          - radius of clusters [scalar double]
-% * indexOfCluster  - cluster index from 1 to kcluster [nstep integer]
+% * indexOfCluster  - cluster index from 1 to kcluster [nframe integer]
 % * centroid        - centroids of clusters [double kcluster x natom3]
 % * population      - populatinos of clusters calculted from the
 %                     first and second halves of trajectory 
@@ -35,10 +35,10 @@ function [indexOfCluster, centroid, population] = clusteringbyrandom(trj, radius
 % [2] E. Lyman and D.M. Zuckerman, J. Phys. Chem. B 11, 12876 (2007).
 
 %% preparation
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
-indexOfCluster = zeros(nstep, 1);
+indexOfCluster = zeros(nframe, 1);
 centroid = [];
 population = [];
 
@@ -66,7 +66,7 @@ end
 
 fprintf('%d clusters were identified.\n', icount);
 
-index_firsthalf = ((1:nstep) <= nstep/2);
+index_firsthalf = ((1:nframe) <= nframe/2);
 index_secondhalf = ~index_firsthalf;
 if nargout > 2
   kcluster = max(indexOfCluster);

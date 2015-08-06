@@ -97,19 +97,19 @@ fprintf(fid, '\n');
 
 
 function s = calcdihedral(x)
-nstep = size(x,1);
-s = zeros(nstep,1);
+nframe = size(x,1);
+s = zeros(nframe,1);
 
-for istep = 1:nstep
-  d1 = x(istep,4:6) - x(istep,1:3);
-  d2 = x(istep,7:9) - x(istep,4:6);
-  d3 = x(istep,10:12) - x(istep,7:9);
+for iframe = 1:nframe
+  d1 = x(iframe,4:6) - x(iframe,1:3);
+  d2 = x(iframe,7:9) - x(iframe,4:6);
+  d3 = x(iframe,10:12) - x(iframe,7:9);
   m1 = cross(d1,d2);
   m2 = cross(d2,d3);
-  s(istep) = acos(dot(m1,m2)./(norm(m1).*norm(m2)));
+  s(iframe) = acos(dot(m1,m2)./(norm(m1).*norm(m2)));
   rotdirection = dot(d2,cross(m1,m2));
   if rotdirection < 0
-    s(istep) = 2*pi - s(istep);
+    s(iframe) = 2*pi - s(iframe);
   end
 end
 

@@ -13,11 +13,11 @@ function [progress, distance] = calcpathcv(path, data)
 % * path     - path way data consists of m-points defined in n-dimensional space
 %              [m x ndim double]
 % * data     - some trajectory or data set to be evaluated
-%              [nstep x ndim double]
+%              [nframe x ndim double]
 % * progress - progress of the pathway
-%              [nstep x 1 double]
+%              [nframe x 1 double]
 % * distance - distance from the closest point along the pathway
-%              [nstep x 1 double]
+%              [nframe x 1 double]
 %
 %% Example
 %# path = [0.25 0.3; 0.5 0.6; 0.75 0.3];
@@ -44,11 +44,11 @@ function [progress, distance] = calcpathcv(path, data)
 
 %% setup
 [m, ndim1] = size(path);
-[nstep, ndim2] = size(data);
+[nframe, ndim2] = size(data);
 assert(ndim1 == ndim2, 'dimensions of path and data do not match...');
 
 %% calculation
-d = zeros(nstep, m);
+d = zeros(nframe, m);
 
 % determine lambda parameter
 d_pathpoints = 0;

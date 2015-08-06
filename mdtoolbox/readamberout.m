@@ -10,23 +10,23 @@ function ene = readamberout(filename)
 %
 % * fname     - filename of amber output
 % * ene       - structure data 
-%        nstep: [nstepx1 double]
-%         time: [nstepx1 double]
-%         temp: [nstepx1 double]
-%        press: [nstepx1 double]
-%         etot: [nstepx1 double]
-%        ektot: [nstepx1 double]
-%        eptot: [nstepx1 double]
-%         bond: [nstepx1 double]
-%        angle: [nstepx1 double]
-%        dihed: [nstepx1 double]
-%         nb14: [nstepx1 double]
-%        eel14: [nstepx1 double]
-%      vdwaals: [nstepx1 double]
-%        eelec: [nstepx1 double]
-%       ehbond: [nstepx1 double]
-%    restraint: [nstepx1 double]
-%       eamber: [nstepx1 double]
+%        nstep: [nframex1 double]
+%         time: [nframex1 double]
+%         temp: [nframex1 double]
+%        press: [nframex1 double]
+%         etot: [nframex1 double]
+%        ektot: [nframex1 double]
+%        eptot: [nframex1 double]
+%         bond: [nframex1 double]
+%        angle: [nframex1 double]
+%        dihed: [nframex1 double]
+%         nb14: [nframex1 double]
+%        eel14: [nframex1 double]
+%      vdwaals: [nframex1 double]
+%        eelec: [nframex1 double]
+%       ehbond: [nframex1 double]
+%    restraint: [nframex1 double]
+%       eamber: [nframex1 double]
 % 
 %% Example
 %# ene = readamberout('run.log');
@@ -95,7 +95,7 @@ while ~feof(fid)
     break;
   end
 
-  % parse one step data
+  % parse single frame data
   if strncmp(line, 'NSTEP', numel('NSTEP'))
 
     while ~(strncmp(line, '---', numel('---')))
@@ -122,7 +122,7 @@ while ~feof(fid)
   
   end
 
-  % store one step data
+  % store single frame data
   if ilabel == nlabel
     data = [data; data_each];
     ilabel = 1;

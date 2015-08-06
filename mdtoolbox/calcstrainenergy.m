@@ -11,9 +11,9 @@ function ene = calcstrainenergy(ref, trj, rcut)
 % * ref   - refeference structure for elastic network model
 %           [1 x 3natom]
 % * trj   - elastic energies are calculated for trj
-%           [nstep x 3natom]
+%           [nframe x 3natom]
 % * ene   - elastic energies
-%           [nstep x natom]
+%           [nframe x natom]
 %
 %% Example
 %# 
@@ -23,7 +23,7 @@ function ene = calcstrainenergy(ref, trj, rcut)
 %
 
 %% initialization
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 
@@ -35,7 +35,7 @@ end
 [pair, d0] = calcpairlist(ref, rcut);
 
 %% calculate restrain energies
-ene = zeros(nstep, natom);
+ene = zeros(nframe, natom);
 d = calcbond(trj, pair);
 d = bsxfun(@minus, d, d0');
 d = d.^2;
@@ -44,4 +44,5 @@ for iatom = 1:natom
   index = (pair(:, 1) == iatom) | (pair(:, 2) == iatom);
   ene(:, iatom) = sum(d(:, index), 2);
 end
+
 

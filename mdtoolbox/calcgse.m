@@ -16,16 +16,16 @@ function [energy, potential, density, xi, yi, zi] = calcgse(trj, charge, box, xi
 %# [energy, potential, density] = calcgse(trj, psf.charge, box, xi, yi, zi);
 %# 
 %
-%% See alo
+%% See also
 % 
 % 
 
 %% setup
-coefficient = 332.0716;     % CHARMM
+coefficient = 332.0716;      % CHARMM
 %coefficient = 332.05221729; % AMBER
 %coefficient = 332.0636930;  % GROMACS
 
-nstep   = size(trj, 1);
+nframe  = size(trj, 1);
 natom   = numel(charge);
 energy  = [];
 density = [];
@@ -73,7 +73,7 @@ fprintf('message: sigma1 of %f A is used\n', sigma1);
 fprintf('message: sigma2 of %f A is used\n', sigma2);
 
 if ~exist('weight', 'var') || isempty(weight)
-  weight = ones(nstep, 1);
+  weight = ones(nframe, 1);
   weight = weight./sum(weight);
 end
 
@@ -82,14 +82,14 @@ end
 % pre-allocation
 data = zeros(natom, 3);
 potential = zeros(numel(yi), numel(xi), numel(zi));
-energy = zeros(nstep, 1);
+energy = zeros(nframe, 1);
 density = zeros(numel(yi), numel(xi), numel(zi));
 
-for istep = 1:nstep
+for iframe = 1:nframe
   % determine grids
-  xi_gse = linspace(-box(istep, 1)/2, box(istep, 1)/2, floor(box(istep, 1))+1);
-  yi_gse = linspace(-box(istep, 2)/2, box(istep, 2)/2, floor(box(istep, 2))+1);
-  zi_gse = linspace(-box(istep, 3)/2, box(istep, 3)/2, floor(box(istep, 3))+1);
+  xi_gse = linspace(-box(iframe, 1)/2, box(iframe, 1)/2, floor(box(iframe, 1))+1);
+  yi_gse = linspace(-box(iframe, 2)/2, box(iframe, 2)/2, floor(box(iframe, 2))+1);
+  zi_gse = linspace(-box(iframe, 3)/2, box(iframe, 3)/2, floor(box(iframe, 3))+1);
   xi_gse(end) = [];
   yi_gse(end) = [];
   zi_gse(end) = [];
@@ -98,17 +98,17 @@ for istep = 1:nstep
   nz = numel(zi_gse);
 
   % 1: charge spreading by convolving Gaussian function in real-space
-  data = reshape(trj(istep, :), 3, natom)';
-  d1 = ksdensity3d(data, xi_gse, yi_gse, zi_gse, bandwidth1, box(istep, :), charge);
+  data = reshape(trj(iframe, :), 3, natom)';
+  d1 = ksdensity3d(data, xi_gse, yi_gse, zi_gse, bandwidth1, box(iframe, :), charge);
   d2 = permute(d1, [2,1,3]);
 
   % FFT
   f = fft3d(d2);
 
   % 2: on-mesh charge spreading by convolution with Gaussian function exp(-sig^2*k^2/2)
-  [X, Y, Z] = meshgrid(2*pi*ifftshift(-ceil((nx-1)/2):floor((nx-1)/2))./box(istep, 1), ...
-                     2*pi*ifftshift(-ceil((ny-1)/2):floor((ny-1)/2))./box(istep, 2), ...
-                     2*pi*ifftshift(-ceil((nz-1)/2):floor((nz-1)/2))./box(istep, 3));
+  [X, Y, Z] = meshgrid(2*pi*ifftshift(-ceil((nx-1)/2):floor((nx-1)/2))./box(iframe, 1), ...
+                     2*pi*ifftshift(-ceil((ny-1)/2):floor((ny-1)/2))./box(iframe, 2), ...
+                     2*pi*ifftshift(-ceil((nz-1)/2):floor((nz-1)/2))./box(iframe, 3));
   gamma_mod = exp(-(sigma2.^2)*(X.^2 + Y.^2 + Z.^2)./2);
 
   % 3: solve poisson equation by convolution with Green function 4*pi/k^2
@@ -121,13 +121,13 @@ for istep = 1:nstep
 
   % 4': compute reciprocal energy
   d2 = d2.*potential_gse;
-  energy(istep) = 0.5 * abs((xi_gse(2)-xi_gse(1)) * (yi_gse(2)-yi_gse(1)) * (zi_gse(2)-zi_gse(1))) * sum(d2(:));
-  energy(istep) = energy(istep) * coefficient;
+  energy(iframe) = 0.5 * abs((xi_gse(2)-xi_gse(1)) * (yi_gse(2)-yi_gse(1)) * (zi_gse(2)-zi_gse(1))) * sum(d2(:));
+  energy(iframe) = energy(iframe) * coefficient;
 
   % 4'': mesh interpolation if needed
   %potential = potential + weight*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'linear');
-  density   = density   + weight(istep)*interp3(xi_gse, yi_gse, zi_gse, d1,            xi_query, yi_query, zi_query, 'cubic');
-  potential = potential + weight(istep)*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'cubic');
+  density   = density   + weight(iframe)*interp3(xi_gse, yi_gse, zi_gse, d1,            xi_query, yi_query, zi_query, 'cubic');
+  potential = potential + weight(iframe)*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'cubic');
 end
 
 potential = permute(potential, [2,1,3]);

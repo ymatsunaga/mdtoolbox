@@ -10,7 +10,7 @@ function [density, xi, yi, zi] = calcdensity(trj, xi, yi, zi, bandwidth, box, we
 %
 %% Description
 %
-% * trj       - trajectory data [nstep x natom3 double]
+% * trj       - trajectory data [nframe x natom3 double]
 % * xi        - uniformly-spaced grid in the x-axis 
 %               on which the density is estimated [1 x nx double]
 % * yi        - uniformly-spaced grid in the y-axis 
@@ -21,7 +21,7 @@ function [density, xi, yi, zi] = calcdensity(trj, xi, yi, zi, bandwidth, box, we
 %               [1 x 3 double]
 % * weight    - weights of trajectory snapshots. 
 %               By default, uniform weight is used. 
-%               [nstep x 1 double]
+%               [nframe x 1 double]
 % * density   - volumetric data of 3-dimensional density
 %               Note that the density value is multiplied by the volumetric element.
 %               Thus, the value of this matrix is actually not
@@ -39,7 +39,7 @@ function [density, xi, yi, zi] = calcdensity(trj, xi, yi, zi, bandwidth, box, we
 %
 
 %% preparation
-nstep  = size(trj, 1);
+nframe = size(trj, 1);
 natom3 = size(trj, 2);
 natom  = natom3./3;
 %bulk_density = (natom./(nbins.^3));
@@ -73,11 +73,11 @@ end
 if ~exist('box', 'var')
   box = [];
 else (size(box, 1) == 1)
-  box = repmat(box, nstep, 1);
+  box = repmat(box, nframe, 1);
 end
 
 if ~exist('weight', 'var') || isempty(weight)
-  weight = ones(nstep, 1);
+  weight = ones(nframe, 1);
   disp('message: weights is considered as uniform.');
 end
 weight = weight./sum(weight);
@@ -90,18 +90,18 @@ density = zeros(nx, ny, nz);
 f = zeros(nx, ny, nz);
 
 if isempty(box)
-  for istep = 1:nstep
-    istep
-    data = reshape(trj(istep, :), 3, natom)';
+  for iframe = 1:nframe
+    iframe
+    data = reshape(trj(iframe, :), 3, natom)';
     f = ksdensity3d(data, xi, yi, zi, bandwidth, []);
-    density = density + f*weight(istep);
+    density = density + f*weight(iframe);
   end
 else
-  for istep = 1:nstep
-    istep
-    data = reshape(trj(istep, :), 3, natom)';
-    f = ksdensity3d(data, xi, yi, zi, bandwidth, box(istep, :));
-    density = density + f*weight(istep);
+  for iframe = 1:nframe
+    iframe
+    data = reshape(trj(iframe, :), 3, natom)';
+    f = ksdensity3d(data, xi, yi, zi, bandwidth, box(iframe, :));
+    density = density + f*weight(iframe);
   end
 end
 density = density*(natom./(abs(xi(2)-xi(1))*abs(yi(2)-yi(1))*abs(zi(2)-zi(1))));

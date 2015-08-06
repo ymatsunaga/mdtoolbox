@@ -12,8 +12,8 @@ function writenetcdf(filename, trj, box, title)
 % This code puts trajectories into a netcdf file. 
 %
 % * filename  - output dcd trajectory filename
-% * trj       - trajectory [nstep x natom3 double or single]
-% * box       - box size [nstep x 3 double]
+% * trj       - trajectory [nframe x natom3 double or single]
+% * box       - box size [nframe x 3 double]
 % * title     - title [chars]
 %
 %% Example
@@ -68,18 +68,18 @@ if exist(filename, 'file')
 end
 
 %% initialization
-[nstep, natom3] = size(trj);
+[nframe, natom3] = size(trj);
 natom = natom3 / 3;
 
 if ~isa(trj, 'single');
   trj = single(trj);
 end
 trj = trj';
-trj = reshape(trj, 3, natom, nstep);
+trj = reshape(trj, 3, natom, nframe);
 
 if exist('box', 'var') && ~isempty(box)
   if (size(box, 1) == 1)
-    box = repmat(box, nstep, 1);
+    box = repmat(box, nframe, 1);
   end
 end
 
@@ -111,7 +111,7 @@ finfo.Attributes(6).Name  = 'ConventionVersion';
 finfo.Attributes(6).Value = '1.0';
 
 finfo.Dimensions(1).Name      = 'frame';
-finfo.Dimensions(1).Length    = nstep;
+finfo.Dimensions(1).Length    = nframe;
 finfo.Dimensions(1).Unlimited = true;
 
 finfo.Dimensions(2).Name      = 'spatial';
@@ -150,9 +150,9 @@ finfo.Variables(1).Shuffle              = false;
 
 finfo.Variables(2).Name                 = 'time';
 finfo.Variables(2).Dimensions.Name      = 'frame';
-finfo.Variables(2).Dimensions.Length    = nstep;
+finfo.Variables(2).Dimensions.Length    = nframe;
 finfo.Variables(2).Dimensions.Unlimited = true;
-finfo.Variables(2).Size                 = nstep;
+finfo.Variables(2).Size                 = nframe;
 finfo.Variables(2).Datatype             = 'single';
 finfo.Variables(2).Attributes.Name      = 'units';
 finfo.Variables(2).Attributes.Value     = 'picosecond';
@@ -169,9 +169,9 @@ finfo.Variables(3).Dimensions(2).Name      = 'atom';
 finfo.Variables(3).Dimensions(2).Length    = natom;
 finfo.Variables(3).Dimensions(2).Unlimited = false;
 finfo.Variables(3).Dimensions(3).Name      = 'frame';
-finfo.Variables(3).Dimensions(3).Length    = nstep;
+finfo.Variables(3).Dimensions(3).Length    = nframe;
 finfo.Variables(3).Dimensions(3).Unlimited = true;
-finfo.Variables(3).Size                    = [3 natom nstep];
+finfo.Variables(3).Size                    = [3 natom nframe];
 finfo.Variables(3).Datatype                = 'single';
 finfo.Variables(3).Attributes.Name         = 'units';
 finfo.Variables(3).Attributes.Value        = 'angstrom';
@@ -213,9 +213,9 @@ if exist('box', 'var') && ~isempty(box)
   finfo.Variables(6).Dimensions(1).Length    = 3;
   finfo.Variables(6).Dimensions(1).Unlimited = false;
   finfo.Variables(6).Dimensions(2).Name      = 'frame';
-  finfo.Variables(6).Dimensions(2).Length    = nstep;
+  finfo.Variables(6).Dimensions(2).Length    = nframe;
   finfo.Variables(6).Dimensions(2).Unlimited = true;
-  finfo.Variables(6).Size                    = [3 nstep];
+  finfo.Variables(6).Size                    = [3 nframe];
   finfo.Variables(6).Datatype                = 'double';
   finfo.Variables(6).Attributes.Name         = 'units';
   finfo.Variables(6).Attributes.Value        = 'angstrom';
@@ -229,9 +229,9 @@ if exist('box', 'var') && ~isempty(box)
   finfo.Variables(7).Dimensions(1).Length    = 3;
   finfo.Variables(7).Dimensions(1).Unlimited = false;
   finfo.Variables(7).Dimensions(2).Name      = 'frame';
-  finfo.Variables(7).Dimensions(2).Length    = nstep;
+  finfo.Variables(7).Dimensions(2).Length    = nframe;
   finfo.Variables(7).Dimensions(2).Unlimited = true;
-  finfo.Variables(7).Size                    = [3 nstep];
+  finfo.Variables(7).Size                    = [3 nframe];
   finfo.Variables(7).Datatype                = 'double';
   finfo.Variables(7).Attributes.Name         = 'units';
   finfo.Variables(7).Attributes.Value        = 'degree';
@@ -245,12 +245,12 @@ ncwriteschema(filename, finfo);
 
 %% write data
 ncwrite(filename, 'spatial', ['xyz']);
-ncwrite(filename, 'time', [1:nstep]);
+ncwrite(filename, 'time', [1:nframe]);
 ncwrite(filename, 'coordinates', trj);
 if exist('box', 'var') && ~isempty(box)
   ncwrite(filename, 'cell_spatial', ['abc']);
   ncwrite(filename, 'cell_angular', ['alpha'; 'beta '; 'gamma']');
   ncwrite(filename, 'cell_lengths', box');
-  ncwrite(filename, 'cell_angles', repmat(90, 3, nstep));
+  ncwrite(filename, 'cell_angles', repmat(90, 3, nframe));
 end
 

@@ -14,11 +14,11 @@ function contactVector = calccontactvector(trj, cutoff)
 % (e.g., principal component analysis). 
 %
 % * trj           - trajectory
-%                   [nstep x 3natom]
+%                   [nframe x 3natom]
 % * cutoff        - threshold distance to make contact. default is 8 angstrom. 
 %                   [scalar]
 % * contactVector - contact map vector
-%                   [nstep x natom(natom-1)/2]
+%                   [nframe x natom(natom-1)/2]
 %
 %% Example
 %# trj = readdcd('bln.dcd');
@@ -63,14 +63,13 @@ function contactVector = calccontactvector(trj, cutoff)
 % calccontactmap, calcdistancevector
 %
 
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 
-contactVector = zeros(nstep, natom*(natom-1)/2);
-for istep = 1:nstep
-  contactMap = calccontactmap(trj(istep, :), cutoff);
-  contactVector(istep, :) = contactMap(triu(true(size(contactMap)), 1))';
+contactVector = zeros(nframe, natom*(natom-1)/2);
+for iframe = 1:nframe
+  contactMap = calccontactmap(trj(iframe, :), cutoff);
+  contactVector(iframe, :) = contactMap(triu(true(size(contactMap)), 1))';
 end
-
 

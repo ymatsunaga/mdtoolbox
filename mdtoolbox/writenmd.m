@@ -15,9 +15,9 @@ function writenmd(filename, crd, mode, resid, chainid)
 %
 % * filename  - output nmd filename
 % * crd       - coordinates [1 x natom3 double]
-% * mode      - mode information [nstep3 x n double]
-% * resids    - residue numbers [optional] [nstep3 x m char]
-% * chainids  - chain identifiers [optional] [nstep3 x 1 integer]
+% * mode      - mode information [natom3 x n double]
+% * resids    - residue numbers [optional] [natom3 x m char]
+% * chainids  - chain identifiers [optional] [natom3 x 1 integer]
 %
 %% Example
 %# [pdb, crd] = readpdb('lys.pdb');

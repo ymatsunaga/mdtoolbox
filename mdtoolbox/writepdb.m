@@ -34,7 +34,7 @@ function writepdb(filename, pdb, trj, format_type, bfactor)
 %                  if given, the coordiates of pdb is replaced with
 %                  this data. Trajectory is written as mutiple
 %                  models in pdb file. 
-%                  [1 x 3natom double] or [nstep x 3natom double]
+%                  [1 x 3natom double] or [nframe x 3natom double]
 % * format_type -  format type [chars. only 'vmd' can be available,
 %                  otherwise default(standard?) format is used]
 %
@@ -82,7 +82,7 @@ if (nargin < 3) || (numel(trj) == 0)
   trj = pdb.xyz';
   trj = trj(:)';
 end
-nstep = size(trj, 1);
+nframe = size(trj, 1);
   
 if nargin < 4
   format_type = 'default';
@@ -103,10 +103,10 @@ if strncmpi(format_type, 'namd', numel('namd'))
 end
 
 %% write file
-for istep = 1:nstep
+for iframe = 1:nframe
 
-  if(nstep > 1)
-    fprintf(fid, 'MODEL %8d\n', istep);
+  if(nframe > 1)
+    fprintf(fid, 'MODEL %8d\n', iframe);
   end
   
   for iatom = 1:natom
@@ -130,12 +130,12 @@ for istep = 1:nstep
       %fprintf(fid, '%8.3f', pdb.xyz(iatom, 1));
       %fprintf(fid, '%8.3f', pdb.xyz(iatom, 2));
       %fprintf(fid, '%8.3f', pdb.xyz(iatom, 3));
-      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+1));
-      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+2));
-      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+3));
+      fprintf(fid, '%8.3f', trj(iframe, 3*(iatom-1)+1));
+      fprintf(fid, '%8.3f', trj(iframe, 3*(iatom-1)+2));
+      fprintf(fid, '%8.3f', trj(iframe, 3*(iatom-1)+3));
       fprintf(fid, '%6.2f', pdb.occupancy(iatom));
       if is_bfactor
-        fprintf(fid, '%6.2f', bfactor(istep, iatom));
+        fprintf(fid, '%6.2f', bfactor(iframe, iatom));
       else
         fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
       end
@@ -177,12 +177,12 @@ for istep = 1:nstep
       %fprintf(fid, '%8.3f', pdb.xyz(iatom, 1));
       %fprintf(fid, '%8.3f', pdb.xyz(iatom, 2));
       %fprintf(fid, '%8.3f', pdb.xyz(iatom, 3));
-      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+1));
-      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+2));
-      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+3));
+      fprintf(fid, '%8.3f', trj(iframe, 3*(iatom-1)+1));
+      fprintf(fid, '%8.3f', trj(iframe, 3*(iatom-1)+2));
+      fprintf(fid, '%8.3f', trj(iframe, 3*(iatom-1)+3));
       fprintf(fid, '%6.2f', pdb.occupancy(iatom));
       if is_bfactor
-        fprintf(fid, '%6.2f', bfactor(istep, iatom));
+        fprintf(fid, '%6.2f', bfactor(iframe, iatom));
       else
         fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
       end
@@ -232,12 +232,12 @@ for istep = 1:nstep
       %fprintf(fid, '%8.3f', pdb.xyz(iatom, 1));
       %fprintf(fid, '%8.3f', pdb.xyz(iatom, 2));
       %fprintf(fid, '%8.3f', pdb.xyz(iatom, 3));
-      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+1));
-      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+2));
-      fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+3));
+      fprintf(fid, '%8.3f', trj(iframe, 3*(iatom-1)+1));
+      fprintf(fid, '%8.3f', trj(iframe, 3*(iatom-1)+2));
+      fprintf(fid, '%8.3f', trj(iframe, 3*(iatom-1)+3));
       fprintf(fid, '%6.2f', pdb.occupancy(iatom));
       if is_bfactor
-        fprintf(fid, '%6.2f', bfactor(istep, iatom));
+        fprintf(fid, '%6.2f', bfactor(iframe, iatom));
       else
         fprintf(fid, '%6.2f', pdb.tempfactor(iatom));
       end

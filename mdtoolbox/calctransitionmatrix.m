@@ -23,11 +23,11 @@ function [t, eq, x] = calctransitionmatrix(indexOfCluster, tau, prior)
 % 
 
 %% setup
-nstep  = numel(indexOfCluster);
+nframe  = numel(indexOfCluster);
 nstate = max(indexOfCluster);
 
-index_from = 1:(nstep-tau);
-index_to   = (1+tau):nstep;
+index_from = 1:(nframe-tau);
+index_to   = (1+tau):nframe;
 indexOfCluster_from = indexOfCluster(index_from);
 indexOfCluster_to   = indexOfCluster(index_to);
 

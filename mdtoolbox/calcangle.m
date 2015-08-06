@@ -11,9 +11,9 @@ function angle = calcangle(trj, triplet)
 % Triplets, whose angles are calculated, can be specified via the
 % variable (triplet).
 %
-% * trj     - coordinates of atoms [nstep x natom3]
+% * trj     - coordinates of atoms [nframe x natom3]
 % * triplet - triplet indices whose angles are calculated [ntriplet x 3]
-% * angle   - angles of the triplets (in radian) [nstep x ntriplet]
+% * angle   - angles of the triplets (in radian) [nframe x ntriplet]
 %
 %% Example
 %# trj = readnetcdf('ala.nc');
@@ -29,20 +29,20 @@ if ~exist('triplet', 'var')
   triplet = [1 2 3];
 end
 
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 ntriplet = size(triplet, 1);
 
 %% calculation
-angle = zeros(nstep, ntriplet);
+angle = zeros(nframe, ntriplet);
 
 for itriplet = 1:ntriplet
   index1 = to3(triplet(itriplet, 1));
   index2 = to3(triplet(itriplet, 2));
   index3 = to3(triplet(itriplet, 3));
-  for istep = 1:nstep
-    d1 = trj(istep, index1) - trj(istep, index2);
-    d2 = trj(istep, index3) - trj(istep, index2);
-    angle(istep, itriplet) = acos(dot(d1, d2)./(norm(d1).*norm(d2)));
+  for iframe = 1:nframe
+    d1 = trj(iframe, index1) - trj(iframe, index2);
+    d2 = trj(iframe, index3) - trj(iframe, index2);
+    angle(iframe, itriplet) = acos(dot(d1, d2)./(norm(d1).*norm(d2)));
   end
 end
 

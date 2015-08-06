@@ -17,9 +17,9 @@ function [projection, mode, variances] = calcpca(trj)
 % Thus, the user may need to perform such processs before calling
 % this routine. 
 %
-% * trj        - trajectory of coordinates [nstep x 3natom]
-% * projection - principal components (projection of the trajectory on to principal modes) [nstep x 3natom]
-% * mode       - principal modes [nstep x 3natom]
+% * trj        - trajectory of coordinates [nframe x 3natom]
+% * projection - principal components (projection of the trajectory on to principal modes) [nframe x 3natom]
+% * mode       - principal modes [nframe x 3natom]
 % * variances  - variances of principal components [3natom x 1]
 %
 %% Example

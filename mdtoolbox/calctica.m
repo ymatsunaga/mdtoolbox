@@ -1,5 +1,5 @@
 function [projection, mode, lambda] = calctica(trj, lagtime)
-%% calcpca
+%% calctica
 % perform time-structure based Independent Component Analysis (tICA)
 %
 %% Syntax
@@ -10,21 +10,22 @@ function [projection, mode, lambda] = calctica(trj, lagtime)
 %% Description
 % This routine performs time-structure based Independent Component
 % Analysis (tICA). The tICA identifies degrees of freedom which are
-% most important in slow conformational transition.
-% The algorithm of the tICA is based on solving a eigenvalue
-% problem of time-lagges covariance matrix. The user needs to
-% specify the lagtime for the calculation of the covariance matrix.
+% most important in the sense that their motions are very slow.
+% The algorithm of the tICA is based on solving a generalized
+% eigenvalue problem of time-lagges covariance matrix. The user
+% needs to specify the lagtime for the calculation of the
+% covariance matrix. 
 %
 % It is noted that this routine DOES NOT apply any preprocesses to
-% the input trajectory, such as centering, or regularization. 
-% Thus, the user may need to perform such processs before calling
-% this routine. 
+% the input trajectory, such as centering, or least-square fitting
+% to a reference structure. The user may need to perform such
+% processs before calling this routine. 
 %
-% * trj         - trajectory of coordinates [nstep x 3natom]
-% * lagtime     - lag time in the unit of steps. The default is 1.
+% * trj         - trajectory of coordinates [nframe x natom3]
+% * lagtime     - lag time in the unit of frames. The default is 1.
 %                 [scalar integer]
-% * projection  - projections to the modes (projection of the trajectory on to tICA modes) [nstep x 3natom]
-% * mode        - tICA modes (normalized eigenvectors) [nstep x n]
+% * projection  - projections to the modes (projection of the trajectory on to tICA modes) [nframe x natom3]
+% * mode        - tICA modes (normalized eigenvectors) [nframe x n]
 % * lambda      - corresponding eigenvalues in descending order [n x 1]
 %
 %% Example
@@ -45,7 +46,7 @@ function [projection, mode, lambda] = calctica(trj, lagtime)
 
 %% setup
 if ~exist('lagtime', 'var')
-  fprintf('lagtime of 1 step is used.\n');
+  fprintf('lagtime of 1 frame is used.\n');
   lagtime = 1;
 end
 

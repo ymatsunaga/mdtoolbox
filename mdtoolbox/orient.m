@@ -12,13 +12,13 @@ function trj = orient(trj, index, mass)
 %
 % * trj         - XYZ coordinates of atoms in order
 %                 (x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom))
-%                 [nstep x natom3 double]
+%                 [nframe x natom3 double]
 % * index_atom  - index of atoms from which the center of mass are
 %                 calculated [1 x n integer]
 % * mass        - atom masses [1 x natom double]
 % * trj(output) - XYZ coordinates of atoms in the coordinates system
 %                 of the principal axes of inertia. 
-%                 [nstep x natom3 double]
+%                 [nframe x natom3 double]
 %
 %% Example
 %# [pdb, crd] = readpdb('trap.pdb');
@@ -31,7 +31,7 @@ function trj = orient(trj, index, mass)
 % 
 
 %% setup
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 
@@ -65,11 +65,11 @@ indexz = 3.*(index-1) + 3;
 trj = decenter(trj, index, mass);
 
 %% calculate the principal axis of inertia
-for istep = 1:nstep
+for iframe = 1:nframe
   mass = mass(index);
-  x = trj(istep, indexx);
-  y = trj(istep, indexy);
-  z = trj(istep, indexz);
+  x = trj(iframe, indexx);
+  y = trj(iframe, indexy);
+  z = trj(iframe, indexz);
   
   I = zeros(3,3);
   
@@ -95,9 +95,9 @@ for istep = 1:nstep
   end
   
   %% project onto the principal axis of inertia
-  proj = reshape(trj(istep, :), 3, [])' * p_axis;
-  trj(istep, 1:3:end) = proj(:, 1)';
-  trj(istep, 2:3:end) = proj(:, 2)';
-  trj(istep, 3:3:end) = proj(:, 3)';
+  proj = reshape(trj(iframe, :), 3, [])' * p_axis;
+  trj(iframe, 1:3:end) = proj(:, 1)';
+  trj(iframe, 2:3:end) = proj(:, 2)';
+  trj(iframe, 3:3:end) = proj(:, 3)';
 end
 

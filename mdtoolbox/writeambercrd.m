@@ -19,7 +19,7 @@ function writeambercrd(filename, crd, box, vel, title)
 % * filename  - input amber coordinate/restart filename
 % * crd       - coordinates [1 x natom3 double]
 % * vel       - velocities [1 x natom3 double]
-% * box       - size of the periodic box [nstep x 3 double]
+% * box       - size of the periodic box [nframe x 3 double]
 % * title    - title characters [chars]
 %
 %% Example

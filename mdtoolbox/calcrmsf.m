@@ -11,7 +11,7 @@ function rmsf = calcrmsf(trj, index, nblock)
 %% Description
 % Calculate RMSF of atomic positions
 %
-% * trj        - trajectory [nstep x (natom*3) double]
+% * trj        - trajectory [nframe x (natom*3) double]
 % * index_atom - atom index or logical index specifying atoms to be fitted to the average structure
 % * nblock     - the number of blocks for block averaging
 % * rmsf       - root mean square fluctuatons (RMSF)
@@ -30,7 +30,7 @@ function rmsf = calcrmsf(trj, index, nblock)
 % 
 
 %% preparation
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 natom = size(trj, 2)/3;
 
 % index
@@ -44,13 +44,13 @@ if ~exist('nblock', 'var') || isempty(nblock)
 end
 
 %% evaluate RMSF
-interface = round(linspace(0, nstep, nblock+1));
+interface = round(linspace(0, nframe, nblock+1));
 rmsf = {};
 for iblock = 1:nblock
   istart = interface(iblock)+1;
   iend = interface(iblock+1);
   if nblock > 1
-    fprintf('[block %d] from step %d to step %d\n', iblock, istart, iend);
+    fprintf('[block %d] from frame %d to frame %d\n', iblock, istart, iend);
   end
   rmsf{iblock} = kernelfunction(trj(istart:iend, :), index);
 end

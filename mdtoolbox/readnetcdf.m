@@ -13,18 +13,18 @@ function [trj, box, vel, temp, attributes] = readnetcdf(filename, index_atom, in
 %
 %% Description
 % The XYZ coordinates of atoms are read into 'trj' variable
-% which has 'nstep' rows and '3*natom' columns.
+% which has 'nframe' rows and '3*natom' columns.
 % Each row of 'trj' has the XYZ coordinates of atoms in order 
 % [x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom) y(natom) z(natom)].
 %
 % * filename   - input netcdf trajectory filename
 % * index_atom - atom index or logical index specifying atoms to be read
-% * index_time - time-step index or logical index specifying steps to be read
+% * index_time - time-frame index or logical index specifying frames to be read
 %                please note that this should be a regularly-spaced index
-% * trj        - coordinates in units of angstrom [nstep x natom3 double]
-% * box        - box size in units of angstrom [nstep x 3 double]
-% * vel        - velocity in units of angstrom/picosecond [nstep x natom3 double]
-% * temp       - target temperature in units of kelvin [nstep x 1 double]
+% * trj        - coordinates in units of angstrom [nframe x natom3 double]
+% * box        - box size in units of angstrom [nframe x 3 double]
+% * vel        - velocity in units of angstrom/picosecond [nframe x natom3 double]
+% * temp       - target temperature in units of kelvin [nframe x 1 double]
 % * attributes - attributes (like header information) of netcdf file
 %                [structure]
 %
@@ -126,7 +126,7 @@ end
 
 %% initialization
 natom = dimensions.atom;
-nstep = dimensions.frame;
+nframe = dimensions.frame;
 
 if ~exist('index_atom', 'var') || isempty(index_atom)
   index_atom = 1:natom;
@@ -138,12 +138,12 @@ else
 end
 
 if ~exist('index_time', 'var') || isempty(index_time)
-  index_time = 1:nstep;
+  index_time = 1:nframe;
 else
   if islogical(index_time)
     index_time = find(index_time);
   end
-  index_time(index_time > nstep) = [];
+  index_time(index_time > nframe) = [];
 end
 
 start_atom  = min(index_atom);
@@ -161,8 +161,8 @@ if is_trj
   trj = ncread(filename, 'coordinates', [1 start_atom start_time], ...
                [3 count_atom count_time], [1 stride_atom stride_time]); 
   trj = trj(:, index_atom, :);
-  [nspatial, natom, nstep] = size(trj);
-  trj = reshape(trj, nspatial*natom, nstep)';
+  [nspatial, natom, nframe] = size(trj);
+  trj = reshape(trj, nspatial*natom, nframe)';
   trj = double(trj);
 else
   trj = [];
@@ -182,8 +182,8 @@ if is_vel
   vel = ncread(filename, 'velocities', [1 start_atom start_time], ...
                [3 count_atom count_time], [1 stride_atom stride_time]); 
   vel = vel(:, index_atom, :);
-  [nspatial, natom, nstep] = size(vel);
-  vel = reshape(vel, nspatial*natom, nstep)';
+  [nspatial, natom, nframe] = size(vel);
+  vel = reshape(vel, nspatial*natom, nframe)';
   vel = double(vel);
   vel = 20.455*vel;
 else
@@ -197,5 +197,4 @@ if is_temp
 else
   temp = [];
 end
-
 

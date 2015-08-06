@@ -12,7 +12,7 @@ function formatplot()
 %% Example
 %# plot(randn(100,1), '-');
 %# formatplot;
-%# xlabel('step'); ylabel('value');
+%# xlabel('frame'); ylabel('value');
 %
 %% See also
 % exportas

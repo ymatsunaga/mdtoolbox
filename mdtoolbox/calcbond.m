@@ -11,9 +11,9 @@ function bond = calcbond(trj, pair)
 % Pairs, whose distances are calculated, can be specified via the
 % variable (pair).
 %
-% * trj    - coordinates of atoms [nstep x natom3]
+% * trj    - coordinates of atoms [nframe x natom3]
 % * pair   - pair indices whose distances are calculated [npair x 2]
-% * bond   - distances between the pairs [nstep x npair]
+% * bond   - distances between the pairs [nframe x npair]
 %
 %% Example
 %# trj = readnetcdf('ala.nc');
@@ -30,11 +30,11 @@ if ~exist('pair', 'var')
   pair = [1 2];
 end
 
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 npair = size(pair, 1);
 
 %% calculation
-bond = zeros(nstep, npair);
+bond = zeros(nframe, npair);
 
 for ipair = 1:npair
   index1 = to3(pair(ipair, 1));

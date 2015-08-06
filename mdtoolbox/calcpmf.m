@@ -10,7 +10,7 @@ function [pmf, xi] = calcpmf(data, xi, bandwidth, box, weight)
 %% Description
 %
 % * data      - one-dimensional data
-%               [nstep x 1 double array]
+%               [nframe x 1 double array]
 % * xi        - equally spaced grid
 %               [n x 1 or 1 x n double]
 % * bandwidth - bandwidth of the Gaussian kernel function
@@ -20,7 +20,7 @@ function [pmf, xi] = calcpmf(data, xi, bandwidth, box, weight)
 %               [1 x 1 double]
 % * weight    - weights of observables in data. 
 %               By default, uniform weight is used. 
-%               [nstep x 1 double]
+%               [nframe x 1 double]
 % * pmf       - potential of mean force
 %               [m x n double array]
 %
@@ -68,7 +68,7 @@ function [f, xi] = ksdensity1d(data, xi, bandwidth, box, weight)
 %
 
 %% setup
-nstep = size(data, 1);
+nframe = size(data, 1);
 
 if ~exist('xi', 'var') || isempty(xi)
   xi = linspace(min(data(:)), max(data(:)), 100);
@@ -82,7 +82,7 @@ if ~exist('bandwidth', 'var') || isempty(bandwidth)
   sig = median(abs(xi - median(xi)))/0.6745;
   if sig <= 0, sig = max(xi) - min(xi); end
   if sig > 0
-    bandwidth = sig * (1/nstep)^(1/6);
+    bandwidth = sig * (1/nframe)^(1/6);
   else
     bandwidth = 1;
   end
@@ -97,7 +97,7 @@ else
 end
 
 if ~exist('weight', 'var') || isempty(weight)
-  weight = ones(nstep, 1);
+  weight = ones(nframe, 1);
   weight = weight./sum(weight);
 end
 

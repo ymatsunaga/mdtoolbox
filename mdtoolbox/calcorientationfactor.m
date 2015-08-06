@@ -22,8 +22,8 @@ function kappa2 = calcorientationfactor(trj, index_donor, index_acceptor);
 % 
 
 %% setup
-nstep = size(trj, 1);
-kappa = zeros(nstep, 1);
+nframe = size(trj, 1);
+kappa = zeros(nframe, 1);
 
 assert(numel(index_donor) == 2, 'index_donor must has 2 elements.')
 assert(numel(index_acceptor) == 2, 'index_acceptor must has 2 elements.')

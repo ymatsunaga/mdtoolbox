@@ -10,33 +10,33 @@ function ene = readgenesisout(filename)
 %
 % * fname     - filename of genesis output
 % * ene       - structure data 
-%           step: [nstepx1 double]
-%           time: [nstepx1 double]
-%        totener: [nstepx1 double]
-%          totke: [nstepx1 double]
-%         energy: [nstepx1 double]
-%    temperature: [nstepx1 double]
-%           grms: [nstepx1 double]
-%        hfctote: [nstepx1 double]
-%          hfcke: [nstepx1 double]
-%         ehfcor: [nstepx1 double]
-%          virke: [nstepx1 double]
-%          bonds: [nstepx1 double]
-%         angles: [nstepx1 double]
-%         urey_b: [nstepx1 double]
-%      dihedrals: [nstepx1 double]
-%      impropers: [nstepx1 double]
-%          cmaps: [nstepx1 double]
-%        vdwaals: [nstepx1 double]
-%           elec: [nstepx1 double]
-%         hbonds: [nstepx1 double]
-%            asp: [nstepx1 double]
-%           user: [nstepx1 double]
-%           vire: [nstepx1 double]
-%           viri: [nstepx1 double]
-%         presse: [nstepx1 double]
-%         pressi: [nstepx1 double]
-%         volume: [nstepx1 double]
+%           step: [nframex1 double]
+%           time: [nframex1 double]
+%        totener: [nframex1 double]
+%          totke: [nframex1 double]
+%         energy: [nframex1 double]
+%    temperature: [nframex1 double]
+%           grms: [nframex1 double]
+%        hfctote: [nframex1 double]
+%          hfcke: [nframex1 double]
+%         ehfcor: [nframex1 double]
+%          virke: [nframex1 double]
+%          bonds: [nframex1 double]
+%         angles: [nframex1 double]
+%         urey_b: [nframex1 double]
+%      dihedrals: [nframex1 double]
+%      impropers: [nframex1 double]
+%          cmaps: [nframex1 double]
+%        vdwaals: [nframex1 double]
+%           elec: [nframex1 double]
+%         hbonds: [nframex1 double]
+%            asp: [nframex1 double]
+%           user: [nframex1 double]
+%           vire: [nframex1 double]
+%           viri: [nframex1 double]
+%         presse: [nframex1 double]
+%         pressi: [nframex1 double]
+%         volume: [nframex1 double]
 % 
 %% Example
 %# ene = readgenesisout('run.log');
@@ -118,7 +118,7 @@ end
 ene = struct;
 
 if ~isempty(data)
-  % delete zero-th step
+  % delete zero-th frame
   %data(1, :) = [];
   for ilabel = 1:numel(label)
     ene = setfield(ene, label{ilabel}, data(:, ilabel));

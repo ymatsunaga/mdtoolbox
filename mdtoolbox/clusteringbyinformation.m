@@ -29,7 +29,7 @@ maxIteration = 2000;
 tolerance = 10^(-10);
 
 %% setup
-[nstep, ndim] = size(x);
+[nframe, ndim] = size(x);
 
 if ~exist('temperature', 'var')
     temperature = 1/30;
@@ -48,27 +48,27 @@ values.f           = -inf;
 values.similarity  = 0;
 values.compression = 0;
 
-p_ci_best = zeros(nstep, nc);
-p_ci_old  = zeros(nstep, nc);
-work      = zeros(nstep, nc);
+p_ci_best = zeros(nframe, nc);
+p_ci_old  = zeros(nframe, nc);
+work      = zeros(nframe, nc);
 
 for ireplica = 1:nReplicates
   % initialize
-  p_ci = rand(nstep, nc);
+  p_ci = rand(nframe, nc);
   p_ci = bsxfun(@rdivide, p_ci, sum(p_ci, 2));
-  p_c  = sum(p_ci) ./ nstep;
+  p_c  = sum(p_ci) ./ nframe;
   
   % calc similarities s(c) and s(C; i)
   s_c  = zeros(1, nc);
-  s_ci = zeros(nstep, nc);
-  for i = 1:nstep
+  s_ci = zeros(nframe, nc);
+  for i = 1:nframe
     similarity_i = calcsimilarity(x(i,:), x);
     s_ci(i, :)   = similarity_i * p_ci;
   end
   % end
   s_c  = sum(p_ci .* s_ci);
-  s_ci = bsxfun(@rdivide, s_ci, p_c) ./ nstep;
-  s_c  = s_c .* (1./nstep.^2) .* (1./p_c.^2);
+  s_ci = bsxfun(@rdivide, s_ci, p_c) ./ nframe;
+  s_c  = s_c .* (1./nframe.^2) .* (1./p_c.^2);
   
   % solve self-consistent equation
   f           = -inf;
@@ -85,23 +85,23 @@ for ireplica = 1:nReplicates
     p_ci = exp(p_ci);
     p_ci = bsxfun(@times, p_c, p_ci);
     p_ci = bsxfun(@rdivide, p_ci, sum(p_ci, 2));
-    p_c  = sum(p_ci) ./ nstep;
+    p_c  = sum(p_ci) ./ nframe;
 
     % calc similarity <s>
-    for i = 1:nstep
+    for i = 1:nframe
       similarity_i = calcsimilarity(x(i,:), x);
       s_ci(i, :)   = similarity_i * p_ci;
     end
     s_c  = sum(p_ci .* s_ci);
-    s_ci = bsxfun(@rdivide, s_ci, p_c) ./ nstep;
-    s_c  = s_c .* (1./nstep.^2) .* (1./p_c.^2);
+    s_ci = bsxfun(@rdivide, s_ci, p_c) ./ nframe;
+    s_c  = s_c .* (1./nframe.^2) .* (1./p_c.^2);
     similarity = sum(p_c .* s_c);
 
     % calc compression I
     work = bsxfun(@rdivide, p_ci, p_c);
     work(work <= eps) = 1.0;
     compression = sum(sum( p_ci .* log2(work) ));
-    compression = compression ./ nstep;
+    compression = compression ./ nframe;
 
     % calc free energy f
     f = similarity - temperature * compression;
@@ -127,9 +127,9 @@ end
 
 
 % function ss = calcsimilarity(xi, x)
-%   [istep, ndim] = size(xi);
-%   [nstep, ndim] = size(x);
-%   ss = zeros(istep, nstep);
+%   [iframe, ndim] = size(xi);
+%   [nframe, ndim] = size(x);
+%   ss = zeros(iframe, nframe);
 %   cc = cell(ndim, 1);
 %   for idim = 1:ndim
 %     cc{idim} = bsxfun(@minus, xi(:, idim), x(:, idim)');
@@ -141,10 +141,10 @@ end
 
 
 % function ss = calcsimilarity(xi, x)
-%   [istep, ndim] = size(xi);
-%   [nstep, ndim] = size(x);
-%   ss = zeros(istep, nstep);
-%   cc = zeros(istep, nstep, ndim);
+%   [iframe, ndim] = size(xi);
+%   [nframe, ndim] = size(x);
+%   ss = zeros(iframe, nframe);
+%   cc = zeros(iframe, nframe, ndim);
 %   for idim = 1:ndim
 %     cc(:, :, idim) = bsxfun(@minus, xi(:, idim), x(:, idim)');
 %   end
@@ -152,11 +152,11 @@ end
 
 
 % function ss = calcsimilarity(xi, x)
-%   [istep, ndim] = size(xi);
-%   [nstep, ndim] = size(x);
-%   a = reshape(xi, istep, 1, ndim);
-%   b = reshape(x, 1, nstep, ndim);
-%   ss = - sqrt(sum((a(:, ones(nstep, 1), :) - b(ones(istep, 1), :, :)).^2, 3));
+%   [iframe, ndim] = size(xi);
+%   [nframe, ndim] = size(x);
+%   a = reshape(xi, iframe, 1, ndim);
+%   b = reshape(x, 1, nframe, ndim);
+%   ss = - sqrt(sum((a(:, ones(nframe, 1), :) - b(ones(iframe, 1), :, :)).^2, 3));
 
 
 function ss = calcsimilarity(xi, x)

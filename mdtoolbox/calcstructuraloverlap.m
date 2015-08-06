@@ -11,7 +11,7 @@ function kai = calcstructuraloverlap(ref, trj, cutoff)
 % 
 
 %% setup
-[nstep, natom3] = size(trj);
+[nframe, natom3] = size(trj);
 natom = natom3./3;
 index = find(triu(true(natom), 3));
 
@@ -19,13 +19,19 @@ dmat1 = calcdistancematrix(ref);
 dvec1 = dmat1(index);
 
 %% calculation
-kai = zeros(nstep, 1);
+kai = zeros(nframe, 1);
 
-for istep = 1:nstep
-  dmat2 = calcdistancematrix(trj(istep, :));
+for iframe = 1:nframe
+  dmat2 = calcdistancematrix(trj(iframe, :));
   dvec2 = dmat2(index);
-  kai(istep) = sum(abs(dvec1 - dvec2) < cutoff);
+  kai(iframe) = sum(abs(dvec1 - dvec2) < cutoff);
 end
 
 kai = 1 - kai * (2 ./ (natom.^2 - 5*natom + 6));
+
+
+
+
+
+
 

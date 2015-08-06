@@ -17,7 +17,7 @@ function [indexOfCluster_out] = clusteringbymarkov(t, indexOfState, r)
 
 %% preparation
 nstate = size(t, 1);
-nstep = size(indexOfState, 1);
+%nframe = size(indexOfState, 1);
 
 if ~exist('r', 'var')
   r = 2;

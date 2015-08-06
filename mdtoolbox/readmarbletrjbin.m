@@ -10,15 +10,15 @@ function [trj, box, vel] = readmarbletrjbin(filename, index_atom, index_time)
 %
 %% Description
 % The XYZ coordinates of atoms are read into 'trj' variable
-% which has 'nstep' rows and '3*natom' columns.
+% which has 'nframe' rows and '3*natom' columns.
 % Each row of 'trj' has the XYZ coordinates of atoms in order 
 % [x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom) y(natom) z(natom)].
 %
 % * filename   - input marble trajectory filename
 % * index_atom - atom index or logical index specifying atoms to be read
-% * trj        - trajectory [nstepx3natom double]
-% * box        - box size [nstepx3 double]
-% * vel        - velocities [nstepx3natom double]
+% * trj        - trajectory [nframex3natom double]
+% * box        - box size [nframex3 double]
+% * vel        - velocities [nframex3natom double]
 %
 %% Example
 %# trj = readmarbletrj('eq.trj');
@@ -70,7 +70,7 @@ vel = zeros(1, numel(index_atom3));
 box = zeros(1, 3);
 
 %% read data
-istep = 0;
+iframe = 0;
 idata = 0;
 crd  = zeros(1, natom3);
 vcrd = zeros(1, natom3);
@@ -81,8 +81,8 @@ while 1
     break;
   end
 
-  istep = istep + 1;
-  if isempty(index_time) || ismember(istep, index_time)
+  iframe = iframe + 1;
+  if isempty(index_time) || ismember(iframe, index_time)
     idata = idata + 1;
     crd  = fread(fid, natom3, 'float64');
     vcrd = fread(fid, natom3, 'float64');
@@ -96,7 +96,7 @@ while 1
     fseek(fid, 8*9, 0);
   end
 
-  if (~isempty(index_time)) && (istep >= max(index_time))
+  if (~isempty(index_time)) && (iframe >= max(index_time))
     break;
   end
 end

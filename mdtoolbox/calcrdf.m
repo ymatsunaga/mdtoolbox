@@ -11,8 +11,8 @@ function [rdf, center] = calcrdf(index_atom1, index_atom2, trj, box, edge, nbloc
 %
 % * index_atom1 - aton index for atom type 1 [logical index or index n]
 % * index_atom2 - aton index for atom type 2 [logical index or index m]
-% * trj         - trajectorys [double nstep x natom3]
-% * box         - box size [double nstep x 3 or 1 x 3]
+% * trj         - trajectorys [double nframe x natom3]
+% * box         - box size [double nframe x 3 or 1 x 3]
 % * edge        - box size [double 1 x nbin+1]
 % * nblock      - the number of blocks used for error evaluation. default is 1 (no error estimation)
 %                 [integer scalar]
@@ -34,13 +34,13 @@ function [rdf, center] = calcrdf(index_atom1, index_atom2, trj, box, edge, nbloc
 % 
 
 %% setup
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 
 % box
 if ~exist('box', 'var') || isempty(box)
   error('box information is necessary for radial distribution function.');
 elseif (size(box, 1) == 1)
-  box = repmat(box, nstep, 1);
+  box = repmat(box, nframe, 1);
 end
 
 % edge
@@ -72,13 +72,13 @@ index_atom1 = to3(index_atom1);
 index_atom2 = to3(index_atom2);
 
 % evaluate RDF
-interface = round(linspace(0, nstep, nblock+1));
+interface = round(linspace(0, nframe, nblock+1));
 rdf = {};
 for iblock = 1:nblock
   istart = interface(iblock)+1;
   iend = interface(iblock+1);
   if nblock > 1
-    fprintf('[block %d] from step %d to step %d\n', iblock, istart, iend);
+    fprintf('[block %d] from frame %d to frame %d\n', iblock, istart, iend);
   end
   rdf{iblock} = kernelfunction(index_atom1, index_atom2, trj, box, edge, npair, nbin, rcut, istart, iend);
 end
@@ -92,10 +92,10 @@ end
 function rdf = kernelfunction(index_atom1, index_atom2, trj, box, edge, npair, nbin, rcut, istart, iend);
 
 count  = zeros(1, nbin);
-for istep = istart:iend
-  crd1 = trj(istep, index_atom1);
-  crd2 = trj(istep, index_atom2);
-  [~, dist] = searchrange(crd1, crd2, rcut, box(istep, :));
+for iframe = istart:iend
+  crd1 = trj(iframe, index_atom1);
+  crd2 = trj(iframe, index_atom2);
+  [~, dist] = searchrange(crd1, crd2, rcut, box(iframe, :));
   index_different_pair = (dist > 10.^(-6));
   count1 = histc(dist(index_different_pair), edge); count = count + count1(1:nbin)'; % for old versions of MATLAB
   %count1 = histcounts(dist(index_different_pair), edge); count = count + count1; % for new versions of MATLAB
@@ -104,4 +104,5 @@ end
 shell_volume = (4./3) * pi * (edge(2:end).^3 - edge(1:(end-1)).^3);
 s = npair * sum(1.0./prod(box(istart:iend, :), 2)) * shell_volume;
 rdf = (count./s)';
+
 

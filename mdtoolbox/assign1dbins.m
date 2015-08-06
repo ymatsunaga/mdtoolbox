@@ -16,13 +16,13 @@ function [index, center, edge] = assign1dbins(data, edge)
 % max(data) belongs to the last bin.
 %
 % * data   - data to be assigned 
-%            [double nstep x 1]
+%            [double nframe x 1]
 % * edge   - edges of bins
-%            [double nstep+1 x 1]
+%            [double nframe+1 x 1]
 % * index  - indices of bins.
-%            [integer nstep x 1]
+%            [integer nframe x 1]
 % * center - centers of bins
-%            [double nstep x 1]
+%            [double nframe x 1]
 % * nbin   - the number of bins
 %            [integer scalar]
 %

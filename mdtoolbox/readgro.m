@@ -22,10 +22,10 @@ function [gro, crd, vel] = readgro(filename, index)
 %           velocity: atom XYZ velocities [natom x 3 double]
 % * crd       - coordinates [1 x natom3 double]
 %               if the gro file contains multiple structures
-%               coordinates [nstep x natom3 double]
+%               coordinates [nframe x natom3 double]
 % * vel       - velocities [1 x natom3 double]
 %               if the gro file contains multiple structures
-%               velocities [nstep x natom3 double]
+%               velocities [nframe x natom3 double]
 % * box       - box size [1 x 3 double]
 %
 %% Example
@@ -40,7 +40,7 @@ function [gro, crd, vel] = readgro(filename, index)
 %% TODO
 % velocities
 % time step in title
-% multiple steps
+% multiple frames
 %
 
 %% open file

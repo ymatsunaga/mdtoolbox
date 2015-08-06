@@ -11,17 +11,17 @@ function [indexOfCluster, centroid, sumd] = clusteringbykmeans(trj, kcluster, ma
 %% Description
 %
 % * trj            - trajectory to be clustered 
-%                    [double nstep x natom3]
+%                    [double nframe x natom3]
 % * kcluster       - the number of clusters 
 %                    [integer 1]
 % * mass           - masses used for the calculation of rmsd 
 %                    [double natom]
 % * indexOfCluster - cluster index from 1 to kcluster 
-%                    [integer nstep]
+%                    [integer nframe]
 % * centroid       - centroids of clusters
 %                    [double kcluster x natom3]
 % * sumd           - sum of RMSDs from the centroid in each cluster
-%                    [double nstep]
+%                    [double nframe]
 % 
 %% Example
 %# parm = readparm('ala.parm');
@@ -37,7 +37,7 @@ function [indexOfCluster, centroid, sumd] = clusteringbykmeans(trj, kcluster, ma
 %
 
 %% preparation
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 
@@ -54,16 +54,16 @@ trj = decenter(trj, [], mass);
 
 %% clustering by iteration
 % create centroid by randomly drawn from input
-indexOfCentroid = randperm(nstep, kcluster);
+indexOfCentroid = randperm(nframe, kcluster);
 centroid = trj(indexOfCentroid, :);
 
-indexOfCluster = zeros(nstep, 1);
+indexOfCluster = zeros(nframe, 1);
 while true
 
   indexOfClusterOld = indexOfCluster;
   
   % calc distance and assign cluster-index
-  distanceFromCentroid = zeros(nstep, kcluster);
+  distanceFromCentroid = zeros(nframe, kcluster);
   for icluster = 1:kcluster
     rmsd = superimpose(centroid(icluster, :), trj, [], mass, [], true);
     distanceFromCentroid(:, icluster) = rmsd;
@@ -78,7 +78,7 @@ while true
   [~,com] = decenter(centroid, [], mass);
 
   % check convergence (normalized Hamming distance of indices)
-  hammingDistance = double(sum(indexOfCluster ~= indexOfClusterOld))./nstep;
+  hammingDistance = double(sum(indexOfCluster ~= indexOfClusterOld))./nframe;
   fprintf(['normalized hamming distance from the previous cluster assingments: %d\n'], hammingDistance);
   if hammingDistance < 10^(-6)
     break;

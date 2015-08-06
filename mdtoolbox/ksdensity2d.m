@@ -17,7 +17,7 @@ function [f, xi, yi] = ksdensity2d(data, xi, yi, bandwidth, box, weight)
 % The bandwidth can be specfied as an argument, 
 % otherwise automatically determined from data and grids. 
 %
-% * data      - scattered 2-dimensional data [nstep x 2 double]
+% * data      - scattered 2-dimensional data [nframe x 2 double]
 % * xi        - equally spaced grid in the x-axis on which
 %               the density is estimated [1 x nx double]
 % * yi        - equally spaced grid in the y-axis on which
@@ -29,7 +29,7 @@ function [f, xi, yi] = ksdensity2d(data, xi, yi, bandwidth, box, weight)
 %               [1 x 2 double]
 % * weight    - weights of observables in data. 
 %               By default, uniform weight is used. 
-%               [nstep x 1 double]
+%               [nframe x 1 double]
 % * f         - density estiamtes in 2-dimensional space
 %               [nx x ny double]
 %               
@@ -43,7 +43,7 @@ function [f, xi, yi] = ksdensity2d(data, xi, yi, bandwidth, box, weight)
 %
 
 %% setup
-nstep = size(data, 1);
+nframe = size(data, 1);
 
 if ~exist('xi', 'var') || isempty(xi)
   xi = linspace(min(data(:, 1)), max(data(:, 1)), 100);
@@ -66,7 +66,7 @@ if ~exist('bandwidth', 'var') || isempty(bandwidth)
   sig = median(abs(xi - median(xi)))/0.6745;
   if sig <= 0, sig = max(xi) - min(xi); end
   if sig > 0
-    bandwidth(1) = sig * (1/nstep)^(1/6);
+    bandwidth(1) = sig * (1/nframe)^(1/6);
   else
     bandwidth(1) = 1;
   end
@@ -74,7 +74,7 @@ if ~exist('bandwidth', 'var') || isempty(bandwidth)
   sig = median(abs(yi - median(yi))) / 0.6745;
   if sig <= 0, sig = max(yi) - min(yi); end
   if sig > 0
-    bandwidth(2) = sig * (1/nstep)^(1/6);
+    bandwidth(2) = sig * (1/nframe)^(1/6);
   else
     bandwidth(2) = 1;
   end
@@ -97,7 +97,7 @@ else
 end
 
 if ~exist('weight', 'var') || isempty(weight)
-  weight = ones(nstep, 1);
+  weight = ones(nframe, 1);
   weight = weight./sum(weight);
 end
 
@@ -117,8 +117,16 @@ gaussx = exp(-0.5 * dx2)./(sqrt(2*pi).*bandwidth(1));
 gaussy = exp(-0.5 * dy2)./(sqrt(2*pi).*bandwidth(2));
 
 f = zeros(nx, ny);
-for istep = 1:nstep
-  t2 = bsxfun(@times, gaussx(istep, :)', gaussy(istep, :));
-  f = f + t2*weight(istep);
+for iframe = 1:nframe
+  t2 = bsxfun(@times, gaussx(iframe, :)', gaussy(iframe, :));
+  f = f + t2*weight(iframe);
 end
+
+
+
+
+
+
+
+
 

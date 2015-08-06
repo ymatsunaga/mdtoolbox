@@ -22,9 +22,6 @@ function [lifetime, time_array] = calclifetime(data, recrossing_step)
 % http://en.wikipedia.org/wiki/Poisson_distribution
 % 
 
-%% setup
-nstep = size(data, 1);
-
 %% change point detection
 % 1 for false->true, -1 for true-false, in 1 step evolution
 index_change = data(2:end) - data(1:end-1);
@@ -36,7 +33,7 @@ index_inward = find(index_change == 1);
 index_outward = find(index_change == -1);
 
 %% extrude exceptional cases
-% exclude the case where the initi step is already in true
+% exclude the case where the initial step is already in true
 if index_outward(1) < index_inward(1)
   index_outward(1) = [];
 end

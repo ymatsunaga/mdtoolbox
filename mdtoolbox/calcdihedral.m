@@ -11,9 +11,9 @@ function dihedral = calcdihedral(trj, quadruplet);
 % Quadruplets, whose dihedral angles are calculated, can be specified via the
 % variable (quadruplet).
 %
-% * trj        - coordinates of atoms [nstep x natom3]
+% * trj        - coordinates of atoms [nframe x natom3]
 % * quadruplet - quadruplet indices whose angles are calculated [nquadruplet x 3]
-% * dihedral   - dihedral angles of the quadruplet (in radian) [nstep x nquadruplet]
+% * dihedral   - dihedral angles of the quadruplet (in radian) [nframe x nquadruplet]
 %
 %% Example
 %# trj = readnetcdf('ala.nc');
@@ -29,27 +29,27 @@ if ~exist('quadruplet', 'var')
   quadruplet = [1 2 3 4];
 end
 
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 nquadruplet = size(quadruplet, 1);
 
 %% calculation
-dihedral = zeros(nstep, nquadruplet);
+dihedral = zeros(nframe, nquadruplet);
 
 for iquadruplet = 1:nquadruplet
   index1 = to3(quadruplet(iquadruplet, 1));
   index2 = to3(quadruplet(iquadruplet, 2));
   index3 = to3(quadruplet(iquadruplet, 3));
   index4 = to3(quadruplet(iquadruplet, 4));
-  for istep = 1:nstep
-    d1 = trj(istep, index1) - trj(istep, index2);
-    d2 = trj(istep, index3) - trj(istep, index2);
-    d3 = trj(istep, index3) - trj(istep, index4);
+  for iframe = 1:nframe
+    d1 = trj(iframe, index1) - trj(iframe, index2);
+    d2 = trj(iframe, index3) - trj(iframe, index2);
+    d3 = trj(iframe, index3) - trj(iframe, index4);
     m1 = cross(d1, d2);
     m2 = cross(d2, d3);
-    dihedral(istep, iquadruplet) = acos(dot(m1, m2)./(norm(m1).*norm(m2)));
+    dihedral(iframe, iquadruplet) = acos(dot(m1, m2)./(norm(m1).*norm(m2)));
     rotdirection = dot(d2,cross(m1, m2));
     if rotdirection < 0
-      dihedral(istep, iquadruplet) = - dihedral(istep, iquadruplet);
+      dihedral(iframe, iquadruplet) = - dihedral(iframe, iquadruplet);
     end
   end
 end

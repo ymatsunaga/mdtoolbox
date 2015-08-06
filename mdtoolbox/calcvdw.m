@@ -89,14 +89,14 @@ bsol   = parm.hbond_bcoef;
 % ene = ene + lrc
 
 %% calculate vdw energy
-nstep = size(trj, 1);
-ene = zeros(nstep, 1);
+nframe = size(trj, 1);
+ene = zeros(nframe, 1);
 
-for istep = 1:nstep
-  istep
+for iframe = 1:nframe
+  iframe
   % calc pair-list within cutoff
-  %[pair, r] = calcpairlist_exhaustive(trj(istep, :), cutoff, box(istep, :));
-  [pair, r] = calcpairlist(trj(istep, :), cutoff, box(istep, :));
+  %[pair, r] = calcpairlist_exhaustive(trj(iframe, :), cutoff, box(iframe, :));
+  [pair, r] = calcpairlist(trj(iframe, :), cutoff, box(iframe, :));
   % remove exclusion pairs
   [pair, irows] = setdiff(pair, parm.excluded_pair, 'rows');
   r = r(irows, :);
@@ -105,6 +105,14 @@ for istep = 1:nstep
   lj_coef12 = cn1(index(index > 0));
   lj_coef6  = cn2(index(index > 0));
   lj_r      = r(index > 0);
-  ene(istep) = sum((lj_coef12./(lj_r.^(12))) - (lj_coef6./(lj_r.^(6))));
+  ene(iframe) = sum((lj_coef12./(lj_r.^(12))) - (lj_coef6./(lj_r.^(6))));
 end
+
+
+
+
+
+
+
+
 

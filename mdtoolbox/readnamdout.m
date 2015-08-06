@@ -10,26 +10,26 @@ function ene = readnamdout(filename)
 %
 % * fname     - filename of namd output
 % * ene       - structure data 
-%           ts: [nstepx1 double]
-%         bond: [nstepx1 double]
-%        angle: [nstepx1 double]
-%        dihed: [nstepx1 double]
-%        imprp: [nstepx1 double]
-%        elect: [nstepx1 double]
-%          vdw: [nstepx1 double]
-%     boundary: [nstepx1 double]
-%         misc: [nstepx1 double]
-%      kinetic: [nstepx1 double]
-%        total: [nstepx1 double]
-%         temp: [nstepx1 double]
-%    potential: [nstepx1 double]
-%       total3: [nstepx1 double]
-%      tempavg: [nstepx1 double]
-%     pressure: [nstepx1 double]
-%    gpressure: [nstepx1 double]
-%       volume: [nstepx1 double]
-%     pressavg: [nstepx1 double]
-%    gpressavg: [nstepx1 double]
+%           ts: [nframex1 double]
+%         bond: [nframex1 double]
+%        angle: [nframex1 double]
+%        dihed: [nframex1 double]
+%        imprp: [nframex1 double]
+%        elect: [nframex1 double]
+%          vdw: [nframex1 double]
+%     boundary: [nframex1 double]
+%         misc: [nframex1 double]
+%      kinetic: [nframex1 double]
+%        total: [nframex1 double]
+%         temp: [nframex1 double]
+%    potential: [nframex1 double]
+%       total3: [nframex1 double]
+%      tempavg: [nframex1 double]
+%     pressure: [nframex1 double]
+%    gpressure: [nframex1 double]
+%       volume: [nframex1 double]
+%     pressavg: [nframex1 double]
+%    gpressavg: [nframex1 double]
 % 
 %% Example
 %# ene = readnamdout('run.log');
@@ -76,12 +76,11 @@ while ~feof(fid)
   end
 end
 
-% delete zero-th step
+% delete zero-th frame
 data(1, :) = [];
 
 ene = struct;
 for ilabel = 1:numel(label)
   ene = setfield(ene, label{ilabel}, data(:, ilabel));
 end
-
 

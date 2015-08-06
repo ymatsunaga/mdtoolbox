@@ -12,7 +12,6 @@ function [z, xi] = calchistpmf(x, nbin)
 %
 
 x = x(:,1);
-nstep = size(x,1);
 
 if ~exist('nbin', 'var') || isempty(nbin)
   nbin = 100;

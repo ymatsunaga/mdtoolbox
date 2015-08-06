@@ -9,14 +9,14 @@ function [trj, title] = readmdcrd(natom, filename, index)
 %
 %% Description
 % The XYZ coordinates of atoms are read into 'trj' variable
-% which has 'nstep' rows and '3*natom' columns.
+% which has 'nframe' rows and '3*natom' columns.
 % Each row of 'trj' has the XYZ coordinates of atoms in order 
 % [x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom) y(natom) z(natom)].
 %
 % * natom      - # of atoms [integer]
 % * filename   - input amber trajectory filename [chars]
 % * index_atom - atom index or logical index specifying atoms to be read
-% * trj        - trajectory [nstep x natom3 double]
+% * trj        - trajectory [nframe x natom3 double]
 % * title      - title characters [chars]
 %
 %% Example

@@ -15,17 +15,17 @@ function [index, center_x, center_y, edge_x, edge_y] = assign2dbins(data, edge_x
 % in 2-dimensional space. 
 %
 % * data     - data to be assigned 
-%              [double nstep x 1]
+%              [double nframe x 1]
 % * edge_x   - edges for bins in the 1st dimension
-%              [double nstep+1 x 1]
+%              [double nframe+1 x 1]
 % * edge_y   - edges for bins in the 2nd dimension
-%              [double nstep+1 x 1]
+%              [double nframe+1 x 1]
 % * index    - indices of bins.
-%              [integer nstep x 1]
+%              [integer nframe x 1]
 % * center_x - centers of bins in the 1st dimension
-%              [double nstep x 1]
+%              [double nframe x 1]
 % * center_y - centers of bins in the 2nd dimension
-%              [double nstep x 1]
+%              [double nframe x 1]
 % * nbin_x   - the number of bins in the 1st dimension
 %              [integer scalar]
 % * nbin_y   - the number of bins in the 2nd dimension

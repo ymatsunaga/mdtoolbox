@@ -12,8 +12,8 @@ function [corr, corr_atom] = calccorr(trj, lagtime)
 % between atomi and atom j, and make a cross-correlation matrix
 % from input trajectory
 %
-% * trj       - trajectory of coordinates [nstep x 3natom]
-% * lagtime   - lag time in the unit of steps. The default is 0.
+% * trj       - trajectory of coordinates [nframe x 3natom]
+% * lagtime   - lag time in the unit of frames. The default is 0.
 %               [scalar integer]
 % * corr      - time-lagged cross correlation matrix of anisotropic fluctuations. 
 %               [double natom x natom]
@@ -35,7 +35,7 @@ function [corr, corr_atom] = calccorr(trj, lagtime)
 % 
 
 %% setup
-nstep = size(trj, 1);
+%nframe = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 

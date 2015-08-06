@@ -17,15 +17,15 @@ function [rmsd, trj, vel, Ucell] = superimpose(ref, trj, index, mass, vel, isdec
 % * ref        - reference structure 
 %                [double natom3]
 % * trj        - trajectory fitted to the reference structure
-%                [double nstep x natom3]
+%                [double nframe x natom3]
 % * index_atom - index of atoms used in the calculation of fitting
 %                [integer n]
 % * mass       - mass
 %                [double natom]
 % * vel        - velocity
-%                [double nstep x natom3]
+%                [double nframe x natom3]
 % * rmsd       - root mean square deviations after fitting
-%                [double nstep]
+%                [double nframe]
 % 
 %% Example
 %# trj = readnetcdf('ak.nc');
@@ -47,7 +47,7 @@ function [rmsd, trj, vel, Ucell] = superimpose(ref, trj, index, mass, vel, isdec
 %% preparation
 natom3 = size(ref, 2);
 natom  = natom3/3;
-nstep  = size(trj, 1);
+nframe = size(trj, 1);
 
 if ~exist('index', 'var') || isempty(index)
   index = 1:natom;
@@ -78,7 +78,7 @@ if ~exist('isdecentered', 'var')
 end
 
 if nargout >= 4
-  Ucell = cell(nstep, 1);
+  Ucell = cell(nframe, 1);
 end
 
 %% remove the center of mass
@@ -95,13 +95,13 @@ end
 mass = mass(index);
 massxyz = repmat(mass, 3, 1);
 y = reshape(ref(1, index3), 3, numel(index));
-rmsd = zeros(nstep, 1);
+rmsd = zeros(nframe, 1);
 
 %% superimpose
-for istep = 1:nstep
+for iframe = 1:nframe
   % calculate R matrix
-  x = reshape(trj(istep, index3), 3, numel(index));
-  rmsd(istep) = 0.5 * sum(mass.*sum(x.^2 + y.^2));
+  x = reshape(trj(iframe, index3), 3, numel(index));
+  rmsd(iframe) = 0.5 * sum(mass.*sum(x.^2 + y.^2));
   R = (massxyz.*y) * x';
   [V, D, W] = svd(R);
   D = diag(D);
@@ -112,30 +112,30 @@ for istep = 1:nstep
     D(3) = -D(3);
     V(:, 3) = -V(:, 3);
   end
-  rmsd(istep) = rmsd(istep) - sum(D);
+  rmsd(iframe) = rmsd(iframe) - sum(D);
 
   if nargout >= 2
     % calculate rotation matrix
     U = V*W';
     if nargout >= 4
-      Ucell{istep} = U;
+      Ucell{iframe} = U;
     end
 
     % rotate molecule
-    x = reshape(trj(istep, :), 3, natom);
+    x = reshape(trj(iframe, :), 3, natom);
     x = U*x;
 
     % restore the original center of mass
     x(1, :) = x(1, :) + comy(1);
     x(2, :) = x(2, :) + comy(2);
     x(3, :) = x(3, :) + comy(3);
-    trj(istep, :) = reshape(x, 1, natom3);
+    trj(iframe, :) = reshape(x, 1, natom3);
   
     if numel(vel) ~= 0
       % rotate velocity
-      v = reshape(vel(istep, :), 3, natom);
+      v = reshape(vel(iframe, :), 3, natom);
       v = U*v;
-      vel(istep, :) = reshape(v, 1, natom3);
+      vel(iframe, :) = reshape(v, 1, natom3);
     end
   end
 end

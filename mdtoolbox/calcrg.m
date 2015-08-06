@@ -12,7 +12,7 @@ function rg = calcrg(trj, mass)
 % 
 
 %% setup
-nstep  = size(trj, 1);
+nframe = size(trj, 1);
 natom3 = size(trj, 2);
 natom  = natom3/3;
 
@@ -25,7 +25,7 @@ else
 end
 
 %% calculation
-rg = zeros(nstep, 1);
+rg = zeros(nframe, 1);
 [trj, com] = decenter(trj, [], mass);
 totalMass  = sum(mass);
 

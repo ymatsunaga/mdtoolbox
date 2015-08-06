@@ -22,10 +22,10 @@ function writegro(filename, gro, trj)
 %           velocity: atom XYZ velocities [natom x 3 double]
 % * crd,trj   - coordinates [1 x natom3 double]
 %               if the gro file contains multiple structures
-%               coordinates [nstep x natom3 double]
+%               coordinates [nframe x natom3 double]
 % * vel       - velocities [1 x natom3 double]
 %               if the gro file contains multiple structures
-%               velocities [nstep x natom3 double]
+%               velocities [nframe x natom3 double]
 % * box       - box size [1 x 3 double]
 %
 %% Example
@@ -42,7 +42,7 @@ function writegro(filename, gro, trj)
 %% TODO
 % velocities
 % time step in title
-% multiple steps
+% multiple frames
 %
 
 %% check existing file
@@ -59,7 +59,7 @@ if ~exist('trj', 'var') || isempty(trj)
   trj = gro.position';
   trj = trj(:)';
 end
-nstep = size(trj, 1);
+nframe = size(trj, 1);
   
 %% open file
 fid = fopen(filename, 'w');
@@ -70,15 +70,15 @@ cleaner = onCleanup(@() fclose(fid));
 fprintf(fid, 'REMARKS FILENAME=%s CREATED BY MATLAB\n', filename);
 fprintf(fid, '%5d\n', natom);
 
-istep = 1;
+iframe = 1;
 for iatom = 1:natom
   fprintf(fid, '%5d', gro.residue_number(iatom));
   fprintf(fid, '%-5s', gro.residue_name(iatom, :));
   fprintf(fid, '%5s', gro.atom_name(iatom, :));
   fprintf(fid, '%5d', gro.atom_number(iatom, :));
-  fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+1));
-  fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+2));
-  fprintf(fid, '%8.3f', trj(istep, 3*(iatom-1)+3));
+  fprintf(fid, '%8.3f', trj(iframe, 3*(iatom-1)+1));
+  fprintf(fid, '%8.3f', trj(iframe, 3*(iatom-1)+2));
+  fprintf(fid, '%8.3f', trj(iframe, 3*(iatom-1)+3));
   fprintf(fid, '\n');
 end
   

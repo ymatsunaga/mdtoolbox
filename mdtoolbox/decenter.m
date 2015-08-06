@@ -16,14 +16,14 @@ function [x, com] = decenter(x, index, mass)
 %
 % * trj         - XYZ coordinates of atoms in order
 %                 (x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom))
-%                 [nstep x natom3 double]
+%                 [nframe x natom3 double]
 % * index_atom  - index of atoms from which the center of mass are
 %                 calculated [1 x n integer]
 % * mass        - atom masses [1 x natom double]
 % * trj(output) - XYZ coordinates of atoms where the centers of mass
 %                 are removed, i.e., the com is always equal to the origin. 
-%                 [nstep x natom3 double]
-% * com         - centers of mass [nstep x 3]
+%                 [nframe x natom3 double]
+% * com         - centers of mass [nframe x 3]
 %
 %% Example
 %# trj = readdcd('ak.dcd');
@@ -33,10 +33,10 @@ function [x, com] = decenter(x, index, mass)
 %
 
 %% setup
-nstep = size(x, 1);
+nframe = size(x, 1);
 natom3 = size(x, 2);
 natom = natom3/3;
-com = zeros(nstep, 3);
+com = zeros(nframe, 3);
 
 if ~exist('index', 'var') || isempty(index)
   index = 1:natom;

@@ -18,7 +18,7 @@ function [crd, box, vel, title] = readambercrd(filename, index)
 % * filename   - input amber coordinate/restart filename
 % * index_atom - atom index or logical index specifying atoms to be read
 % * crd        - coordinates [1 x natom3 double]
-% * box        - size of the periodic box [nstep x 3 double]
+% * box        - size of the periodic box [nframe x 3 double]
 % * vel        - velocities [1 x natom3 double]
 % * title      - title characters [chars]
 %

@@ -12,9 +12,9 @@ function rmsd = calcrmsd(ref, trj, index, mass)
 % Calculate RMSD without performing any fittings
 %
 % * ref    - reference coordinates [1 x (natom*3) double]
-% * trj    - trajectory [nstep x (natom*3) double]
+% * trj    - trajectory [nframe x (natom*3) double]
 % * mass   - mass [1 x natom double] or [natom x 1 double]
-% * rmsd   - RMSD [nstep x 1 double]
+% * rmsd   - RMSD [nframe x 1 double]
 %
 %% Example
 %# rmsd = calcrmsd(ref, trj);
@@ -50,7 +50,7 @@ ref = ref(to3(index));
 trj = trj(:, to3(index));
 mass = mass(index);
 
-[nstep, natom3] = size(trj);
+[nframe, natom3] = size(trj);
 natom = natom3 / 3;
 
 x_diff = bsxfun(@minus, trj(:, 1:3:end), ref(1:3:end));

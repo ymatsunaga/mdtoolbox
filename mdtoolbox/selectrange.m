@@ -31,7 +31,7 @@ function logical_index = selectrange(crd, index, rcut, box)
 %# index = selectname(parm.atom_name, 'CA');
 %# index = find(index);
 %#
-%# % choose all the atoms within 4 Angstrom from CA atoms of residue 1-3 at step 1
+%# % choose all the atoms within 4 Angstrom from CA atoms of residue 1-3 at frame 1
 %# index2 = selectrange(trj(1, :), index(1:3), 4.0);
 %# index2 = find(index2);
 %

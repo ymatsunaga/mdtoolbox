@@ -11,7 +11,7 @@ function formatplot2()
 %
 %% Example
 %# plot(randn(100,1), '-');
-%# xlabel('step'); ylabel('value');
+%# xlabel('frame'); ylabel('value');
 %# formatplot;
 %
 %% See also

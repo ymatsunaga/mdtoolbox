@@ -9,8 +9,8 @@ function [trj,box] = readfloattrj(natom, filename, index, isbox)
 %        index_atom 読み込む原子番号のリスト(省略可。省略された時には全原子を読む)
 %        isbox ボックス付きのtrjファイルか否か。ブーリアン型(false or true)。(省略可。省略された時はボックスなし=false)
 %
-% output: trj (nstep x natom*3) トラジェクトリ each row containing coordinates in the order [x1 y1 z1 x2 y2 z2 ...]
-%         box (nstep x 3) box
+% output: trj (nframe x natom*3) トラジェクトリ each row containing coordinates in the order [x1 y1 z1 x2 y2 z2 ...]
+%         box (nframe x 3) box
 % 
 % example:
 % ボックス無しの場合
@@ -43,8 +43,8 @@ fid = fopen(filename, 'r');
 trj = fread(fid, '*float');
 fclose(fid);
 
-nstep = length(trj) / nlimit;
-trj = reshape(trj,nlimit,nstep)';
+nframe = length(trj) / nlimit;
+trj = reshape(trj,nlimit,nframe)';
 
 if isbox
   box = trj(:, end-2:end);
@@ -52,5 +52,4 @@ if isbox
 end
 
 trj = trj(:, index3);
-
 

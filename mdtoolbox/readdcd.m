@@ -11,14 +11,14 @@ function [trj, box, header] = readdcd(filename, index)
 %
 %% Description
 % The XYZ coordinates of atoms are read into 'trj' variable
-% which has 'nstep' rows and '3*natom' columns.
+% which has 'nframe' rows and '3*natom' columns.
 % Each row of 'trj' has the XYZ coordinates of atoms in order 
 % [x(1) y(1) z(1) x(2) y(2) z(2) ... x(natom) y(natom) z(natom)].
 %
 % * filename   - input dcd trajectory filename
 % * index_atom - index or logical index for specifying atoms to be read
-% * trj        - trajectory [nstep x natom3 double]
-% * box        - box size [nstep x 3 double]
+% * trj        - trajectory [nframe x natom3 double]
+% * box        - box size [nframe x 3 double]
 % * header     - structure variable, which has header information 
 %                [structure]
 %
@@ -196,17 +196,17 @@ end
 
 coordblocksize = (4*2 + 4*header.natom)*3;
 
-nstep = floor(filesize - headersize) / (extrablocksize + coordblocksize);
+nframe = floor(filesize - headersize) / (extrablocksize + coordblocksize);
 
 if ~exist('index', 'var') || isempty(index)
   index = 1:header.natom;
 end
 
-trj = zeros(nstep, numel(index)*3);
-box = zeros(nstep, 3);
+trj = zeros(nframe, numel(index)*3);
+box = zeros(nframe, 3);
 
-% read next steps
-for istep = 1:nstep
+% read next frames
+for iframe = 1:nframe
   % read charmm extrablock (unitcell info)
   if header.is_charmm_extrablock
     blocksize = fread(fid, 1, 'int32');
@@ -237,10 +237,10 @@ for istep = 1:nstep
   end
 
   if header.is_charmm_extrablock
-    box(istep, :) = dummy([1 3 6])';
+    box(iframe, :) = dummy([1 3 6])';
   end
-  trj(istep, 1:3:end) = x(index)';
-  trj(istep, 2:3:end) = y(index)';
-  trj(istep, 3:3:end) = z(index)';
+  trj(iframe, 1:3:end) = x(index)';
+  trj(iframe, 2:3:end) = y(index)';
+  trj(iframe, 3:3:end) = z(index)';
 end
 

@@ -11,8 +11,8 @@ function [covar, covar_atom] = calccovar(trj, lagtime)
 % This routine calculates a (time-lagged) covariance matrix from
 % input trajectory.
 %
-% * trj        - trajectory of coordinates [nstep x 3natom]
-% * lagtime    - lag time in the unit of steps. The default is 0.
+% * trj        - trajectory of coordinates [nframe x 3natom]
+% * lagtime    - lag time in the unit of frames. The default is 0.
 %                [scalar integer]
 % * covar      - covariance matrix of anisotropic fluctuations. 
 %                covar(i,j) = <q_i(t) q_j(t+dt)>
@@ -36,7 +36,7 @@ function [covar, covar_atom] = calccovar(trj, lagtime)
 % 
 
 %% setup
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 
@@ -50,10 +50,10 @@ end
 
 %% covariance matrix
 trj = bsxfun(@minus, trj, mean(trj));
-index1 = 1:(nstep-lagtime);
-index2 = (1+lagtime):nstep;
-covar = (trj(index1, :)'*trj(index2, :))./(nstep-lagtime-1);  % unbiased estimates of covariances
-%covar = (trj'*trj)./nstep;     % biased estimates of covariances
+index1 = 1:(nframe-lagtime);
+index2 = (1+lagtime):nframe;
+covar = (trj(index1, :)'*trj(index2, :))./(nframe-lagtime-1);  % unbiased estimates of covariances
+%covar = (trj'*trj)./nframe;     % biased estimates of covariances
 
 if nargout > 1
   covar_atom = zeros(natom, natom);

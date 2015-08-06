@@ -16,11 +16,11 @@ function [index, dmin] = assignvoronoi(ref, data)
 % * ref   - generating points of Voronoi cells 
 %           [n x ndim double]
 % * data  - some trajectory or data set to be assigned 
-%           [nstep x ndim double]
+%           [nframe x ndim double]
 % * index - indices of Voronoi cells. indices correspond to the rows of ref 
-%           [nstep x 1 double]
+%           [nframe x 1 double]
 % * dmin  - distance between the data to the nearest generating point 
-%           [nstep x 1 double]
+%           [nframe x 1 double]
 %
 %% Example
 %# ref  = rand(10, 2);
@@ -36,18 +36,18 @@ function [index, dmin] = assignvoronoi(ref, data)
 
 %% setup
 [~, ndim1] = size(ref);
-[nstep, ndim2] = size(data);
+[nframe, ndim2] = size(data);
 assert(ndim1 == ndim2, 'dimensions of ref and data do not match...');
 
 %% calculation
-index = zeros(nstep, 1);
-dmin = zeros(nstep, 1);
+index = zeros(nframe, 1);
+dmin = zeros(nframe, 1);
 
-for istep = 1:nstep
-  dev = bsxfun(@minus, ref, data(istep, :));
+for iframe = 1:nframe
+  dev = bsxfun(@minus, ref, data(iframe, :));
   dist = sum(dev.^2, 2);
   [dmin_each, index_each] = min(dist);
-  index(istep) = index_each;
-  dmin(istep) = sqrt(dmin_each);
+  index(iframe) = index_each;
+  dmin(iframe) = sqrt(dmin_each);
 end
 

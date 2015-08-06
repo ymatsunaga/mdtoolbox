@@ -10,12 +10,12 @@ function [indexOfCluster_out, indexOfCenter_out, distPointCenter_out] = clusteri
 %
 %% Description
 %
-% * trj             - trajectory to be clustered [nstep x natom3 double]
+% * trj             - trajectory to be clustered [nframe x natom3 double]
 % * kcluster        - the number of clusters [scalar integer]
 % * mass            - masses used for the calculation of rmsd [natom double]
-% * indexOfCluster  - cluster index from 1 to kcluster [nstep integer]
+% * indexOfCluster  - cluster index from 1 to kcluster [nframe integer]
 % * indexOfCenter   - time index of center coordinates [kcluster integer]
-% * distPointCenter - distance between the points and the centers of cluster [nstep double]
+% * distPointCenter - distance between the points and the centers of cluster [nframe double]
 % 
 %% Example
 %# parm = readparm('ala.parm');
@@ -32,7 +32,7 @@ function [indexOfCluster_out, indexOfCenter_out, distPointCenter_out] = clusteri
 %
 
 %% preparation
-nstep = size(trj, 1);
+nframe = size(trj, 1);
 natom3 = size(trj, 2);
 natom = natom3/3;
 
@@ -54,9 +54,9 @@ trj = decenter(trj, [], mass);
 %% clustering
 for ireplica = 1:nReplicates
   % create the centroid of the 1st cluster
-  indexOfCenter(1) = randi([1 nstep]);
+  indexOfCenter(1) = randi([1 nframe]);
   % at first, all points belong to the 1st cluster
-  indexOfCluster = ones(nstep, 1);
+  indexOfCluster = ones(nframe, 1);
   % distance between the points and the 1st centroid
   distPointCenter = superimpose(trj(indexOfCenter(1), :), trj, [], mass, [], true);
 

@@ -1,9 +1,9 @@
-function writepcrst(filename, pmode, r0, k0, r0a, k0a, nstep1, nstep2)
+function writepcrst(filename, pmode, r0, k0, r0a, k0a, nframe1, nframe2)
 %% writepcrst
 % write configuration file for principal component restraint as a mu2lib input file
 %
 %% Syntax
-%# writepcrst(filename, pmode, r0, r0a, k0, k0a, nstep1, nstep2)
+%# writepcrst(filename, pmode, r0, r0a, k0, k0a, nframe1, nframe2)
 %
 %% Description
 %
@@ -13,8 +13,8 @@ function writepcrst(filename, pmode, r0, k0, r0a, k0a, nstep1, nstep2)
 % * r0a       - [nmode x 1 double]
 % * k0        - [nmode x 1 double]
 % * k0a       - [nmode x 1 double]
-% * nstep1    - [nmode x 1 double]
-% * nstep2    - [nmode x 1 double]
+% * nframe1   - [nmode x 1 double]
+% * nframe2   - [nmode x 1 double]
 %
 %% Example
 %
@@ -65,7 +65,7 @@ if nargin == 4
 else
   for imode = 1:nmode
     fprintf(fid, ' &pcrst\n');
-    fprintf(fid, '   ifvari = 1, nstep1 = %d, nstep2 = %d,\n', nstep1(imode), nstep2(imode));
+    fprintf(fid, '   ifvari = 1, nstep1 = %d, nstep2 = %d,\n', nframe1(imode), nframe2(imode));
     fprintf(fid, '   r0  = %15.11f, k0  = %13.5f,\n', r0(imode), k0(imode));
     fprintf(fid, '   r0a = %15.11f, k0a = %13.5f,\n', r0a(imode), k0a(imode));
     fprintf(fid, '   pcs = ');
