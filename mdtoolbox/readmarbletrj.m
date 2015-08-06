@@ -142,7 +142,7 @@ while ~feof(fid)
     end
   end
    
-  if (~isempty(index_time)) & (iframe >= max(index_time))
+  if (~isempty(index_time)) && (iframe >= max(index_time))
     break;
   end
 end

@@ -87,7 +87,7 @@ for iline = 1:nline
     icount = icount + 1;
     lines_clean{icount} = line;
   end
-  if strncmpi(line, 'ENDMDL', numel('ENDMDL')) || (iline == nline & icount ~= 0)
+  if strncmpi(line, 'ENDMDL', numel('ENDMDL')) || ((iline == nline) && (icount ~= 0))
     natom = icount;
     nmodel = nmodel + 1;
     model{nmodel} = lines_clean;

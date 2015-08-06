@@ -39,7 +39,7 @@ function [corr, corr_atom] = calccorr(trj, lagtime)
 natom3 = size(trj, 2);
 natom = natom3/3;
 
-if ~exist('lagtime', 'var')
+if ~exist('lagtime', 'var') || isempty(lagtime)
   lagtime = 0;
 end
 

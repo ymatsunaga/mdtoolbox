@@ -25,7 +25,7 @@ function bond = calcbond(trj, pair)
 % 
 
 %% initialization
-if ~exist('pair', 'var')
+if ~exist('pair', 'var') || isempty(pair)
   %fprintf('calculating the distances between the 1st and 2nd atoms\n');
   pair = [1 2];
 end

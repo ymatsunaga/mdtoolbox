@@ -74,12 +74,12 @@ y = crd(1,2:3:end);
 z = crd(1,3:3:end);
 natom = length(x);
 
-if ~exist('cutoff', 'var')
+if ~exist('cutoff', 'var') || isempty(cutoff)
   cutoff = 10.0;
 end
 cutoff2 = cutoff.^2;
 
-if ~exist('k', 'var')
+if ~exist('k', 'var') || isempty(k)
   k = 10;
 end
 

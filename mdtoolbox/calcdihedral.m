@@ -25,7 +25,7 @@ function dihedral = calcdihedral(trj, quadruplet);
 % 
 
 %% initialization
-if ~exist('quadruplet', 'var')
+if ~exist('quadruplet', 'var') || isempty(quadruplet)
   quadruplet = [1 2 3 4];
 end
 

@@ -57,7 +57,7 @@ if ~exist('nblock', 'var') || isempty(nblock)
 end
 
 % calculate the number of pairs (npair)
-if islogical(index_atom1) & islogical(index_atom2)
+if islogical(index_atom1) && islogical(index_atom2)
   npair = nnz(index_atom1)*nnz(index_atom2) - nnz(index_atom1 & index_atom2);
 else
   if islogical(index_atom1)

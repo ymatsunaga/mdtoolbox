@@ -25,7 +25,7 @@ function angle = calcangle(trj, triplet)
 % 
 
 %% initialization
-if ~exist('triplet', 'var')
+if ~exist('triplet', 'var') || isempty(triplet)
   triplet = [1 2 3];
 end
 
