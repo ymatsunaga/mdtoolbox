@@ -1,9 +1,9 @@
 %% usage:
-%% >> test = testreadnetcdf;
+%% >> test = testnetcdf;
 %% >> result = run(test)
 %%
 
-classdef testreadnetcdf < matlab.unittest.TestCase
+classdef testnetcdf < matlab.unittest.TestCase
 
   methods(Test)
       
