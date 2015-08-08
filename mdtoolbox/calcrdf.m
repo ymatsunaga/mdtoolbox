@@ -1,19 +1,21 @@
 function [rdf, center] = calcrdf(index_atom1, index_atom2, trj, box, edge, nblock)
 %% calcrdf
-% calculate radial distribution function of two atom types specfied index_atom1 and index_atom2
+% calculate radial distribution function (RDF) of two atom types specfied index_atom1 and index_atom2
 %
 %% Syntax
 %# [rdf, center] = calcrdf(index_atom1, index_atom2, trj, box);
 %# [rdf, center] = calcrdf(index_atom1, index_atom2, trj, box, edge);
+%# [rdf, center] = calcrdf(index_atom1, index_atom2, trj, box, edge, nblock);
 %
 %% Description
-% Calculate radial distribution function between two atom types specfied index_atom1 and index_atom2 
+% Calculate radial distribution function (RDF) between 
+% two atom types specfied by index_atom1 and index_atom2  
 %
-% * index_atom1 - aton index for atom type 1 [logical index or index n]
-% * index_atom2 - aton index for atom type 2 [logical index or index m]
+% * index_atom1 - atom index for atom type 1 [logical index or index n]
+% * index_atom2 - atom index for atom type 2 [logical index or index m]
 % * trj         - trajectorys [double nframe x natom3]
 % * box         - box size [double nframe x 3 or 1 x 3]
-% * edge        - box size [double 1 x nbin+1]
+% * edge        - edges of bins used for RDF histogram [double 1 x nbin+1]
 % * nblock      - the number of blocks used for error evaluation. default is 1 (no error estimation)
 %                 [integer scalar]
 % * rdf         - radial distribution function [double nbin x 1]
@@ -44,7 +46,7 @@ elseif (size(box, 1) == 1)
 end
 
 % edge
-if ~exist('edge', 'var')
+if ~exist('edge', 'var') || isempty(edge)
   edge = 0:0.1:10.0;
 end
 rcut  = max(edge);
@@ -90,7 +92,6 @@ end
 
 %%%%%%%% kernel function
 function rdf = kernelfunction(index_atom1, index_atom2, trj, box, edge, npair, nbin, rcut, istart, iend);
-
 count  = zeros(1, nbin);
 for iframe = istart:iend
   crd1 = trj(iframe, index_atom1);
@@ -104,5 +105,4 @@ end
 shell_volume = (4./3) * pi * (edge(2:end).^3 - edge(1:(end-1)).^3);
 s = npair * sum(1.0./prod(box(istart:iend, :), 2)) * shell_volume;
 rdf = (count./s)';
-
 
