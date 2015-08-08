@@ -1,8 +1,8 @@
 MDToolbox
 =========
-MDToolbox is a MATLAB toolbox for statistical analysis of molecular
-dynamics (MD) simulation data of biomolecules. It consists of a
-collection of MATLAB functions covering the following types of
+MDToolbox is a MATLAB/Octave toolbox for statistical analysis of
+molecular dynamics (MD) simulation data of biomolecules. It consists
+of a collection of functions covering the following types of
 scientific computations: 
 
 * I/O for trajectory, coordinate, and topology files used for MD simulation
