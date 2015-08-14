@@ -1,6 +1,6 @@
 function c = msmcountmatrix(indexOfCluster, nstate, tau)
 %% msmcountmatrix
-% calculate transition count matrix for Markov State Model (MSM)
+% calculate transition count matrix from a set of binned trajectory data
 %
 %% Syntax
 %# c = msmcountmatrix(indexOfCluster);
@@ -18,8 +18,16 @@ function c = msmcountmatrix(indexOfCluster, nstate, tau)
 %
 
 %% setup
+if ~iscell(indexOfCluster)
+  indexOfCluster_noncell = indexOfCluster;
+  clear indexOfCluster;
+  indexOfCluster{1} = indexOfCluster_noncell;
+  clear indexOfCluster_noncell;
+end
+ntrj = numel(indexOfCluster);
+
 if ~exist('nstate', 'var') || isempty(nstate)
-  nstate = max(indexOfCluster);
+  nstate = max(cellfunc(@max, c));
   disp(sprintf('Message: nstate = %d is used.', nstate));
 end
 
@@ -28,38 +36,46 @@ if ~exist('tau', 'var') || isempty(tau)
   disp('Message: tau = 1 is used.');
 end
 
-nframe  = numel(indexOfCluster);
+%% count transitions
+c = sparse(nstate, nstate);
 
-index_from = 1:(nframe-tau);
-index_to   = (1+tau):nframe;
-indexOfCluster_from = indexOfCluster(index_from);
-indexOfCluster_to   = indexOfCluster(index_to);
+for itrj = 1:ntrj
+  nframe = numel(indexOfCluster{itrj});
 
-%% ignore invalid indices
-nframe = numel(indexOfCluster_from);
-s = ones(nframe, 1);
+  index_from = 1:(nframe-tau);
+  index_to   = (1+tau):nframe;
+  indexOfCluster_from = indexOfCluster{itrj}(index_from);
+  indexOfCluster_to   = indexOfCluster{itrj}(index_to);
 
-id = (indexOfCluster_from <= 0);
-s(id) = 0;
-indexOfCluster_from(id) = 1;
+  %% ignore invalid indices
+  nframe = numel(indexOfCluster_from);
+  s = ones(nframe, 1);
 
-id = (indexOfCluster_to   <= 0);
-s(id) = 0;
-indexOfCluster_to(id)   = 1;
+  id = (indexOfCluster_from <= 0);
+  s(id) = 0;
+  indexOfCluster_from(id) = 1;
 
-id = (indexOfCluster_from == NaN);
-s(id) = 0;
-indexOfCluster_from(id) = 1;
+  id = (indexOfCluster_to   <= 0);
+  s(id) = 0;
+  indexOfCluster_to(id)   = 1;
 
-id = (indexOfCluster_to   == NaN);
-s(id) = 0;
-indexOfCluster_to(id)   = 1;
+  id = (indexOfCluster_from == NaN);
+  s(id) = 0;
+  indexOfCluster_from(id) = 1;
 
-%% calc count matrix
-% count transitions and make count matrix C_ij by using a sparse matrix
-c = sparse(indexOfCluster_from, indexOfCluster_to, s, nstate, nstate);
+  id = (indexOfCluster_to   == NaN);
+  s(id) = 0;
+  indexOfCluster_to(id)   = 1;
 
-% some regularization (see the references)
+  %% calc count matrix
+  % count transitions and make count matrix C_ij by using a sparse matrix
+  c_itrj = sparse(indexOfCluster_from, indexOfCluster_to, s, nstate, nstate);
+
+  [m, n] = size(c_itrj);
+  c(1:m, 1:n) = c(1:m, 1:n) + c_itrj(1:m, 1:n);
+end
+
+% some regularization
 %s = (c + c') > 0;
 %prior = 1;
 %c = c + prior*s;
