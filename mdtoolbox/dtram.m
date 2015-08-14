@@ -1,6 +1,6 @@
-function [pmf_m, t_mn] = dtram(c_k, fhandle_k, temperature, edge_m)
+function [pmf_m, t_k] = dtram(c_k, fhandle_k, temperature, edge_m)
 %% dtram
-% calculate (dimensionless relative) potential of mean force and transition matrix by using dTRAM
+% calculate (reduced) potential of mean force and transition matrix by using dTRAM
 %
 %% Syntax
 %# [pmf_m, t_k] = dtram(c_k, fhandle_k, temperature, edge_m)
@@ -34,13 +34,14 @@ function [pmf_m, t_mn] = dtram(c_k, fhandle_k, temperature, edge_m)
 %
 %% TODO
 % sparse matrix support
+% mex for kernel part
 %
 
 %% preparation
 % Boltzmann constant in kcal/(mol K)
 KB = 0.00198719168260038;
 % Tolerance for the convergence of iterations
-TOLERANCE = 10^(-8);
+TOLERANCE = 10^(-2);
 %TOLERANCE = 10^(-2);
 
 % K: number of thermodynamic states
@@ -80,18 +81,21 @@ end
 bias_km = bias_km ./ (KB*temperature);
 
 %% flat prior
+c_k_cell = c_k;
+clear c_k;
+c_k = zeros(M, M, K);
 for k = 1:K
-  c_k{k} = c_k{k} + (1./M)*10^(-5);
+  c_k(:, :, k) = c_k_cell{k} + (1./M)*10^(-5);
 end
 
 %% prepare symmetrized transition count matrix
-c_sym_k = {};
+c_sym_k = zeros(M, M, K);
 for k = 1:K
-  c_sym_k{k} = c_k{k} + c_k{k}';
+  c_sym_k(:, :, k) = c_k(:, :, k) + c_k(:, :, k)';
 end
 
 %% neighbor prior
-%% (in principle, MATLAB's log() exp() allow negative c_ij)
+%% (in principle, MATLAB's log() exp() allow negative c_ij except for zero)
 % for k = 1:K
 %   ind_zero = find(c_sym_k{k}==0);
 %   c_k{k}(ind_zero) = - 1;
@@ -109,11 +113,11 @@ prior = double(eps('single'));
 
 log_lambda_km = zeros(K, M); % log of Langrange's multipliers lambda
 for k = 1:K
-  log_lambda_km(k, :) = log(sum(c_k{k}, 2)' + (M*prior) + 10^(-10));
+  log_lambda_km(k, :) = log(sum(c_k(:,:,k), 2)' + (M*prior) + 10^(-10));
   %log_lambda_km(k, :) = log(sum(c_k{k}, 2)' + 10^(-10));
 end
 check_convergence = inf;
-t_mn = log_lambda_km;
+t_k = log_lambda_km;
 
 prob_m = ones(1, M)./M;
 log_prob_m = log(prob_m);
@@ -123,62 +127,37 @@ pmf_new_m = pmf_m;
 log_lambda_new_km = log_lambda_km;
 log_prob_new_m   = log_prob_m;
 
-log_numerator_km   = zeros(K, M);
-log_denominator_km = zeros(K, M);
-
-log_mn = zeros(M, M);
-
-tic;
 count_iteration = 0;
 while check_convergence > TOLERANCE
 
   % 1st equation (Eq. 16 of Ref. 1)
   for k = 1:K
-    c_sym = c_sym_k{k};
-    for i = 1:M
-      log_iij_m = -bias_km(k, i) + log_prob_m(i) + log_lambda_km(k, :);
-      log_iij_m2 = real(log_iij_m);
-      log_jji_m = -bias_km(k, :) + log_prob_m    + log_lambda_km(k, i);
-      log_jji_m2 = real(log_jji_m);
-      vmax = max(log_iij_m2, log_jji_m2);
-      log_iij_jji_m = vmax + log(exp(log_iij_m - vmax) + exp(log_jji_m - vmax));
+    log_iij_mn = bsxfun(@plus, log_lambda_km(k, :), (-bias_km(k,:)+log_prob_m)');
+    log_iij_mn2 = real(log_iij_mn);
+    log_jji_mn = bsxfun(@plus, (-bias_km(k,:)+log_prob_m), log_lambda_km(k, :)');
+    log_jji_mn2 = real(log_jji_mn);
+    vmax = max(log_iij_mn2, log_jji_mn2);
+    log_iij_jji_mn = vmax + log(exp(log_iij_mn - vmax) + exp(log_jji_mn - vmax));
 
-      %log_c_m = log(c_sym(i, :) + prior);
-      log_c_m = log(c_sym(i, :));
-      %log_m = log_c_m - bias_km(k, :) + log_prob_m + log_lambda_km(k, i) - log_iij_jji_m;
-      log_mn(:, i) = (log_c_m - bias_km(k, :) + log_prob_m + log_lambda_km(k, i) - log_iij_jji_m)';
-      
-      %log_lambda_new_km(k, i) = logsumexp(log_m);
-    end
-    
-    log_lambda_new_km(k, :) = logsumexp2(log_mn);
+    log_c_mn = log(c_sym_k(:, :, k));
+    log_mn = bsxfun(@plus, bsxfun(@plus, log_c_mn-log_iij_jji_mn, (-bias_km(k,:)+log_prob_m)), log_lambda_km(k,:)');
+    log_lambda_new_km(k, :) = logsumexp2(log_mn');
   end
   log_lambda_km = log_lambda_new_km;
 
   % 2nd equation (Eq. 17 of Ref. 1)
   for i = 1:M
-    for k = 1:K
-      %log_numerator_km(k, :) = log(c_k{k}(:, i)' + prior);
-      log_numerator_km(k, :) = log(c_k{k}(:, i)');
+    log_numerator_km = log(squeeze(c_k(:, i, :))');
+    
+    log_iij_km = bsxfun(@plus, log_lambda_km, -bias_km(:, i)) + log_prob_m(i);
+    log_iij_km2 = real(log_iij_km);
+    log_jji_km = bsxfun(@plus, bsxfun(@plus, -bias_km, log_lambda_km(:, i)), log_prob_m);
+    log_jji_km2 = real(log_jji_km);
+    vmax = max(log_iij_km2, log_jji_km2);
+    log_iij_jji_km = vmax + log(exp(log_iij_km - vmax) + exp(log_jji_km - vmax));
 
-      log_iij_m = -bias_km(k, i) + log_prob_m(i) + log_lambda_km(k, :);
-      log_iij_m2 = real(log_iij_m);
-      log_jji_m = -bias_km(k, :) + log_prob_m    + log_lambda_km(k, i);
-      log_jji_m2 = real(log_jji_m);
-      vmax = max(log_iij_m2, log_jji_m2);
-      log_iij_jji_m = vmax + log(exp(log_iij_m - vmax) + exp(log_jji_m - vmax));
-
-      c_sym = c_sym_k{k};
-      %log_c_m = log(c_sym(i, :) + prior);
-      log_c_m = log(c_sym(i, :));
-
-      % if any(isnan(log_c_m(:))); error('log_c_m includes NaN'); end
-      % if any(isnan(bias_km(:))); error('bias_km includes NaN'); end
-      % if any(isnan(real(log_lambda_km(:)))); error('log_lambda_km includes NaN'); end
-      % if any(isnan(log_iij_jji_m(:))); error('log_iij_jji_m includes NaN'); end
-
-      log_denominator_km(k, :) = log_c_m - bias_km(k, i) + log_lambda_km(k, :) - log_iij_jji_m;
-    end
+    log_c_km = log(squeeze(c_sym_k(i, :, :))');
+    log_denominator_km = bsxfun(@plus, log_c_km + log_lambda_km - log_iij_jji_km, -bias_km(:, i));
     log_prob_new_m(i) = real(logsumexp(log_numerator_km(:)) - logsumexp(log_denominator_km(:)));
   end
   
@@ -187,7 +166,6 @@ while check_convergence > TOLERANCE
   pmf_new_m  = -log(prob_new_m);
   
   % check convergence
-  %check_convergence = max(abs(f_k_new - f_k))./std(f_k_new);
   check_convergence = max(abs(pmf_new_m - pmf_m))./std(pmf_new_m);
 
   prob_m = prob_new_m;
@@ -203,10 +181,6 @@ while check_convergence > TOLERANCE
     fprintf('\n');
   end
 end
-
-toc;
-% before tuning: 16.732 sec
-%t_mn = log_lambda_km;
 
 %% logsumexp (input should be array. sums over rows)
 function s = logsumexp(x)
