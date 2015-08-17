@@ -34,7 +34,7 @@ function [pmf_m, t_k] = dtram(c_k, bias_km)
 
 %% preparation
 % Tolerance for the convergence of iterations
-TOLERANCE = 10^(-2);
+TOLERANCE = 10^(-8);
 
 % K: number of thermodynamic states
 K = numel(c_k);
