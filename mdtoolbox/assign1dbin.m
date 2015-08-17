@@ -1,6 +1,6 @@
 function [index, histogram] = assign1dbin(data, edge)
 %% assign1dbin
-% assign bin index to the given 1-D data by binning their values
+% assign 1-D bin index to the given 1-D data by binning their values
 %
 %% Syntax
 %# index = assign1dbin(data, edge);
@@ -36,13 +36,16 @@ function [index, histogram] = assign1dbin(data, edge)
 % assign2dbin, assignvoronoi
 %
 
+%% setup
 if isrow(data)
   data = data';
 end
 nedge = numel(edge);
 
+%% construct histogram and binning
 [histogram, index] = histc(data, edge);
 
+%% eliminate samples outside the specified bin edges
 index(index == nedge) = NaN;
 index(index == 0) = NaN;
 histogram(nedge) = [];

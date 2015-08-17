@@ -32,7 +32,7 @@ function [index, histogram] = assign2dbin(data, edge_x, edge_y)
 %
 %% Example
 %# data = rand(100000, 2);
-%# index = assign2dbin(data, 0:0.2:1, 0:0.5:1);
+%# index = assign2dbin(data, [0 0.2 0.4 0.6 0.8 1.0], [0.4 0.5 1.0]);
 %# scatter(data(:, 1), data(:, 2), 5, index(:, 1) + 5*(index(:, 2)-1), 'filled');
 % 
 %% See also
@@ -64,6 +64,14 @@ index = [index_x index_y];
 if nargout > 1
   id = id12 | id34;
   index = index(~id, :);
-  z = accumarray(index, 1, [(nedge_x-1) (nedge_y-1)]);
+  histogram = accumarray(index, 1, [(nedge_x-1) (nedge_y-1)]);
 end
+
+
+
+
+
+
+
+
 
