@@ -1,76 +1,69 @@
-function [index, center_x, center_y, edge_x, edge_y] = assign2dbins(data, edge_x, edge_y)
-%% assign2dbins
-% assign 1-dimensional indices to the 2-dimensional data
+function [index, histogram] = assign2dbin(data, edge_x, edge_y)
+%% assign2dbin
+% assign 2-D bin index to the given 2-D data by binning their values
 %
 %% Syntax
-%# index = assign2dbins(data);
-%# index = assign2dbins(data, edge_x, edge_y);
-%# [index, center_x, center_y] = assign2dbins(data, edge_x, edge_y);
-%#
-%# index = assign2dbins(data, nbin_x, nbin_y);
-%# [index, center_x, center_y, edge_x, edge_y] = assign1dbins(data, nbin)
+%# index = assign2dbin(data, edge_x, edge_y);
+%# [index, histogram] = assign2dbin(data, edge_x, edge_y)
 %
 %% Description
-% This routine assigns 1-dimensional bin indices to the given data
-% in 2-dimensional space. 
+% This routine assigns bin index to the given data by binning
+% their values. 
 %
-% * data     - data to be assigned 
-%              [double nframe x 1]
+% For each data(i, :), bin index k1 and k2 is assgined if data(i, :) is
+%   edge_x(k1) ≤ data(i, 1) < edge_x(k1+1)
+%   edge_y(k2) ≤ data(i, 2) < edge_y(k2+1)
+% 
+% NaN is assigned to data outside the given edges.
+% Also, data outside the given edges are not counted in the
+% histogram. 
+%
+% * data     - 2-D data to be assigned 
+%              [double nframe x 2]
 % * edge_x   - edges for bins in the 1st dimension
-%              [double nframe+1 x 1]
+%              [double (nedge_x) x 1]
 % * edge_y   - edges for bins in the 2nd dimension
-%              [double nframe+1 x 1]
-% * index    - indices of bins.
-%              [integer nframe x 1]
-% * center_x - centers of bins in the 1st dimension
-%              [double nframe x 1]
-% * center_y - centers of bins in the 2nd dimension
-%              [double nframe x 1]
-% * nbin_x   - the number of bins in the 1st dimension
-%              [integer scalar]
-% * nbin_y   - the number of bins in the 2nd dimension
-%              [integer scalar]
+%              [double (nedge_y) x 1]
+%
+% * index     - bined 2-D index data
+%               [integer nframe x 2]
+% * histogram - binned histogram
+%               [integer (nedge_x-1) x (nedge_y-1)]
 %
 %% Example
 %# data = rand(100000, 2);
-%# [index, center, edge] = assign2dbins(data, 0:0.2:1, 0:0.5:1);
-%# scatter(data(:, 1), data(:, 2), 5, index, 'filled');
+%# index = assign2dbin(data, 0:0.2:1, 0:0.5:1);
+%# scatter(data(:, 1), data(:, 2), 5, index(:, 1) + 5*(index(:, 2)-1), 'filled');
 % 
 %% See also
-% assign1dbins, assignvoronoi
+% assign1dbin, assignvoronoi
 %
 
-if isrow(data)
-  data = data';
-end
+%% setup
+nedge_x = numel(edge_x);
+nedge_y = numel(edge_y);
 
-if (~exist('edge_x', 'var') || isempty(edge_x))
-  edge_x = 10;
-end
+%% assing bin-index to samples
+[~, index_x] = histc(data(:, 1), edge_x);
+[~, index_y] = histc(data(:, 2), edge_y);
 
-if (~exist('edge_y', 'var') || isempty(edge_y))
-  edge_y = 10;
-end
+%% eliminate samples outside the specified bin edges
+id1 = (index_x == nedge_x);
+id2 = (index_x == 0);
+id12 = id1 | id2;
+index_x(id12) = NaN;
 
-if numel(edge_x) == 1
-  nbin_x = edge_x;
-  data_min = min(data(:, 1));
-  data_max = max(data(:, 1));
-  edge_x = linspace(data_min, data_max + nbin_x*eps, nbin_x+1);
-else
-  nbin_x = numel(edge_x) - 1;
-end
+id3 = (index_y == nedge_y);
+id4 = (index_y == 0);
+id34 = id3 | id4;
+index_y(id34) = NaN;
 
-if numel(edge_y) == 1
-  nbin_y = edge_y;
-  data_min = min(data(:, 2));
-  data_max = max(data(:, 2));
-  edge_y = linspace(data_min, data_max + nbin_y*eps, nbin_y+1);
-else
-  nbin_y = numel(edge_y) - 1;
-end
+index = [index_x index_y];
 
-[index_x, center_x] = assign1dbins(data(:, 1), edge_x);
-[index_y, center_y] = assign1dbins(data(:, 2), edge_y);
-index = nbin_y*(index_x-1) + index_y;
+%% construct histogram with accumulation
+if nargout > 1
+  id = id12 | id34;
+  index = index(~id, :);
+  z = accumarray(index, 1, [(nedge_x-1) (nedge_y-1)]);
+end
 
