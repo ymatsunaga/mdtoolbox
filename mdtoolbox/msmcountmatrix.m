@@ -1,12 +1,12 @@
-function c = msmcountmatrix(indexOfCluster, nstate, tau)
+function c = msmcountmatrix(indexOfCluster, tau, nstate)
 %% msmcountmatrix
 % calculate transition count matrix from a set of binned trajectory data
 %
 %% Syntax
 %# c = msmcountmatrix(indexOfCluster);
-%# c = msmcountmatrix(indexOfCluster, nstate);
-%# c = msmcountmatrix(indexOfCluster, nstate, tau);
-%# c = msmcountmatrix(indexOfCluster, [], tau);
+%# c = msmcountmatrix(indexOfCluster, tau);
+%# c = msmcountmatrix(indexOfCluster, tau, nstate);
+%# c = msmcountmatrix(indexOfCluster, [], nstate);
 %
 %% Description
 % calculate count matrix of transition from state i to state j during time step tau
@@ -59,25 +59,18 @@ for itrj = 1:ntrj
   s(id) = 0;
   indexOfCluster_to(id)   = 1;
 
-  id = (indexOfCluster_from == NaN);
+  id = isnan(indexOfCluster_from);
   s(id) = 0;
   indexOfCluster_from(id) = 1;
 
-  id = (indexOfCluster_to   == NaN);
+  id = isnan(indexOfCluster_to);
   s(id) = 0;
   indexOfCluster_to(id)   = 1;
 
   %% calc count matrix
-  % count transitions and make count matrix C_ij by using a sparse matrix
+  % count transitions and make count matrix C_ij by using a sparse
+  % matrix
   c_itrj = sparse(indexOfCluster_from, indexOfCluster_to, s, nstate, nstate);
-
-  [m, n] = size(c_itrj);
-  c(1:m, 1:n) = c(1:m, 1:n) + c_itrj(1:m, 1:n);
+  c = c + c_itrj;
 end
-
-% some regularization
-%s = (c + c') > 0;
-%prior = 1;
-%c = c + prior*s;
-% %c = 0.5*(c + c') + prior*s;
 

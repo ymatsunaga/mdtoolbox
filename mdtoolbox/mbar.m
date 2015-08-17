@@ -8,10 +8,11 @@ function f_k = mbar(u_kl, nblock)
 %
 %% Description
 %
-% * u_kl      - reduced potential energy of umbrella simulation k evaluated at umbrella l
+% * u_kl      - reduced bias-factor or potential energy of umbrella simulation data k evaluated at umbrella l
 %               [cell numbrella x numbrella]
 % * nblock    - the number of blocks used for error evaluation. default is 1 (no error estimation)
 %               [integer scalar]
+%
 % * f_k       - (dimensionless) free energies of umbrella-windows
 %               [double numbrella x nblock]
 % 

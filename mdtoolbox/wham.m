@@ -1,6 +1,6 @@
 function [f_k, pmf_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, temperature, edge_m, nblock)
 %% wham
-% calculate (dimensionless relative) free energies of umbrella-windows and potential of mean force in data-bins by using the WHAM
+% calculate (reduced) free energies of umbrella-windows and potential of mean force in data-bins by using the WHAM
 %
 %% Syntax
 %# [f_k, pmf_m, center_m] = wham(data_k, fhandle_k, temperature)
@@ -8,9 +8,9 @@ function [f_k, pmf_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, tempera
 %
 %% Description
 %
-% * data_k      - cell of trajectories in a space where histograms are counted
+% * data_k      - trajectories of a variable where histograms are counted
 %                 [cell K x 1]
-% * fhandle_k   - cell of function handles which represent biased potentials
+% * fhandle_k   - cell of function handles which represent bias-factors
 %                 [cell K x 1]
 % * temperature - Temperature in Kelvin
 %                 [double scalar]
@@ -33,15 +33,6 @@ function [f_k, pmf_m, center_m, h_km, bias_km] = wham(data_k, fhandle_k, tempera
 % This function uses the method described in
 % [1] S. Kumar, D. Bouzida, R. H. Swendsen, P. A. Kollman, and
 %     J. M. Rosenberg, J. Comput. Chem. 13, 1011 (1992). 
-% Also, some parts are based on the following papers:
-% [2] B. Roux, Computer Physics Communications 91, 275 (1995).
-% [3] J. D. Chodera, W. C. Swope, J. W. Pitera, C. Seok, and  
-%     K. A. Dill, J. Chem. Theory Comput. 3, 26 (2007).
-% [4] J. S. Hub, B. L. de Groot, and D. van der Spoel,
-%     J. Chem. Theory Comput. 6, 3713 (2010). 
-%
-%% TODO
-% bootstrap
 %
 
 % The names of variables and indicies follow the convention of Ref 1.
@@ -165,7 +156,7 @@ log_Neff_km(:) = double(log(eps('single')));
 log_Neff_km(Neff_km > 0) = log(Neff_km(Neff_km > 0));
 
 %% calculate bias-factor
-% bias_km: bias-factor for umbrella-window (k) in data-bin (m)
+% bias_km: bias-factor for umbrella-window (k) at bin-center (m)
 bias_km = zeros(K, M);
 for k = 1:K
   for m = 1:M
