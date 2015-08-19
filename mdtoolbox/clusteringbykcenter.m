@@ -27,8 +27,8 @@ function [indexOfCluster_out, indexOfCenter_out, distPointCenter_out] = clusteri
 % clusteringbykmeans, clusteringbyinformation
 %
 %% References
-% S. Dasgupta and P. M. Long, J. Comput. Syst. Sci. 70, 555 (2005).
-% J. Sun, Y. Yao, X. Huang, V. Pande, G. Carlsson, and L. J. Guibas, Learning 24, 2 (2009).
+% [1] S. Dasgupta and P. M. Long, J. Comput. Syst. Sci. 70, 555 (2005).
+% [2] J. Sun, Y. Yao, X. Huang, V. Pande, G. Carlsson, and L. J. Guibas, Learning 24, 2 (2009).
 %
 
 %% preparation
@@ -48,7 +48,7 @@ if ~exist('nReplicates', 'var')
     nReplicates = 10;
 end
 
-%% remove the centers of mass of the structres
+%% remove the centers of mass of the structures
 trj = decenter(trj, [], mass);
 
 %% clustering

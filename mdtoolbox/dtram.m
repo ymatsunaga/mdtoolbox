@@ -18,7 +18,7 @@ function [pmf_m, t_k] = dtram(c_k, bias_km)
 %                 [cell of size K where each element has M x M matrix]
 % 
 %% Example
-%# 
+%# see http://mdtoolbox.readthedocs.org/en/latest/alat_1D_umbrella_dham.html
 % 
 %% See also
 % msmcountmatrix wham
@@ -74,8 +74,6 @@ for k = 1:K
 end
 
 %% solve the dTRAM equations by self-consistent iteration
-prior = double(eps('single'));
-
 log_lambda_km = zeros(K, M); % log of Langrange's multipliers lambda
 for k = 1:K
   log_lambda_km(k, :) = log(sum(c_k(:, :, k), 2)');

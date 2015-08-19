@@ -40,7 +40,7 @@ function [projection, mode, lambda] = calctica(trj, lagtime)
 % calcpca
 % 
 %% References
-% [1]	Y. Naritomi and S. Fuchigami, J. Chem. Phys. 134, 065101 (2011).
+% [1] Y. Naritomi and S. Fuchigami, J. Chem. Phys. 134, 065101 (2011).
 % [2] C. R. Schwantes and V. S. Pande, J. Chem. Theory Comput. 9, 2000 (2013).
 %
 
