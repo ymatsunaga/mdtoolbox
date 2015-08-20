@@ -1,5 +1,5 @@
-function [indexOfCluster_out, indexOfCenter_out, distPointCenter_out] = clusterkcenter(trj, kcluster, f_max, nReplicates)
-%% clusterkcenter
+function [indexOfCluster_out, indexOfCenter_out, distanceFromCenter_out] = clusterkcenters(trj, kcluster, f_max, nReplicates)
+%% clusterkcenters
 % K-center clustering by using RMSD metric
 %
 %% Syntax
@@ -16,7 +16,7 @@ function [indexOfCluster_out, indexOfCenter_out, distPointCenter_out] = clusterk
 % * f_max           - maximum distance of samples from cluster centers
 % * indexOfCluster  - cluster index from 1 to kcluster [nframe integer]
 % * indexOfCenter   - time index of center coordinates [kcluster integer]
-% * distPointCenter - distance between the points and the centers of cluster [nframe double]
+% * distanceFromCenter - distance between the points and the centers of cluster [nframe double]
 % 
 %% Example
 %# parm = readparm('ala.parm');
@@ -79,27 +79,27 @@ if ~isempty(kcluster)
     % at first, all points belong to the 1st cluster
     indexOfCluster = ones(nframe, 1);
     % distance of the points from the 1st center
-    distPointCenter = superimpose(trj(indexOfCenter(1), :), trj, [], mass, [], true);
+    distanceFromCenter = superimpose(trj(indexOfCenter(1), :), trj, [], mass, [], true);
 
     for i = 2:kcluster
-      [~, indexOfCenter(i)] = max(distPointCenter);
+      [~, indexOfCenter(i)] = max(distanceFromCenter);
       ref = trj(indexOfCenter(i), :);
       dist = superimpose(ref, trj, [], mass, [], true);
-      index = dist < distPointCenter;
-      if any(index) > 0
+      index = (dist < distanceFromCenter);
+      if any(index)
         % updated if the dist to a new cluster is smaller than the previous one
-        distPointCenter(index) = dist(index);
+        distanceFromCenter(index) = dist(index);
         indexOfCluster(index) = i;
       end
     end
 
-    distMax = max(distPointCenter);
-    disp(sprintf('%d iteration  kcluster = %d  f_max = %f', ireplica, kcluster, distMax));
-    if (ireplica == 1) || (distMax < distMax_out)
-      distMax_out = distMax;
+    distanceMax = max(distanceFromCenter);
+    disp(sprintf('%d iteration  kcluster = %d  f_max = %f', ireplica, kcluster, distanceMax));
+    if (ireplica == 1) || (distanceMax < distanceMax_out)
+      distanceMax_out = distanceMax;
       indexOfCluster_out = indexOfCluster;
       indexOfCenter_out = indexOfCenter;
-      distPointCenter_out = distPointCenter;
+      distanceFromCenter_out = distanceFromCenter;
     end
   end
 
@@ -110,31 +110,31 @@ else
     % at first, all points belong to the 1st cluster
     indexOfCluster = ones(nframe, 1);
     % distance of the points from the 1st center
-    distPointCenter = superimpose(trj(indexOfCenter(1), :), trj, [], mass, [], true);
+    distanceFromCenter = superimpose(trj(indexOfCenter(1), :), trj, [], mass, [], true);
 
     i = 1;
-    distMax = max(distPointCenter);
-    while distMax > f_max
+    distanceMax = max(distanceFromCenter);
+    while distanceMax > f_max
       i = i + 1;
-      [~, indexOfCenter(i)] = max(distPointCenter);
+      [~, indexOfCenter(i)] = max(distanceFromCenter);
       ref = trj(indexOfCenter(i), :);
       dist = superimpose(ref, trj, [], mass, [], true);
-      index = dist < distPointCenter;
-      if any(index) > 0
+      index = dist < distanceFromCenter;
+      if any(index)
         % updated if the dist to a new cluster is smaller than the previous one
-        distPointCenter(index) = dist(index);
+        distanceFromCenter(index) = dist(index);
         indexOfCluster(index) = i;
       end
-      distMax = max(distPointCenter);
+      distanceMax = max(distanceFromCenter);
     end
 
     kcluster = i;
-    disp(sprintf('%d iteration  kcluster = %d  f_max = %f', ireplica, kcluster, distMax));
+    disp(sprintf('%d iteration  kcluster = %d  f_max = %f', ireplica, kcluster, distanceMax));
     if (ireplica == 1) || (kcluster < kcluster_min)
       kcluster_min = kcluster;
       indexOfCluster_out = indexOfCluster;
       indexOfCenter_out = indexOfCenter;
-      distPointCenter_out = distPointCenter;
+      distanceFromCenter_out = distanceFromCenter;
     end
   end
 
