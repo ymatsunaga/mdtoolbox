@@ -1,4 +1,4 @@
-function [p_ci_best, values] = clusteringbyinformation(x, temperature, nc, nReplicates)
+function [p_ci_best, values] = clusterinformation(x, temperature, nc, nReplicates)
 %% clusteringbyinformation
 % clusterize samples according to an information-based criterion
 %

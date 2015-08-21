@@ -1,4 +1,4 @@
-function [indexOfCluster, centroid, population] = clusteringbyrandom(trj, radius)
+function [indexOfCluster, centroid, population] = clusterrandom(trj, radius)
 %% clusteringbyrandom
 % Lyman & Zuckerman clustering by using RMSD metric
 %

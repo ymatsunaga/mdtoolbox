@@ -1,4 +1,4 @@
-function [indexOfCluster_out] = clusteringbymarkov(t, indexOfState, r)
+function [indexOfCluster_out] = clustermarkov(t, indexOfState, r)
 %% clusteringbymarkob
 % Markov Cluster algorithm (MCL)
 %

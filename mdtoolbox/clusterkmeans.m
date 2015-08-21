@@ -1,4 +1,4 @@
-function [indexOfCluster, centroid, sumd] = clusteringbykmeans(trj, kcluster, mass)
+function [indexOfCluster, centroid, sumd] = clusterkmeans(trj, kcluster, mass)
 %% clusteringbykmeans
 % K-means clustering by using rmsd measure
 %
