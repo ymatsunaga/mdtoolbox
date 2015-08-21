@@ -1,4 +1,10 @@
 function [c2, trj_index2] = msmtarjan(c, trj_index)
+%% msmtarjan
+% Tarjan's algorithm
+%
+%% Syntax
+%# [c2, index2] = msmtarjan(c, index);
+%
 
 nstate = size(c, 1);
 if nstate > 1000
