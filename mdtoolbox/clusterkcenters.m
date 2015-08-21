@@ -1,41 +1,59 @@
-function [indexOfCluster_out, indexOfCenter_out, distanceFromCenter_out] = clusterkcenters(trj, kcluster, f_max, nReplicates)
+function [indexOfCluster_out, center_out, distanceFromCenter_out] = clusterkcenters(trj, f_max, kcluster, nReplicates)
 %% clusterkcenters
-% K-center clustering by using RMSD metric
+% K-centers clustering by using RMSD metric
 %
 %% Syntax
-%# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, kcluster);
-%# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, [], f_max);
+%# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, f_max);
+%# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, [], kcluster);
 %
-%# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, kcluster, [], nReplicates);
-%# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, [], f_max, nReplicates);
+%# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, f_max, [], nReplicates);
+%# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj, [], kcluster, nReplicates);
 %
 %% Description
 %
 % * trj             - trajectory to be clustered [nframe x natom3 double]
-% * kcluster        - the number of clusters [scalar integer]
 % * f_max           - maximum distance of samples from cluster centers
+% * kcluster        - the number of clusters [scalar integer]
+%
 % * indexOfCluster  - cluster index from 1 to kcluster [nframe integer]
-% * indexOfCenter   - time index of center coordinates [kcluster integer]
+% * center          - centers of clusters [double kcluster x natom3]
 % * distanceFromCenter - distance between the points and the centers of cluster [nframe double]
 % 
 %% Example
-%# parm = readparm('ala.parm');
-%# trj = readnetcdf('ala.nc');
-%# index = find(selectid(parm.residue_id, 1:3) & ~selectname(parm.atom_name, 'H*'));
-%# [indexOfCluster, indexOfCenter] = clusteringbykcenter(trj(:, to3(index)), 4, parm.mass(index));
+%# 
 % 
 %% See also
-% clusteringbykmeans, clusteringbyinformation
+% clusterhybrid
 %
 %% References
+% This function uses the method described in
 % [1] S. Dasgupta and P. M. Long, J. Comput. Syst. Sci. 70, 555 (2005).
 % [2] J. Sun, Y. Yao, X. Huang, V. Pande, G. Carlsson, and L. J. Guibas, Learning 24, 2 (2009).
 %
 
 %% preparation
+if iscell(trj)
+  trj_cell = trj;
+  
+  ncell = numel(trj_cell);
+  natom3 = size(trj_cell{1}, 2);
+  natom = natom3/3;
+
+  nframes  = zeros(ncell+1, 1);
+  for i = 1:ncell
+    nframes(i+1) = nframes(i) + size(trj_cell{i}, 1);
+  end
+
+  trj = zeros(nframes(end), natom3);
+  for i = 1:ncell
+    trj((nframes(i)+1):nframes(i+1), :) = trj_cell{i};
+  end
+else
+  natom3 = size(trj, 2);
+  natom = natom3/3;
+end
+
 nframe = size(trj, 1);
-natom3 = size(trj, 2);
-natom = natom3/3;
 mass = [];
 
 if ~exist('kcluster', 'var')
@@ -94,11 +112,11 @@ if ~isempty(kcluster)
     end
 
     distanceMax = max(distanceFromCenter);
-    disp(sprintf('%d iteration  kcluster = %d  f_max = %f', ireplica, kcluster, distanceMax));
+    disp(sprintf('%d iteration  f_max = %f  kcluster = %d', ireplica, distanceMax, kcluster));
     if (ireplica == 1) || (distanceMax < distanceMax_out)
       distanceMax_out = distanceMax;
       indexOfCluster_out = indexOfCluster;
-      indexOfCenter_out = indexOfCenter;
+      center_out = trj(indexOfCenter, :);
       distanceFromCenter_out = distanceFromCenter;
     end
   end
@@ -129,14 +147,29 @@ else
     end
 
     kcluster = i;
-    disp(sprintf('%d iteration  kcluster = %d  f_max = %f', ireplica, kcluster, distanceMax));
+    disp(sprintf('%d iteration  f_max = %f  kcluster = %d', ireplica, distanceMax, kcluster));
     if (ireplica == 1) || (kcluster < kcluster_min)
       kcluster_min = kcluster;
       indexOfCluster_out = indexOfCluster;
-      indexOfCenter_out = indexOfCenter;
+      center_out = trj(indexOfCenter, :);
       distanceFromCenter_out = distanceFromCenter;
     end
   end
 
+end
+
+%% preprocess
+if exist('trj_cell', 'var')
+  indexOfCluster_cell = cell(ncell, 1);
+  for i = 1:ncell
+    indexOfCluster_cell{i} = indexOfCluster_out((nframes(i)+1):nframes(i+1));
+  end
+  indexOfCluster_out = indexOfCluster_cell;
+
+  distanceFromCenter_cell = cell(ncell, 1);
+  for i = 1:ncell
+    distanceFromCenter_cell{i} = distanceFromCenter_out((nframes(i)+1):nframes(i+1));
+  end
+  distanceFromCenter_out = distanceFromCenter_cell;
 end
 
