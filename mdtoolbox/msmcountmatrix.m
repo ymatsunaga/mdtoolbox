@@ -27,7 +27,7 @@ end
 ntrj = numel(indexOfCluster);
 
 if ~exist('nstate', 'var') || isempty(nstate)
-  nstate = max(cellfunc(@max, c));
+  nstate = max(cellfun(@(x) max(x), indexOfCluster));
   disp(sprintf('Message: nstate = %d is used.', nstate));
 end
 
