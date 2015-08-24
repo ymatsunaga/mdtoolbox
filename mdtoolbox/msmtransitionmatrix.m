@@ -1,4 +1,4 @@
-function [t, pi_i] = msmtransitionmatrix(c)
+function [t, pi_i] = msmtransitionmatrix(c, TOLERANCE)
 %% msmtransitionmatrix
 % estimate transition probability matrix from count matrix
 %
@@ -28,8 +28,11 @@ x_i    = sum(x, 2);
 
 pi_i   = [];
 
+if ~exist('TOLERANCE', 'var')
+  TOLERANCE = 10^(-14);
+end
+
 %% optimization by self-consistent iteration
-TOLERANCE = 10^(-14);
 check_convergence = inf;
 
 count_iteration = 0;
