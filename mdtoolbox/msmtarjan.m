@@ -7,9 +7,10 @@ function [c2, trj_index2] = msmtarjan(c, trj_index)
 %
 
 nstate = size(c, 1);
-if nstate > 1000
-  nRecursionLimit = get(0,'RecursionLimit');
-  set(0,'RecursionLimit', nstate*2);
+if nstate > 500
+  nRecursionLimit = get(0, 'RecursionLimit');
+  set(0, 'RecursionLimit', nstate*2);
+  cleaner = onCleanup(@() set(0, 'RecursionLimit', nRecursionLimit));
 end
 
 index_counter = 1;
@@ -57,10 +58,6 @@ if nargin > 1
   trj_index2 = trj_index;
 else
   trj_index2 = [];
-end
-
-if nstate > 1000
-  set(0,'RecursionLimit', nRecursionLimit);
 end
 
 
