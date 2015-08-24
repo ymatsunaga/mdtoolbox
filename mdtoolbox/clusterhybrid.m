@@ -81,7 +81,7 @@ center_new = center;
 indexOfCluster_new = indexOfCluster;
 
 check_convergence = 0;
-MAX_REJECTION = 10;
+MAX_REJECTION = 50;
 
 while (check_convergence < MAX_REJECTION) && (count < max_iteration)
   % propose new centers
@@ -144,7 +144,11 @@ while (check_convergence < MAX_REJECTION) && (count < max_iteration)
     disp(sprintf('ACCEPTED at %d iteration  f_max = %f  f_medoids = %f', count, f_max, f_medoids));
     check_convergence = 0;
   else
-    disp(sprintf('REJECTED at %d iteration  f_max = %f  f_medoids = %f  (proposal  f_max = %f  f_medoids = %f)', count, f_max_new, f_medoids_new));
+    if isaccepted1
+      disp(sprintf('REJECTED at %d iteration  f_max = %f  f_medoids = %f  (proposal  f_max = %f  f_medoids = %f)', count, f_max, f_medoids, f_max_new, f_medoids_new));
+    else
+      disp(sprintf('REJECTED at %d iteration  f_max = %f  f_medoids = %f', count, f_max, f_medoids));
+    end
     check_convergence = check_convergence + 1;
   end
 end
