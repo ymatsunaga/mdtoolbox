@@ -81,7 +81,7 @@ center_new = center;
 indexOfCluster_new = indexOfCluster;
 
 check_convergence = 0;
-MAX_REJECTION = 50;
+MAX_REJECTION = 100;
 
 while (check_convergence < MAX_REJECTION) && (count < max_iteration)
   % propose new centers
