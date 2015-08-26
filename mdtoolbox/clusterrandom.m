@@ -25,12 +25,13 @@ function [indexOfCluster, centroid, population] = clusterrandom(trj, radius)
 %# semilogy(population);
 %# xlabel('reference structure', 'fontsize', 25);
 %# ylabel('P_i', 'fontsize', 25);
-%# legend('fitst half', 'second half');
+%# legend('first half', 'second half');
 % 
 %% See also
 % clusteringbykcenter, clusteringbykmeans, clusteringbyinformation
 %
 %% References
+% This functions uses the method described in
 % [1] E. Lyman and D.M. Zuckerman, Biophys. J. 91, 164 (2006).
 % [2] E. Lyman and D.M. Zuckerman, J. Phys. Chem. B 11, 12876 (2007).
 

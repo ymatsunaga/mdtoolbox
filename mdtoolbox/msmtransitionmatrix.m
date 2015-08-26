@@ -50,7 +50,7 @@ if issparse(c)
     x   = x_new;
     x_i = x_new_i;
     if mod(count_iteration, 100) == 0
-      fprintf('%d iteration  delta(pi) = %d  tolerance = %e\n', count_iteration, check_convergence, TOLERANCE);
+      fprintf('%d iteration  delta(pi_i) = %d  tolerance = %e\n', count_iteration, check_convergence, TOLERANCE);
     end
   end
 
@@ -74,7 +74,7 @@ else
     x   = x_new;
     x_i = x_new_i;
     if mod(count_iteration, 100) == 0
-      fprintf('%d iteration  delta(pi) = %d  tolerance = %e\n', count_iteration, check_convergence, TOLERANCE);
+      fprintf('%d iteration  delta(pi_i) = %d  tolerance = %e\n', count_iteration, check_convergence, TOLERANCE);
     end
   end
   

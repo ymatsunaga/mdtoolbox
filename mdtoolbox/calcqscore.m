@@ -24,7 +24,7 @@ function qscore = calcqscore(trj, ref, id_residue, index_atom)
 %
 %% References
 % Definition of Q-score from heavy atoms is based on 
-% [1]	R. B. Best, G. Hummer, and W. A. Eaton, PNAS 110, 17874 (2013).
+% [1] R. B. Best, G. Hummer, and W. A. Eaton, PNAS 110, 17874 (2013).
 %
 
 %% setup

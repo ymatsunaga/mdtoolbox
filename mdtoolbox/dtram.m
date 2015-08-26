@@ -18,7 +18,7 @@ function [pmf_m, t_k] = dtram(c_k, bias_km)
 %                 [cell of size K where each element has M x M matrix]
 % 
 %% Example
-%# see http://mdtoolbox.readthedocs.org/en/latest/alat_1D_umbrella_dham.html
+%# see http://mdtoolbox.readthedocs.org/en/latest/alat_1D_umbrella_dtram.html
 % 
 %% See also
 % msmcountmatrix wham
