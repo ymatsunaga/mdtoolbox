@@ -78,7 +78,7 @@ else
     pmf_i = bsxfun(@minus, pmf_i, pmf_i(index_min, :));
     pmf_i = [mean(pmf_i, 2) 2*std(pmf_i, [], 2)];
   else
-    pmf_i = pmf_i - min(pmf_i);
+    %pmf_i = pmf_i - min(pmf_i);
   end
 end
 
