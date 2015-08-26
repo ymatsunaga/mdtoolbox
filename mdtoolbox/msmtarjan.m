@@ -1,6 +1,6 @@
 function [c2, trj_index2] = msmtarjan(c, trj_index)
 %% msmtarjan
-% Tarjan's algorithm
+% applies Tarjan's algorithm to extract strongly connected components
 %
 %% Syntax
 %# [c2, index2] = msmtarjan(c, index);
@@ -60,6 +60,7 @@ else
   trj_index2 = [];
 end
 
+disp(sprintf('Message: %d strongly connected states extracted from original %d states.', nstate_new, nstate));
 
 %% this resursion is based on http://www.logarithmic.net/pfh-files/blog/01208083168/tarjan.py
 function [index_counter, stack, lowlinks, index, result] = strongconnect(graph, node, index_counter, stack, lowlinks, index, result)
