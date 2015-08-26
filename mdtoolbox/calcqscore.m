@@ -51,14 +51,6 @@ jres = id_residue(pair_all(:, 2));
 id = abs(ires - jres) > 3;
 pair = pair_all(id, :);
 
-% for ipair = 1:size(pair_all, 1)
-%   iatom = pair_all(ipair, 1);
-%   jatom = pair_all(ipair, 2);
-%   if abs(id_residue(iatom) - id_residue(jatom)) > 3
-%     pair = [pair; pair_all(ipair, :)];
-%   end
-% end
-
 dist0 = calcbond(ref, pair);
 id = (dist0 < 4.5);
 dist0 = dist0(id);
