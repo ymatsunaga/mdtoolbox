@@ -14,7 +14,7 @@ function [implied_timescale, lambda] = msmimplied(indexOfCluster, tau)
 %% See also
 %
 
-lambda = zeros(numel(tau), 10);
+lambda = zeros(numel(tau), 9);
 for i = 1:numel(tau)
   disp(sprintf('calculating tau = %d', tau(i)));
   C = msmcountmatrix(indexOfCluster, tau(i));
