@@ -1,9 +1,9 @@
-function [likelihood, alpha, factor] = msmforward(T, pi_i, emission, observation)
+function [logL, alpha, factor] = msmforward(data, T, emission, pi_i)
 %% msmforward
 % forward algorithm to calculate the probability of sequence of observarion
 %
 %% Syntax
-%# [likelihood, alpha, factor] = msmforward(T, pi_i, emission, observation)
+%# [logL, alpha, factor] = msmforward(data, T, emission, pi_i)
 %
 %% Description
 % 
@@ -18,7 +18,7 @@ function [likelihood, alpha, factor] = msmforward(T, pi_i, emission, observation
 %
 
 %% setup
-nframe = numel(observation);
+nframe = numel(data);
 nstate = size(T, 1);
 
 if iscolumn(pi_i)
@@ -34,15 +34,15 @@ alpha = zeros(nframe, nstate);
 factor = zeros(nframe, 1);
 
 %% forward algorithm
-alpha(1, :) = pi_i.*emission(observation(1), :);
+alpha(1, :) = pi_i.*emission(data(1), :);
 factor(1) = sum(alpha(1, :));
 alpha(1, :) = alpha(1, :)./factor(1);
 
 for iframe = 2:nframe
-  alpha(iframe, :) = sum(bsxfun(@times, alpha(iframe-1, :)', T)) .* emission(observation(iframe), :);
+  alpha(iframe, :) = sum(bsxfun(@times, alpha(iframe-1, :)', T)) .* emission(data(iframe), :);
   factor(iframe) = sum(alpha(iframe, :));
   alpha(iframe, :) = alpha(iframe, :)./factor(iframe);
 end
 
-likelihood = prod(factor);
+logL = sum(log(factor));
 

@@ -1,9 +1,9 @@
-function [likelihood, beta, beta_nonscaled] = msmbackward(T, pi_i, emission, observation, factor)
+function [logL, beta, beta_nonscaled] = msmbackward(data, factor, T, emission, pi_i)
 %% msmbackward
 % backward algorithm to calculate the probability of sequence of observarion
 %
 %% Syntax
-%# [likelihood, beta] = msmbackward(T, pi_i, emission, observation, factor)
+%# [logL, beta, beta_nonscaled] = msmbackward(data, factor, T, emission, pi_i)
 %
 %% Description
 % 
@@ -18,7 +18,7 @@ function [likelihood, beta, beta_nonscaled] = msmbackward(T, pi_i, emission, obs
 %
 
 %% setup
-nframe = numel(observation);
+nframe = numel(data);
 nstate = size(T, 1);
 
 if iscolumn(pi_i)
@@ -37,10 +37,10 @@ beta = zeros(nframe, nstate);
 beta(nframe, :) = 1;
 
 for iframe = (nframe-1):-1:1
-  beta(iframe, :) = sum(bsxfun(@times, T, emission(:, observation(iframe+1)) .* beta(iframe+1, :)'))./factor(iframe+1);
+  beta(iframe, :) = sum(bsxfun(@times, T, emission(:, data(iframe+1)) .* beta(iframe+1, :)'))./factor(iframe+1);
 end
 
-likelihood = prod(factor);
+logL = sum(log(factor));
 
 if nargout > 2
   beta_nonscaled = beta;
