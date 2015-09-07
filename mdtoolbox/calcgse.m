@@ -1,6 +1,6 @@
 function [energy, potential, density, xi, yi, zi] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
 %% calcgse
-% compute smooth (or reciprocal) electrostatic energy, density, and average potential using k-space Gaussian split Ewald
+% compute smooth (reciprocal) electrostatic energy, density, and average electrostatic potential using k-space Gaussian split Ewald
 %
 %% Syntax
 %# [energy, potential, density, xi, yi, zi] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);

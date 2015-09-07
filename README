@@ -67,11 +67,11 @@ provided that it meets every condition of the respective licenses.
 --
 superimpose.c is licensed under the BSD license.
 
-  Copyright (c) 2009-2012 Pu Liu and Douglas L. Theobald
-  All rights reserved.
-
   The website for this software is located at:
     http://theobald.brandeis.edu/qcp/    
+
+  Copyright (c) 2009-2012 Pu Liu and Douglas L. Theobald
+  All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are
@@ -109,12 +109,12 @@ Pymbar is distributed under the GNU General Public License.
            Michael R. Shirts (michael.shirts@virginia.edu)
            Kyle A. Beauchamp (beauchak@mskcc.org)
 
+  The website for this software is located at:
+    https://github.com/choderalab/pymbar
+
   Copyright (c) 2006-2012 The Regents of the University of California. All Rights Reserved. 
   Portions of this software are Copyright (c) 2007-2008 Stanford University and Columbia University,
   (c) 2008-2013 University of Virginia, and (c) 2013 Memorial Sloan-Kettering Cancer Center. 
-
-  The website for this software is located at:
-    https://github.com/choderalab/pymbar
 
   This program is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -138,11 +138,11 @@ dx2mat.m and mat2dx.m are licensed under the BSD license.
 
   Author: Evan
 
+  The website for this software is located at:
+    http://www.mathworks.com/matlabcentral/fileexchange/42958-read-and-write-cad-data-files-using-matlab--dx-format-
+
   Copyright (c) 2013, Evan
   All rights reserved.
-
-  The website for this software is located at:
-  http://www.mathworks.com/matlabcentral/fileexchange/42958-read-and-write-cad-data-files-using-matlab--dx-format-
 
   Redistribution and use in source and binary forms, with or without
   modification, are permitted provided that the following conditions are
@@ -165,4 +165,47 @@ dx2mat.m and mat2dx.m are licensed under the BSD license.
   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
   POSSIBILITY OF SUCH DAMAGE.
+
+--
+C version and Matlab wrapper of L-BFGS-B Version 3.0 are written by Stephen Becker
+licensed under the BSD 3-clause license.
+
+  Author: Stephen Becker (stephen.becker@colorado.edu)
+
+  The website for this software is located at:
+  https://github.com/stephenbeckr/L-BFGS-B-C
+
+  Copyright (c) 2015, Stephen Becker
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+  * Redistributions of source code must retain the above copyright notice, this
+    list of conditions and the following disclaimer.
+
+  * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+  * Neither the name of the copyright holder nor the names of its
+    contributors may be used to endorse or promote products derived from
+    this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+The L-BFGS-B algorithm was written in the 1990s (mainly 1994, some revisions 1996)
+by Ciyou Zhu (in collaboration with R.H. Byrd, P. Lu-Chen and J. Nocedal)  
+
+L-BFGS-B Version 3.0 is an algorithmic update from 2011, with coding
+changes by J. L. Morales.
 
