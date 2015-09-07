@@ -59,7 +59,7 @@ if ~isoctave()
 
   elseif strncmpi(target, 'verbose', numel('verbose'))
     for i =1:nmex
-      mex_opt{i} = [mex_opt{i}, {'-v', '-O3'}];
+      mex_opt{i} = [mex_opt{i}, {'-v', '-O'}];
     end
     compile_mex_matlab(mex_opt);
 
@@ -71,7 +71,7 @@ if ~isoctave()
     
   elseif strncmpi(target, 'openmp', numel('openmp'))
     for i =1:nmex
-      mex_opt{i} = [mex_opt{i}, '-O3', 'LDFLAGS="-fopenmp \$LDFLAGS"', 'CFLAGS="-fopenmp \$CFLAGS"'];
+      mex_opt{i} = [mex_opt{i}, '-O', 'LDFLAGS="-fopenmp \$LDFLAGS"', 'CFLAGS="-fopenmp \$CFLAGS"'];
     end
     compile_mex_matlab(mex_opt);
 
@@ -128,6 +128,11 @@ end
 function compile_mex_matlab(mex_opt)
 for i = 1:numel(mex_opt)
   fprintf('Compiling MEX code: %s ...\n', mex_opt{i}{1});
+  % opt = '';
+  % for j = 1:numel(mex_opt{i})
+  %   opt = [opt sprintf('%s ', mex_opt{i}{j})];
+  % end
+  % eval(sprintf('mex %s', opt));
   mex(mex_opt{i}{:});
   fprintf('\n');
 end
