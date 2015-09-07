@@ -1,31 +1,35 @@
 function make(target)
 
-%% mex files list
-mex_opt = cell(1);
-
+%% mex files and options
 % least-squares fitting routine
-mex_opt{1} = {'superimpose.c', '-largeArrayDims'};
+mex_file{1} = 'superimpose.c';
+mex_opt{1} = {'-largeArrayDims'};
 
 % mbar auxiliary function;
-mex_opt{end+1} = {'mbar_log_wi_jn.c', '-largeArrayDims'};
+mex_file{2} = 'mbar_log_wi_jn.c';
+mex_opt{2} = {'-largeArrayDims'};
 
 % 2-d kernel density estimator;
-mex_opt{end+1} = {'ksdensity2d.c'};
+mex_file{3} = 'ksdensity2d.c';
+mex_opt{3} = {};
 
 % 3-d kernel density estimator;
-mex_opt{end+1} = {'ksdensity3d.c'};
+mex_file{4} = 'ksdensity3d.c';
+mex_opt{4} = {};
 
 % reversible transition matrix estimator;
 %mex_opt{end+1} = {'msmtransitionmatrix.c', '-largeArrayDims'};
 
 % L-BFGS-B optimization
 if ispc
-  mex_opt{end+1} = {'lbfgsb_wrapper.c', '-largeArrayDims', '-UDEBUG', '-Ilbfgsb/', ...
+  mex_file{5} = 'lbfgsb_wrapper.c';
+  mex_opt{5}  = {'-largeArrayDims', '-UDEBUG', '-Ilbfgsb/', ...
                   'lbfgsb/lbfgsb.c','lbfgsb/linesearch.c', ...
                   'lbfgsb/subalgorithms.c','lbfgsb/print.c', ...
                   'lbfgsb/linpack.c','lbfgsb/miniCBLAS.c','lbfgsb/timer.c'};
 else
-  mex_opt{end+1} = {'lbfgsb_wrapper.c', '-largeArrayDims', '-lm', '-UDEBUG', '-Ilbfgsb/', ...
+  mex_file{5} = 'lbfgsb_wrapper.c';
+  mex_opt{5} = {'-largeArrayDims', '-lm', '-UDEBUG', '-Ilbfgsb/', ...
                   'lbfgsb/lbfgsb.c','lbfgsb/linesearch.c', ...
                   'lbfgsb/subalgorithms.c','lbfgsb/print.c', ...
                   'lbfgsb/linpack.c','lbfgsb/miniCBLAS.c','lbfgsb/timer.c'};
@@ -53,30 +57,32 @@ if ~isoctave()
   %% set options and compile
   if strncmpi(target, 'all', numel('all'))
     for i =1:nmex
-      mex_opt{i} = [mex_opt{i}, '-O'];
+      mex_opt{i} = ['-O', mex_opt{i}];
     end
-    compile_mex_matlab(mex_opt);
+    compile_mex_matlab(mex_file, mex_opt);
 
   elseif strncmpi(target, 'verbose', numel('verbose'))
     for i =1:nmex
-      mex_opt{i} = [mex_opt{i}, {'-v', '-O'}];
+      mex_opt{i} = [{'-v', '-O'}, mex_opt{i}];
     end
-    compile_mex_matlab(mex_opt);
+    compile_mex_matlab(mex_file, mex_opt);
 
   elseif strncmpi(target, 'debug', numel('debug'))
     for i =1:nmex
-      mex_opt{i} = [mex_opt{i}, {'-g', '-DDEBUG'}];
+      mex_opt{i} = [{'-g', '-DDEBUG'}, mex_opt{i}];
     end
-    compile_mex_matlab(mex_opt);
+    compile_mex_matlab(mex_file, mex_opt);
     
   elseif strncmpi(target, 'openmp', numel('openmp'))
     for i =1:nmex
-      mex_opt{i} = [mex_opt{i}, '-O', 'LDFLAGS="-fopenmp \$LDFLAGS"', 'CFLAGS="-fopenmp \$CFLAGS"'];
+      if i ~= 5
+        mex_opt{i} = ['LDFLAGS="-fopenmp \$LDFLAGS"', 'CFLAGS="-fopenmp \$CFLAGS"', '-O', mex_opt{i}];
+      end
     end
-    compile_mex_matlab(mex_opt);
+    compile_mex_matlab(mex_file, mex_opt);
 
   elseif strncmpi(target, 'clean', numel('clean'))
-    delete_mex(mex_opt);
+    delete_mex(mex_file);
 
   else
     error(sprintf('cannot find target: %s', target));
@@ -125,21 +131,21 @@ else
 
 end
 
-function compile_mex_matlab(mex_opt)
-for i = 1:numel(mex_opt)
-  fprintf('Compiling MEX code: %s ...\n', mex_opt{i}{1});
-  % opt = '';
-  % for j = 1:numel(mex_opt{i})
-  %   opt = [opt sprintf('%s ', mex_opt{i}{j})];
-  % end
-  % eval(sprintf('mex %s', opt));
-  mex(mex_opt{i}{:});
+function compile_mex_matlab(mex_file, mex_opt)
+for i = 1:numel(mex_file)
+  fprintf('Compiling MEX code: %s ...\n', mex_file{i});
+  opt = '';
+  for j = 1:numel(mex_opt{i})
+    opt = [opt sprintf('%s ', mex_opt{i}{j})];
+  end
+  eval(sprintf('mex %s %s', mex_file{i}, opt));
+  %mex(mex_opt{i}{:});
   fprintf('\n');
 end
 
-function delete_mex(mex_opt)
-for i = 1:numel(mex_opt)
-  [~, filename] = fileparts(mex_opt{i}{1});
+function delete_mex(mex_file)
+for i = 1:numel(mex_file)
+  [~, filename] = fileparts(mex_file{i});
   mex_exe = [filename '.' mexext];
   fprintf('Deleting MEX exe: %s ...\n', mex_exe);
   if (exist(mex_exe, 'file'))
