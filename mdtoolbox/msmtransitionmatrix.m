@@ -66,13 +66,14 @@ x_i = sum(x, 2);
 % F
 tmp = c .* log(bsxfun(@rdivide, x, x_i));
 %index = ~(isnan(tmp));
-index = (x > 0);
+index = (x > (10*eps));
 f = - sum(tmp(index));
 
 % G
 t = c_i./x_i;
 g = (c./x) + (c'./x') - bsxfun(@plus, t, t');
-index = ((x == 0) & (x' == 0));
-g(index) = 0;
+index = ((x > (10*eps)) & (x' > (10*eps)));
+g(~index) = 0;
+g(isnan(g)) = 0;
 g = -g;
 
