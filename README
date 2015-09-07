@@ -68,7 +68,7 @@ provided that it meets every condition of the respective licenses.
 superimpose.c is licensed under the BSD license.
 
   The website for this software is located at:
-    http://theobald.brandeis.edu/qcp/    
+  http://theobald.brandeis.edu/qcp/    
 
   Copyright (c) 2009-2012 Pu Liu and Douglas L. Theobald
   All rights reserved.
@@ -110,7 +110,7 @@ Pymbar is distributed under the GNU General Public License.
            Kyle A. Beauchamp (beauchak@mskcc.org)
 
   The website for this software is located at:
-    https://github.com/choderalab/pymbar
+  https://github.com/choderalab/pymbar
 
   Copyright (c) 2006-2012 The Regents of the University of California. All Rights Reserved. 
   Portions of this software are Copyright (c) 2007-2008 Stanford University and Columbia University,
@@ -139,7 +139,7 @@ dx2mat.m and mat2dx.m are licensed under the BSD license.
   Author: Evan
 
   The website for this software is located at:
-    http://www.mathworks.com/matlabcentral/fileexchange/42958-read-and-write-cad-data-files-using-matlab--dx-format-
+  http://www.mathworks.com/matlabcentral/fileexchange/42958-read-and-write-cad-data-files-using-matlab--dx-format-
 
   Copyright (c) 2013, Evan
   All rights reserved.
