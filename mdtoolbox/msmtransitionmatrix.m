@@ -1,10 +1,10 @@
-function [t, pi_i] = msmtransitionmatrix(c, maxiteration)
+function [t, pi_i, x] = msmtransitionmatrix(c, maxiteration)
 %% msmtransitionmatrix
 % estimate transition probability matrix from count matrix
 %
 %% Syntax
-%# t = msmtransitionmatrix(c);
-%# t = msmtransitionmatrix(c, maxiteration);
+%# [t, pi_i] = msmtransitionmatrix(c);
+%# [t, pi_i] = msmtransitionmatrix(c, maxiteration);
 %
 %% Description
 % this routines uses the reversible maximum likelihood estimator
@@ -15,7 +15,7 @@ function [t, pi_i] = msmtransitionmatrix(c, maxiteration)
 %% See also
 %
 %% TODO
-% sparse matrix
+% support of sparse matrix
 % prior
 %
 
