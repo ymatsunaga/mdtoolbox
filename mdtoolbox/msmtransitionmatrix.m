@@ -49,6 +49,7 @@ x = reshape(x, nstate, nstate);
 
 x_i = sum(x, 2);
 t = bsxfun(@rdivide, x, x_i);
+t(isnan(t)) = 0;
 pi_i = x_i./sum(x_i);
 
 
@@ -72,6 +73,7 @@ f = - sum(tmp(index));
 % G
 t = c_i./x_i;
 g = (c./x) + (c'./x') - bsxfun(@plus, t, t');
+g((x_i < (10*eps)), :) = 0;
 index = ((x > (10*eps)) & (x' > (10*eps)));
 g(~index) = 0;
 g(isnan(g)) = 0;
