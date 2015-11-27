@@ -3,12 +3,24 @@ function [energy, potential, density, xi, yi, zi] = calcgse(trj, charge, box, xi
 % compute smooth (reciprocal) electrostatic energy, average potential/density using k-space Gaussian split Ewald
 %
 %% Syntax
-%# [energy, potential, density, xi, yi, zi] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
+%# energy = calcgse(trj, charge, box, xi, yi, zi);
+%# energy = calcgse(trj, charge, box, xi, yi, zi, sigma);
+%# energy = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
+%# [energy, potential, density] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
 %
 %% Description
-% This routine calculates reciprocal electrostatic energy, and average
-% potential/density on the given grid points.
-% Algotighm is based on k-space Gaussian split Ewald.
+% This routine calculates (reciprocal part of) electrostatic
+% energy, and average potential/density on the given fixed grid points.
+% Algotighm is based on the k-space Gaussian split Ewald.
+%
+% * trj    - trajectory [nframe x natom3 double]
+% * charge - charge [natom x 1]
+% * box    - PBC box size [nframe x 3 double]
+% * xi     - equally spaced grid in the x-axis on which the potential/density is averaged [nx vector double]
+% * yi     - equally spaced grid in the y-axis on which the potential/density is averaged [ny vector double]
+% * zi     - equally spaced grid in the z-axis on which the potential/density is averaged [nz vector double]
+% * sigma  - width of Gaussian function [scalar double]
+% * weight - weights used for averaging. BY default, uniform weight is used [nframe vector double]
 %
 %% Example
 %# psf = readpsf('run.psf');
