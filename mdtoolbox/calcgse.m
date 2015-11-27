@@ -1,11 +1,14 @@
 function [energy, potential, density, xi, yi, zi] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
 %% calcgse
-% compute smooth (reciprocal) electrostatic energy, density, and average electrostatic potential using k-space Gaussian split Ewald
+% compute smooth (reciprocal) electrostatic energy, average potential/density using k-space Gaussian split Ewald
 %
 %% Syntax
 %# [energy, potential, density, xi, yi, zi] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
 %
 %% Description
+% This routine calculates reciprocal electrostatic energy, and average
+% potential/density on the given grid points.
+% Algotighm is based on k-space Gaussian split Ewald.
 %
 %% Example
 %# psf = readpsf('run.psf');
@@ -14,10 +17,11 @@ function [energy, potential, density, xi, yi, zi] = calcgse(trj, charge, box, xi
 %# yi = -32:32;
 %# zi = -32:32;
 %# [energy, potential, density] = calcgse(trj, psf.charge, box, xi, yi, zi);
-%# 
+%# writedx('potential.dx', potential, xi, yi, zi);
 %
-%% See also
-% 
+%% Reference
+% Y. Shan, J. L. Klepeis, M. P. Eastwood, R. O. Dror, and D. E. Shaw, 
+% J. Chem. Phys. 122, 54101 (2005).
 % 
 
 %% setup
