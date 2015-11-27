@@ -142,11 +142,12 @@ for iframe = 1:nframe
 
   % 4'': mesh interpolation to given fixed grids for averaging over frame
   %potential = potential + weight*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'linear');
-  density   = density   + weight(iframe)*interp3(xi_gse, yi_gse, zi_gse, d1,            xi_query, yi_query, zi_query, 'cubic');
   potential = potential + weight(iframe)*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'cubic');
+  density   = density   + weight(iframe)*interp3(xi_gse, yi_gse, zi_gse, d1,            xi_query, yi_query, zi_query, 'cubic');
 end
 
 potential = permute(potential, [2,1,3]);
+density   = permute(density,   [2,1,3]);
 
 %%%%%% 3D FFT routines
 function A_k = fft3d(A_r);
