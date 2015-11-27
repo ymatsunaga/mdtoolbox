@@ -10,7 +10,7 @@ function [energy, potential, density, xi, yi, zi] = calcgse(trj, charge, box, xi
 %
 %% Description
 % This routine calculates (reciprocal part of) electrostatic
-% energy, and average potential/density on the given fixed grid points.
+% energy, and potential/density averaged over frames on the given fixed grid points.
 % Algotighm is based on the k-space Gaussian split Ewald.
 %
 % * trj    - trajectory [nframe x natom3 double]
@@ -140,7 +140,7 @@ for iframe = 1:nframe
   energy(iframe) = 0.5 * abs((xi_gse(2)-xi_gse(1)) * (yi_gse(2)-yi_gse(1)) * (zi_gse(2)-zi_gse(1))) * sum(d2(:));
   energy(iframe) = energy(iframe) * coefficient;
 
-  % 4'': mesh interpolation if needed
+  % 4'': mesh interpolation to given fixed grids for averaging over frame
   %potential = potential + weight*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'linear');
   density   = density   + weight(iframe)*interp3(xi_gse, yi_gse, zi_gse, d1,            xi_query, yi_query, zi_query, 'cubic');
   potential = potential + weight(iframe)*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'cubic');
