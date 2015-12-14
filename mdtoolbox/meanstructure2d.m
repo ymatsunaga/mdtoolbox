@@ -1,6 +1,6 @@
 function [crd, trj, vel] = meanstructure2d(trj, index, mass, tolerance, vel)
-%% meanstructure
-% calc average structure by iterative superimpose
+%% meanstructure2d
+% calc average structure by iterative superimpose in the XY space (Z-axis ignored)
 %
 %% Syntax
 %# crd = meanstructure2d(trj);
@@ -16,11 +16,11 @@ function [crd, trj, vel] = meanstructure2d(trj, index, mass, tolerance, vel)
 % This routine calculates the average structure from given
 % trajectory. The algorithm superimposes the trajectories to a
 % plausible average structure, then updates the average structrue.
+% In the superimpose step, only XY-space is considered (Z-direction
+% is ignored, this style should be convenient for membrane proteins).
 % This process is repeated until some convergence is achieved in
 % the RMSD between the average structures.
-% The total translational and rotational motions are removed in the
-% final output trajectory which are superimposed to the converged
-% average structure. So, this routine may be useful for a preprocess
+% This routine may be useful for a preprocess
 % for the subsequent structure-analysis routines, such as Principal
 % Component Analysis. 
 %
@@ -53,8 +53,8 @@ if ~exist('vel', 'var')
 end
 
 %% iterative superimpose
-ref = decenter2d(ref, index, mass);
-trj = decenter2d(trj, index, mass);
+%ref = decenter2d(ref, index, mass);
+%trj = decenter2d(trj, index, mass);
 if numel(vel) ~= 0
   vel = decenter2d(vel, index, mass);
 end
@@ -63,7 +63,7 @@ while rmsd > tolerance
   ref_old = ref;
   [~, trj, vel] = superimpose2d(ref, trj, index, mass, vel, true);
   ref = mean(trj);
-  ref = decenter2d(ref, index, mass);
+  %ref = decenter2d(ref, index, mass);
   rmsd = superimpose2d(ref_old, ref, index, mass, [], true);
   fprintf('rmsd from the previous mean structure: %f A\n', rmsd);
 end

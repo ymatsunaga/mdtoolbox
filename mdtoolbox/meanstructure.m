@@ -18,9 +18,7 @@ function [crd, trj, vel] = meanstructure(trj, index, mass, tolerance, vel)
 % plausible average structure, then updates the average structrue.
 % This process is repeated until some convergence is achieved in
 % the RMSD between the average structures.
-% The total translational and rotational motions are removed in the
-% final output trajectory which are superimposed to the converged
-% average structure. So, this routine may be useful for a preprocess
+% This routine may be useful for a preprocess
 % for the subsequent structure-analysis routines, such as Principal
 % Component Analysis. 
 %
@@ -53,8 +51,8 @@ if ~exist('vel', 'var')
 end
 
 %% iterative superimpose
-ref = decenter(ref, index, mass);
-trj = decenter(trj, index, mass);
+%ref = decenter(ref, index, mass);
+%trj = decenter(trj, index, mass);
 if numel(vel) ~= 0
   vel = decenter(vel, index, mass);
 end
@@ -63,7 +61,7 @@ while rmsd > tolerance
   ref_old = ref;
   [~, trj, vel] = superimpose(ref, trj, index, mass, vel, true);
   ref = mean(trj);
-  ref = decenter(ref, index, mass);
+  %ref = decenter(ref, index, mass);
   rmsd = superimpose(ref_old, ref, index, mass, [], true);
   fprintf('rmsd from the previous mean structure: %f A\n', rmsd);
 end
