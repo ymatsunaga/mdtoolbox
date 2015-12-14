@@ -52,7 +52,7 @@ end
 
 if ~exist('mass', 'var')
   mass = [];
-else
+elsif ~isempty(mass)
   assert(isequal(natom, numel(mass)), ...
          ['sizes of coordinates and masses are not same'])
 end
