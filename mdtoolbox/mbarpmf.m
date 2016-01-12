@@ -17,7 +17,7 @@ function [pmf_i, w_k] = mbarpmf(u_kl, bin_k, f_k, u_k)
 % * f_k       - reduced free energies of umbrella k
 %               the number of blocks for block averaing is taken from the colum size of f_k
 %               [double numbrella x nblock]
-% * u_k       - reduced potential energy umbrella simulation k under the condition where PMF is evaluated 
+% * u_k       - reduced potential energy umbrella simulation k where PMF is evaluated 
 %               [cell numbrella x 1]
 %               If omitted, u_k = 0 is assumed
 % * pmf       - potential mean force of each bin
@@ -26,15 +26,14 @@ function [pmf_i, w_k] = mbarpmf(u_kl, bin_k, f_k, u_k)
 %               [cell numbrella x 1]
 % 
 %% Example
-% see http://mdtoolbox.readthedocs.org/en/latest/alat_1D_umbrella_mbar.html
+% http://mdtoolbox.readthedocs.org/en/latest/alat_1D_umbrella_mbar.html
+% http://mdtoolbox.readthedocs.org/en/latest/alad_2D_umbrella_mbar.html
 % 
 %% See also
 % mbar
 %
 %% References
-% [1] M. R. Shirts and J. D. Chodera, J Chem Phys 129, 124105 (2008).
-% [2] Z. Tan, Journal of the American Statistical Association 99, 1027 (2004).
-% [3] C. H. Bennett, Journal of Computational Physics (1976).
+% M. R. Shirts and J. D. Chodera, J Chem Phys 129, 124105 (2008).
 %
 
 % The names of variables and indicies follow the convention of Ref 1.

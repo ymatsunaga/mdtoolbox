@@ -17,15 +17,14 @@ function f_k = mbar(u_kl, nblock)
 %               [double numbrella x nblock]
 % 
 %% Example
-% see http://mdtoolbox.readthedocs.org/en/latest/alat_1D_umbrella_mbar.html
+% http://mdtoolbox.readthedocs.org/en/latest/alat_1D_umbrella_mbar.html
+% http://mdtoolbox.readthedocs.org/en/latest/alad_2D_umbrella_mbar.html
 % 
 %% See also
 % mbarpmf wham wham2d ptwham
 %
 %% References
-% [1] M. R. Shirts and J. D. Chodera, J Chem Phys 129, 124105 (2008).
-% [2] Z. Tan, Journal of the American Statistical Association 99, 1027 (2004).
-% [3] C. H. Bennett, J Comput Phys 22, 245 (1976).
+% M. R. Shirts and J. D. Chodera, J. Chem. Phys. 129, 124105 (2008).
 %
 
 % The names of variables and indicies follow the convention of Ref 1.
