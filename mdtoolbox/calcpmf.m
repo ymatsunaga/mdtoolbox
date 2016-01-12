@@ -4,8 +4,8 @@ function [pmf, xi] = calcpmf(data, xi, bandwidth, box, weight)
 %
 %% Syntax
 % [pmf, xi] = calcpmf(data)
-% pmf = calcpmf2d(data, xi)
-% pmf = calcpmf2d(data, xi, bandwidth, box, weight)
+% pmf = calcpmf(data, xi)
+% pmf = calcpmf(data, xi, bandwidth, box, weight)
 %
 %% Description
 %
