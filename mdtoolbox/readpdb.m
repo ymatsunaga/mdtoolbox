@@ -114,7 +114,6 @@ pdb.charge     = repmat('90', natom, 1);
 %% read PDB data
 lines = model{1};
 for iatom = 1:natom
-  iatom;
   line = repmat(' ', 1, 80);
   line(1:length(lines{iatom})) = lines{iatom};
   pdb.record(iatom, :)     = line(1:6);
@@ -122,7 +121,9 @@ for iatom = 1:natom
   %index_hex = regexp(line(7:12), '[abcdef]+');
   if (iatom == 1) || (pdb.serial(iatom-1) < 99999)
     num = str2num(line(7:12));
-  else
+  elseif any(line(7:12) == '*')
+    num = [];
+  else 
     num = hex2dec(line(7:12));
   end
   if isempty(num);
