@@ -49,9 +49,9 @@ else
   end
 end
 
-if ~exist('mass', 'var') || isempty(mass)
+if ~exist('mass', 'var')
   mass = [];
-elsif ~isempty(mass)
+elseif ~isempty(mass)
   assert(isequal(natom, numel(mass)), ...
          ['sizes of coordinates and masses are not same'])
 end
