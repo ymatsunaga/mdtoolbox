@@ -1,4 +1,4 @@
-function [energy, potential, density, xi, yi, zi] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
+function [energy, potential, density, xi, yi, zi, force] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight, index_atom);
 %% calcgse
 % compute smooth (reciprocal) electrostatic energy, average potential/density using k-space Gaussian split Ewald
 %
@@ -93,6 +93,17 @@ if ~exist('weight', 'var') || isempty(weight)
   weight = weight./sum(weight);
 end
 
+if ~exist('index_atom') || isempty(index_atom)
+  index_atom = 1:natom;
+end
+
+if islogical(index_atom)
+  index_atom = find(index_atom);
+end
+
+if nargout >= 7
+  force = zeros(natom, 3);
+end
 
 %% compute k-space Gaussian split Ewald
 % pre-allocation
@@ -144,6 +155,11 @@ for iframe = 1:nframe
   %potential = potential + weight*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'linear');
   potential = potential + weight(iframe)*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'cubic');
   density   = density   + weight(iframe)*interp3(xi_gse, yi_gse, zi_gse, d1,            xi_query, yi_query, zi_query, 'cubic');
+
+  if nargout >= 7
+    force_gse = calcforce(potential_gse, data, charge, sigma1, xi_gse, yi_gse, zi_gse, box(iframe, :), index_atom);
+    force = force + weight(iframe)*force_gse;
+  end
 end
 
 potential = permute(potential, [2,1,3]);
@@ -155,4 +171,59 @@ A_k = fft(fft(fft(A_r,[],1),[],2),[],3);
 
 function A_r = ifft3d(A_k);
 A_r = ifft(ifft(ifft(A_k,[],1),[],2),[],3,'symmetric');
+
+%%%%%% force
+function force = calcforce(potential, data, charge, sigma1, xi, yi, zi, box, index_atom);
+nx = numel(xi);
+ny = numel(yi);
+nz = numel(zi);
+natom = numel(charge);
+natom_sub = numel(index_atom);
+
+data = data(index_atom, :);
+
+dx = bsxfun(@minus, data(:, 1), xi);
+dx = dx - round(dx./box(1))*box(1);
+dx2 = (dx./sigma1).^2;
+dy = bsxfun(@minus, data(:, 2), yi);
+dy = dy - round(dy./box(2))*box(2);
+dy2 = (dy./sigma1).^2;
+dz = bsxfun(@minus, data(:, 3), zi);
+dz = dz - round(dz./box(3))*box(3);
+dz2 = (dz./sigma1).^2;
+
+gaussx = exp(-0.5 * dx2);
+gaussy = exp(-0.5 * dy2);
+gaussz = exp(-0.5 * dz2);
+
+force = zeros(natom, 3);
+t2 = zeros(nx, ny);
+t3 = zeros(nx, ny, nz);
+
+vec1 = zeros(nx, 1, 1);
+vec2 = zeros(1, ny, 1);
+vec3 = zeros(1, 1, nz);
+
+for i = 1:natom_sub
+  iatom = index_atom(i);
+  t2 = bsxfun(@times, gaussx(i, :)', gaussy(i, :));
+  vec3(1, 1, :) = gaussz(i, :);
+  t3 = bsxfun(@times, t2, vec3);
+  t3 = t3.*potential;
+
+  vec1(:, 1, 1) = dx(i, :);
+  vec2(1, :, 1) = dy(i, :);
+  vec3(1, 1, :) = dz(i, :);
+
+  tmp = bsxfun(@times, vec1, t3);
+  force(iatom, 1) = sum(tmp(:));
+  tmp = bsxfun(@times, vec2, t3);
+  force(iatom, 2) = sum(tmp(:));
+  tmp = bsxfun(@times, vec3, t3);
+  force(iatom, 3) = sum(tmp(:));
+
+  force(iatom, :) = force(iatom, :) * charge(iatom);
+end
+
+force = force * abs((xi(2)-xi(1)) * (yi(2)-yi(1)) * (zi(2)-zi(1))) / (2*pi*sqrt(2*pi)*(sigma1.^5));
 
