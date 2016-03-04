@@ -1,8 +1,9 @@
 function [logL, beta, beta_nonscaled] = msmbackward(data, factor, T, emission, pi_i)
 %% msmbackward
-% backward algorithm to calculate the probability of sequence of observarion
+% backward algorithm to calculate the probability of observed sequence
 %
 %% Syntax
+%# [logL, beta] = msmbackward(data, factor, T, emission, pi_i)
 %# [logL, beta, beta_nonscaled] = msmbackward(data, factor, T, emission, pi_i)
 %
 %% Description

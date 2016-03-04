@@ -24,7 +24,7 @@ trjOfState = zeros(nframe, 1);
 if iscell(indexOfCluster)
   indexOfCluster2 = indexOfCluster;
   indexOfCluster = [];
-  for i = 1:numel(indexOfCluster)
+  for i = 1:numel(indexOfCluster2)
     indexOfCluster = [indexOfCluster; indexOfCluster2{i}];
   end
   clear indexOfCluster2;
@@ -33,7 +33,7 @@ end
 if iscell(trj)
   trj2 = trj;
   trj = [];
-  for i = 1:numel(trj)
+  for i = 1:numel(trj2)
     trj = [trj; trj2{i}];
   end
   clear trj2;
@@ -45,6 +45,6 @@ for iframe = 1:nframe
   index = find(index);
   nz = numel(index);
   ri = randi(nz);
-  trjOfState(iframe) = indexOfCluster(index(ri));
+  trjOfState(iframe) = trj(index(ri));
 end
 

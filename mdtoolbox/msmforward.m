@@ -1,8 +1,9 @@
 function [logL, alpha, factor] = msmforward(data, T, emission, pi_i)
 %% msmforward
-% forward algorithm to calculate the probability of sequence of observarion
+% forward algorithm to calculate the probability of observed sequence
 %
 %% Syntax
+%# [logL, alpha] = msmforward(data, T, emission, pi_i)
 %# [logL, alpha, factor] = msmforward(data, T, emission, pi_i)
 %
 %% Description

@@ -48,7 +48,7 @@ while check_convergence > TOLERANCE
   log_emission0 = log(emission0);
 
   %% M-step
-  % pi_i
+  % equilibrium probability (pi_i)
   pi_i = zeros(1, nstate);
   log_gamma = cell(ndata, 1);
   for idata = 1:ndata
@@ -57,7 +57,7 @@ while check_convergence > TOLERANCE
   end
   pi_i  = pi_i./sum(pi_i);
 
-  % emission
+  % emission probability (emission)
   emission = zeros(nstate, nobs);
   for idata = 1:ndata
     data = data_cell{idata};
@@ -71,7 +71,7 @@ while check_convergence > TOLERANCE
   emission = bsxfun(@rdivide, emission, sum(emission, 2));
   emission(isnan(emission)) = 0;
 
-  % T
+  % transition probability (T)
   T = zeros(nstate, nstate);
   for idata = 1:ndata
     data = data_cell{idata};
