@@ -94,7 +94,7 @@ while (check_convergence > TOLERANCE) && (count_iteration < max_iteration)
   
   % reversible T
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%% X = %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  [T, pi_i] = msmtransitionmatrix(T, 10^(-8));
+  [T, pi_i] = msmtransitionmatrix(T, 1000);
 
   % check convergence
   count_iteration = count_iteration + 1;
