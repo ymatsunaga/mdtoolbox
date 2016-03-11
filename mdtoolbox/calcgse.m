@@ -1,18 +1,19 @@
-function [energy, potential, density, xi, yi, zi, force] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight, index_atom);
+function [potential, density, energy, energy_total, force, xi, yi, zi] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight, index_atom);
 %% calcgse
 % compute smooth (reciprocal) electrostatic energy, average potential/density using k-space Gaussian split Ewald
 %
 %% Syntax
-%# energy = calcgse(trj, charge, box, xi, yi, zi);
-%# energy = calcgse(trj, charge, box, xi, yi, zi, sigma);
-%# energy = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
-%# [energy, potential, density] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
+%# potential = calcgse(trj, charge, box, xi, yi, zi);
+%# potential = calcgse(trj, charge, box, xi, yi, zi, sigma);
+%# potential = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
+%# [potential, energy, energy_total, density] = calcgse(trj, charge, box, xi, yi, zi, sigma, weight);
 %
 %% Description
-% This routine calculates (reciprocal part of) electrostatic
-% energy, and potential/density averaged over frames on the given fixed grid points.
-% Algotighm is based on the k-space Gaussian split Ewald.
+% This routine calculates (reciprocal part of) electrostatic energy.
+% Specifically, electrostatic potential, energy, and smoothed
+% charge density on the specified grid. These may be useful for visualization. 
 %
+% Input
 % * trj    - trajectory [nframe x natom3 double]
 % * charge - charge [natom x 1]
 % * box    - PBC box size [nframe x 3 double]
@@ -22,13 +23,19 @@ function [energy, potential, density, xi, yi, zi, force] = calcgse(trj, charge, 
 % * sigma  - width of Gaussian function [scalar double]
 % * weight - weights used for averaging. BY default, uniform weight is used [nframe vector double]
 %
+% Output
+% * potential    - electrostatic potential on the specfied grid averaged over all frames [double, nx x ny nz]
+% * density      - smoothed charge density on the specfied grid averaged over all frames [double, nx x ny nz]
+% * energy       - electrostatic energy on the specfied grid averaged over all frames [double, nx x ny nz]
+% * energy_total - time-series of total (reciprocal part of) electrostatic energy [double nframe]
+%
 %% Example
 %# psf = readpsf('run.psf');
 %# [trj, box] = readdcd('run.dcd');
 %# xi = -32:32;
 %# yi = -32:32;
 %# zi = -32:32;
-%# [energy, potential, density] = calcgse(trj, psf.charge, box, xi, yi, zi);
+%# potential = calcgse(trj, psf.charge, box, xi, yi, zi);
 %# writedx('potential.dx', potential, xi, yi, zi);
 %
 %% Reference
@@ -101,7 +108,7 @@ if islogical(index_atom)
   index_atom = find(index_atom);
 end
 
-if nargout >= 7
+if nargout >= 5
   force = zeros(natom, 3);
 end
 
@@ -109,11 +116,12 @@ end
 % pre-allocation
 data = zeros(natom, 3);
 potential = zeros(numel(yi), numel(xi), numel(zi));
-energy = zeros(nframe, 1);
-density = zeros(numel(yi), numel(xi), numel(zi));
+density   = zeros(numel(yi), numel(xi), numel(zi));
+energy    = zeros(numel(yi), numel(xi), numel(zi));
+energy_total = zeros(nframe, 1);
 
 for iframe = 1:nframe
-  % determine grids
+  % determine grids for k-GSE
   xi_gse = linspace(-box(iframe, 1)/2, box(iframe, 1)/2, floor(box(iframe, 1))+1);
   yi_gse = linspace(-box(iframe, 2)/2, box(iframe, 2)/2, floor(box(iframe, 2))+1);
   zi_gse = linspace(-box(iframe, 3)/2, box(iframe, 3)/2, floor(box(iframe, 3))+1);
@@ -127,7 +135,8 @@ for iframe = 1:nframe
   % 1: charge spreading by convolving Gaussian function in real-space
   data = reshape(trj(iframe, :), 3, natom)';
   d1 = ksdensity3d(data, xi_gse, yi_gse, zi_gse, bandwidth1, box(iframe, :), charge);
-  d2 = permute(d1, [2,1,3]);
+  d1 = permute(d1, [2,1,3]);
+  d2 = d1;
 
   % FFT
   f = fft3d(d2);
@@ -148,22 +157,24 @@ for iframe = 1:nframe
 
   % 4': compute reciprocal energy
   d2 = d2.*potential_gse;
-  energy(iframe) = 0.5 * abs((xi_gse(2)-xi_gse(1)) * (yi_gse(2)-yi_gse(1)) * (zi_gse(2)-zi_gse(1))) * sum(d2(:));
-  energy(iframe) = energy(iframe) * coefficient;
+  d2 = coefficient * 0.5 * abs((xi_gse(2)-xi_gse(1)) * (yi_gse(2)-yi_gse(1)) * (zi_gse(2)-zi_gse(1))) * d2;
+  energy_total(iframe) = sum(d2(:));
 
   % 4'': mesh interpolation to given fixed grids for averaging over frame
   %potential = potential + weight*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'linear');
   potential = potential + weight(iframe)*interp3(xi_gse, yi_gse, zi_gse, potential_gse, xi_query, yi_query, zi_query, 'cubic');
   density   = density   + weight(iframe)*interp3(xi_gse, yi_gse, zi_gse, d1,            xi_query, yi_query, zi_query, 'cubic');
+  energy    = energy    + weight(iframe)*interp3(xi_gse, yi_gse, zi_gse, d2,            xi_query, yi_query, zi_query, 'cubic');
 
-  if nargout >= 7
+  if nargout >= 5
     force_gse = calcforce(potential_gse, data, charge, sigma1, xi_gse, yi_gse, zi_gse, box(iframe, :), index_atom);
     force = force + weight(iframe)*force_gse;
   end
 end
 
-potential = permute(potential, [2,1,3]);
-density   = permute(density,   [2,1,3]);
+potential = permute(potential,[2,1,3]);
+density   = permute(density,  [2,1,3]);
+energy    = permute(energy,   [2,1,3]);
 
 %%%%%% 3D FFT routines
 function A_k = fft3d(A_r);
