@@ -1,13 +1,12 @@
 function [mi, mi_excess] = calcmutinf(x, y, k)
 %% calcmutinf
-% evaluate mutual information. ***Current implementation requries the Machine Learning Toolbox***
+% evaluate mutual information
 %
 %% Syntax
 %# mi = calcmutinf(x, y, k)
 %# [mi, mi_excess] = calcmutinf(x, y, k)
 %
 %% Description
-% Current implementation requries the Machine Learning Toolbox.
 % 
 % * x - d-dimensional data [double nframe x d]
 % * y - d-dimensional data [double nframe x d]
@@ -63,24 +62,17 @@ end
 %% kernel function
 function mi = kernel_func(x, y, k)
 nframe = size(x, 1);
-e = zeros(nframe, 1);
+nx = zeros(nframe, 1);
+ny = zeros(nframe, 1);
 for iframe = 1:nframe
   dx = sqrt(sum(bsxfun(@minus, x, x(iframe, :)).^2, 2));
   dy = sqrt(sum(bsxfun(@minus, y, y(iframe, :)).^2, 2));
   dz = max(dx, dy);
   dz = sort(dz, 'ascend');
-  e(iframe) = dz(k+1);
-end
-
-e_max = max(e);
-[~, dist_x] = rangesearch(x, x, e_max, 'Distance', 'euclidean');
-[~, dist_y] = rangesearch(y, y, e_max, 'Distance', 'euclidean');
-
-nx = zeros(nframe, 1);
-ny = zeros(nframe, 1);
-for iframe = 1:nframe
-  nx(iframe) = sum(dist_x{iframe} < e(iframe));
-  ny(iframe) = sum(dist_y{iframe} < e(iframe));
+  e = dz(k+1);
+  
+  nx(iframe) = sum(dx < e);
+  ny(iframe) = sum(dy < e);
 end
 nx = nx - 1;
 ny = ny - 1;
