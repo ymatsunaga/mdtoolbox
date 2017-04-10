@@ -182,7 +182,7 @@ if is_vel
   [nspatial, natom, nframe] = size(vel);
   vel = reshape(vel, nspatial*natom, nframe)';
   vel = double(vel);
-  vel = 20.455*vel;
+  %vel = 20.455*vel;
 else
   vel = [];
 end

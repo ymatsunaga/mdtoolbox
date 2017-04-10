@@ -71,9 +71,6 @@ end
 [nframe, natom3] = size(trj);
 natom = natom3 / 3;
 
-if ~isa(trj, 'single');
-  trj = single(trj);
-end
 trj = trj';
 trj = reshape(trj, 3, natom, nframe);
 
@@ -104,7 +101,7 @@ finfo.Attributes(3).Value = 'MATLAB';
 finfo.Attributes(4).Name  = 'programVersion';
 finfo.Attributes(4).Value = version;
 
-finfo.Attributes(5).Name  = 'Conventions';
+finfo.Attributes(5).Name  = 'Conventions'; %required
 finfo.Attributes(5).Value = 'AMBER';
 
 finfo.Attributes(6).Name  = 'ConventionVersion';
@@ -245,12 +242,12 @@ ncwriteschema(filename, finfo);
 
 %% write data
 ncwrite(filename, 'spatial', ['xyz']);
-ncwrite(filename, 'time', [1:nframe]);
-ncwrite(filename, 'coordinates', trj);
+ncwrite(filename, 'time', single([1:nframe]));
+ncwrite(filename, 'coordinates', single(trj));
 if exist('box', 'var') && ~isempty(box)
   ncwrite(filename, 'cell_spatial', ['abc']);
   ncwrite(filename, 'cell_angular', ['alpha'; 'beta '; 'gamma']');
-  ncwrite(filename, 'cell_lengths', box');
-  ncwrite(filename, 'cell_angles', repmat(90, 3, nframe));
+  ncwrite(filename, 'cell_lengths', single(box'));
+  ncwrite(filename, 'cell_angles', single(repmat(90, 3, nframe)));
 end
 

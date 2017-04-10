@@ -6,6 +6,7 @@ function writeamberrst(filename, crd, box, vel, title)
 %# writeamberrst(filename, crd, box);
 %# writeamberrst(filename, crd, box, vel);
 %# writeamberrst(filename, crd, box, vel, title);
+%# writeamberrst(filename, crd, ~, vel);
 %
 %% Description
 % This code puts coordinates and velocities into an amber netcdf restart file. 
@@ -68,10 +69,12 @@ if ~iscolumn(crd)
 end
 crd = reshape(crd, 3, natom);
 
-if ~iscolumn(vel)
-  vel = vel';
+if exist('vel', 'var') && ~isempty(vel)
+  if ~iscolumn(vel)
+    vel = vel';
+  end
+  vel = reshape(vel, 3, natom);
 end
-vel = reshape(vel, 3, natom);
 
 if ~exist('title', 'var')
   title = 'CREATED BY MATLAB';
