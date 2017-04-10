@@ -73,7 +73,7 @@ function [trj, box, vel, temp, attributes] = readnetcdf(filename, index_atom, in
 % 
 
 %% displays groups, dimensions, variable definitions, and all attributes in the NetCDF data
-ncdisp(filename);
+%ncdisp(filename);
 
 %% read attributes
 finfo = ncinfo(filename);
@@ -158,8 +158,7 @@ stride_time = unique(diff(index_time));
 %% read data
 % coordinates in Angstrom
 if is_trj
-  trj = ncread(filename, 'coordinates', [1 start_atom start_time], ...
-               [3 count_atom count_time], [1 stride_atom stride_time]); 
+  trj = ncread(filename, 'coordinates', [1 start_atom start_time], [3 count_atom count_time], [1 stride_atom stride_time]); 
   trj = trj(:, index_atom, :);
   [nspatial, natom, nframe] = size(trj);
   trj = reshape(trj, nspatial*natom, nframe)';
@@ -170,8 +169,7 @@ end
 
 % box-sizes in Angstrom
 if is_box
-  box = ncread(filename, 'cell_lengths', [1 start_time], ...
-               [3 count_time], [1 stride_time]); 
+  box = ncread(filename, 'cell_lengths', [1 start_time], [3 count_time], [1 stride_time]); 
   box = box';
 else
   box = [];
@@ -179,8 +177,7 @@ end
 
 % velocities in Angstrom/picosecond
 if is_vel
-  vel = ncread(filename, 'velocities', [1 start_atom start_time], ...
-               [3 count_atom count_time], [1 stride_atom stride_time]); 
+  vel = ncread(filename, 'velocities', [1 start_atom start_time], [3 count_atom count_time], [1 stride_atom stride_time]); 
   vel = vel(:, index_atom, :);
   [nspatial, natom, nframe] = size(vel);
   vel = reshape(vel, nspatial*natom, nframe)';
@@ -192,8 +189,7 @@ end
 
 % target temperatures in Kelvin
 if is_temp
-  temp = ncread(filename, 'temp0', [start_time], ...
-               [count_time], [stride_time]); 
+  temp = ncread(filename, 'temp0', [start_time], [count_time], [stride_time]); 
 else
   temp = [];
 end

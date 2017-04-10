@@ -95,8 +95,8 @@ varid_global = netcdf.getConstant('GLOBAL');
 
 netcdf.putAtt(ncid, varid_global, 'ConventionVersion', '1.0');
 netcdf.putAtt(ncid, varid_global, 'Conventions', 'AMBERRESTART');
-netcdf.putAtt(ncid, varid_global, 'application', 'MDTOOLBOX');
-netcdf.putAtt(ncid, varid_global, 'program', 'MATLAB');
+netcdf.putAtt(ncid, varid_global, 'application', 'MATLAB');
+netcdf.putAtt(ncid, varid_global, 'program', 'MDTOOLBOX');
 netcdf.putAtt(ncid, varid_global, 'programVersion', '1.0');
 
 if ~exist('title', 'var')
