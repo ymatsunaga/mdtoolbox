@@ -55,5 +55,5 @@ end
 
 %% construct histogram and binning
 histogram = histc(index, (1:(nref+1))-0.5);
-histogram(nref+1) = []
+histogram(nref+1) = [];
 
