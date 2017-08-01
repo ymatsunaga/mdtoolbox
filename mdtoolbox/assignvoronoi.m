@@ -1,4 +1,4 @@
-function [index, dmin] = assignvoronoi(ref, data)
+function [index, histogram, dmin] = assignvoronoi(data, ref)
 %% assignvoronoi
 % assign Voronoi cell indices to the given data by checking the distances between ref and data
 %
@@ -13,19 +13,21 @@ function [index, dmin] = assignvoronoi(ref, data)
 % Data points of index=i belong to the Voronoi cell of the
 % reference point (or generating point) point ref(i,:).
 %
-% * ref   - generating points of Voronoi cells 
-%           [n x ndim double]
-% * data  - some trajectory or data set to be assigned 
-%           [nframe x ndim double]
-% * index - indices of Voronoi cells. indices correspond to the rows of ref 
-%           [nframe x 1 double]
-% * dmin  - distance between the data to the nearest generating point 
-%           [nframe x 1 double]
+% * data      - some trajectory or data set to be assigned 
+%               [nframe x ndim double]
+% * ref       - generating points of Voronoi cells 
+%               [n x ndim double]
+% * index     - indices of Voronoi cells. indices correspond to the rows of ref 
+%               [nframe x 1 double]
+% * histogram - binned histogram
+%               [integer n x 1]
+% * dmin      - distance between the data to the nearest generating point 
+%               [nframe x 1 double]
 %
 %% Example
-%# ref  = rand(10, 2);
 %# data = rand(10000, 2);
-%# index = assignvoronoi(ref, data);
+%# ref  = rand(10, 2);
+%# index = assignvoronoi(data, ref);
 %# scatter(data(:, 1), data(:, 2), 5, index, 'filled');
 %# hold on
 %# scatter(ref(:, 1), ref(:, 2), 100, 'ro', 'filled');
@@ -35,7 +37,7 @@ function [index, dmin] = assignvoronoi(ref, data)
 %
 
 %% setup
-[~, ndim1] = size(ref);
+[nref, ndim1] = size(ref);
 [nframe, ndim2] = size(data);
 assert(ndim1 == ndim2, 'dimensions of ref and data do not match...');
 
@@ -50,4 +52,8 @@ for iframe = 1:nframe
   index(iframe) = index_each;
   dmin(iframe) = sqrt(dmin_each);
 end
+
+%% construct histogram and binning
+histogram = histc(index, (1:(nref+1))-0.5);
+histogram(nref+1) = []
 
