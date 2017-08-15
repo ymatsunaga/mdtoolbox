@@ -17,17 +17,19 @@ mex_opt{3} = {};
 mex_file{4} = 'ksdensity3d.c';
 mex_opt{4} = {};
 
-% reversible transition matrix estimator;
+% reversible transition matrix estimator
 %mex_opt{end+1} = {'msmtransitionmatrix.c', '-largeArrayDims'};
 
 % L-BFGS-B optimization
 if ispc
+  % windows
   mex_file{5} = 'lbfgsb_wrapper.c';
   mex_opt{5}  = {'-largeArrayDims', '-UDEBUG', '-Ilbfgsb/', ...
                   'lbfgsb/lbfgsb.c','lbfgsb/linesearch.c', ...
                   'lbfgsb/subalgorithms.c','lbfgsb/print.c', ...
                   'lbfgsb/linpack.c','lbfgsb/miniCBLAS.c','lbfgsb/timer.c'};
 else
+  % mac or unix
   mex_file{5} = 'lbfgsb_wrapper.c';
   mex_opt{5} = {'-largeArrayDims', '-lm', '-UDEBUG', '-Ilbfgsb/', ...
                   'lbfgsb/lbfgsb.c','lbfgsb/linesearch.c', ...
@@ -90,39 +92,29 @@ if ~isoctave()
   end
 
 else 
-
   %%%%% Octave
-  %% setup
+  %% default keyword
   if (~exist('target', 'var'))
     target = 'all';
   end
+  is_openmp = false;
 
+  %% set options and compile
   if strncmpi(target, 'all', numel('all'))
-    for i = 1:numel(mex_list)
-      commandline = sprintf('CFLAGS="-O3" CXXFLAGS="-O3" LDFLAGS="-O3" mkoctfile -v --mex %s', mex_list{i});
-      system(commandline);
-    end
+    compile_mex_octave(mex_file, mex_opt, is_openmp);
 
   elseif strncmpi(target, 'verbose', numel('verbose'))
-    for i = 1:numel(mex_list)
-      commandline = sprintf('CFLAGS="-O3" CXXFLAGS="-O3" LDFLAGS="-O3" mkoctfile -v --mex %s', mex_list{i});
-      system(commandline);
-    end
+    compile_mex_octave(mex_file, mex_opt, is_openmp);
 
   elseif strncmpi(target, 'debug', numel('debug'))
-    for i = 1:numel(mex_list)
-      commandline = sprintf('CFLAGS="-g -DDEBUG" CXXFLAGS="-g -DDEBUG" LDFLAGS="-g -DDEBUG" mkoctfile -v --mex %s', mex_list{i});
-      system(commandline);
-    end
+    compile_mex_octave(mex_file, mex_opt, is_openmp);
     
   elseif strncmpi(target, 'openmp', numel('openmp'))
-    for i = 1:numel(mex_list)
-      commandline = sprintf('CFLAGS="-O3 -fopenmp" CXXFLAGS="-O3 -fopenmp" LDFLAGS="-O3 -fopenmp" mkoctfile -v --mex %s -lz -lgomp', mex_list{i});
-      system(commandline);
-    end
+    is_openmp = true;
+    compile_mex_octave(mex_file, mex_opt, is_openmp);
 
   elseif strncmpi(target, 'clean', numel('clean'))
-    delete_mex(mex_list);
+    delete_mex(mex_file);
 
   else
     error(sprintf('cannot find target: %s', target));
@@ -138,8 +130,36 @@ for i = 1:numel(mex_file)
   for j = 1:numel(mex_opt{i})
     opt = [opt sprintf('%s ', mex_opt{i}{j})];
   end
-  eval(sprintf('mex %s %s', mex_file{i}, opt));
+  commandline = sprintf('mex %s %s', mex_file{i}, opt);
+  fprintf('%s\n', commandline);
+  eval(commandline);
   %mex(mex_opt{i}{:});
+  fprintf('\n');
+end
+
+function compile_mex_octave(mex_file, mex_opt, is_openmp)
+for i = 1:(numel(mex_file)-1)
+  [~, ALL_CFLAGS] = system('mkoctfile -p ALL_CFLAGS');
+  ALL_CFLAGS = strrep(ALL_CFLAGS, sprintf('\n'), '');
+  fprintf('Compiling MEX code: %s ...\n', mex_file{i});
+  if is_openmp
+    if isempty(strfind(ALL_CFLAGS, 'fopenmp'))
+      ALL_CFLAGS = sprintf('%s %s', ALL_CFLAGS, '-fopenmp');
+    end
+    [~, DL_LDFLAGS] = system('mkoctfile -p DL_LDFLAGS');
+    DL_LDFLAGS = strrep(DL_LDFLAGS, sprintf('\n'), '');
+    DL_LDFLAGS = sprintf('%s %s', DL_LDFLAGS, '-fopenmp');
+    commandline = sprintf(['ALL_CFLAGS="%s" DL_LDFLAGS="%s" mkoctfile -v --mex %s'], ALL_CFLAGS, DL_LDFLAGS, mex_file{i});
+  elseif ~isempty(strfind(ALL_CFLAGS, 'fopenmp'))
+    [~, DL_LDFLAGS] = system('mkoctfile -p DL_LDFLAGS');
+    DL_LDFLAGS = strrep(DL_LDFLAGS, sprintf('\n'), '');
+    DL_LDFLAGS = sprintf('%s %s', DL_LDFLAGS, '-fopenmp');
+    commandline = sprintf('DL_LDFLAGS=\"%s\" mkoctfile -v --mex %s', DL_LDFLAGS, mex_file{i});
+  else
+    commandline = sprintf('mkoctfile -v --mex %s', mex_file{i});
+  end
+  fprintf('%s\n', commandline);
+  system(commandline);
   fprintf('\n');
 end
 
