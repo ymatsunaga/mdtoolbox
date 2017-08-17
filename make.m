@@ -11,11 +11,11 @@ mex_opt{2} = {'-largeArrayDims'};
 
 % 2-d kernel density estimator;
 mex_file{3} = 'ksdensity2d.c';
-mex_opt{3} = {};
+mex_opt{3} = {'-largeArrayDims'};
 
 % 3-d kernel density estimator;
 mex_file{4} = 'ksdensity3d.c';
-mex_opt{4} = {};
+mex_opt{4} = {'-largeArrayDims'};
 
 % reversible transition matrix estimator
 %mex_opt{end+1} = {'msmtransitionmatrix.c', '-largeArrayDims'};
