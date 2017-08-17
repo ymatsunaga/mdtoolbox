@@ -22,29 +22,29 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   double  *f;
 
   /* working variables */
-  int     nstep;
-  int     nx, ny, nz;
+  size_t  nstep;
+  size_t  nx, ny, nz;
   double  dx, dy, dz;
   double  dgrid_x, dgrid_y, dgrid_z;
-  int     dims[3];
-  int     i, j, istep;
-  int     ix, iy, iz;
-  int     ix_min, ix_max;
-  int     iy_min, iy_max;
-  int     iz_min, iz_max;
+  size_t  dims[3];
+  size_t  i, j, istep;
+  size_t  ix, iy, iz;
+  size_t  ix_min, ix_max;
+  size_t  iy_min, iy_max;
+  size_t  iz_min, iz_max;
   double  rx, ry, rz;
   double  *gaussx, *gaussy, *gaussz;
   double  *f_private;
-  int     is_box;
-  int     alloc_bandwidth;
-  int     alloc_weight;
+  size_t  is_box;
+  size_t  alloc_bandwidth;
+  size_t  alloc_weight;
 
-  int     *ix_array;
-  int     *iy_array;
-  int     *iz_array;
-  int     ix_count;
-  int     iy_count;
-  int     iz_count;
+  size_t  *ix_array;
+  size_t  *iy_array;
+  size_t  *iz_array;
+  size_t  ix_count;
+  size_t  iy_count;
+  size_t  iz_count;
 
   /* check inputs and outputs */
   if (nrhs < 5) {
@@ -70,10 +70,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   dims[2] = nz;
 
   #ifdef DEBUG
-    mexPrintf("MEX: nstep = %d\n", nstep);
-    mexPrintf("MEX: nx    = %d\n", nx);
-    mexPrintf("MEX: ny    = %d\n", ny);
-    mexPrintf("MEX: nz    = %d\n", nz);
+    mexPrintf("MEX: nstep = %zu\n", nstep);
+    mexPrintf("MEX: nx    = %zu\n", nx);
+    mexPrintf("MEX: ny    = %zu\n", ny);
+    mexPrintf("MEX: nz    = %zu\n", nz);
   #endif
 
   /* setup: bandwidth */
@@ -155,9 +155,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
       gaussx    = (double *) malloc(nx*sizeof(double));
       gaussy    = (double *) malloc(ny*sizeof(double));
       gaussz    = (double *) malloc(nz*sizeof(double));
-      ix_array  = (int *) malloc(nx*sizeof(int));
-      iy_array  = (int *) malloc(ny*sizeof(int));
-      iz_array  = (int *) malloc(nz*sizeof(int));
+      ix_array  = (size_t *) malloc(nx*sizeof(size_t));
+      iy_array  = (size_t *) malloc(ny*sizeof(size_t));
+      iz_array  = (size_t *) malloc(nz*sizeof(size_t));
 
       for (ix = 0; ix < nx; ix++) {
         for (iy = 0; iy < ny; iy++) {
@@ -303,21 +303,21 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
       for (istep = 0; istep < nstep; istep++) {
 
         dx = data[istep + nstep*0] - grid_x[0];
-        ix_min = (int) ((dx - rx)/dgrid_x);
+        ix_min = (size_t) ((dx - rx)/dgrid_x);
         ix_min = ix_min > 0 ? ix_min : 0;
-        ix_max = ((int) ((dx + rx)/dgrid_x)) + 1;
+        ix_max = ((size_t) ((dx + rx)/dgrid_x)) + 1;
         ix_max = ix_max < nx ? ix_max : nx;
-        /* mexPrintf("MEX: ix_min = %d\n", ix_min); */
-        /* mexPrintf("MEX: ix_max = %d\n", ix_max); */
+        /* mexPrintf("MEX: ix_min = %zu\n", ix_min); */
+        /* mexPrintf("MEX: ix_max = %zu\n", ix_max); */
         for (ix = ix_min; ix < ix_max; ix++) {
           dx = (grid_x[ix] - data[istep + nstep*0])/bandwidth[0];
           gaussx[ix] = exp(-0.5*dx*dx)/(sqrt(2*M_PI)*bandwidth[0]);
         }
 
         dy = data[istep + nstep*1] - grid_y[0];
-        iy_min = (int) ((dy - ry)/dgrid_y);
+        iy_min = (size_t) ((dy - ry)/dgrid_y);
         iy_min = iy_min > 0 ? iy_min : 0;
-        iy_max = ((int) ((dy + ry)/dgrid_y)) + 1;
+        iy_max = ((size_t) ((dy + ry)/dgrid_y)) + 1;
         iy_max = iy_max < ny ? iy_max : ny;
         for (iy = iy_min; iy < iy_max; iy++) {
           dy = (grid_y[iy] - data[istep + nstep*1])/bandwidth[1];
@@ -325,9 +325,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         }
 
         dz = data[istep + nstep*2] - grid_z[0];
-        iz_min = (int) ((dz - rz)/dgrid_z);
+        iz_min = (size_t) ((dz - rz)/dgrid_z);
         iz_min = iz_min > 0 ? iz_min : 0;
-        iz_max = ((int) ((dz + rz)/dgrid_z)) + 1;
+        iz_max = ((size_t) ((dz + rz)/dgrid_z)) + 1;
         iz_max = iz_max < nz ? iz_max : nz;
         for (iz = iz_min; iz < iz_max; iz++) {
           dz = (grid_z[iz] - data[istep + nstep*2])/bandwidth[2];

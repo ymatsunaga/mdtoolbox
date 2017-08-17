@@ -21,26 +21,26 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   double  *f;
 
   /* working variables */
-  int     nstep;
-  int     nx, ny;
+  size_t  nstep;
+  size_t  nx, ny;
   double  dx, dy;
   double  dgrid_x, dgrid_y;
-  int     dims[2];
-  int     i, j, istep;
-  int     ix, iy;
-  int     ix_min, ix_max;
-  int     iy_min, iy_max;
+  size_t  dims[2];
+  size_t  i, j, istep;
+  size_t  ix, iy;
+  size_t  ix_min, ix_max;
+  size_t  iy_min, iy_max;
   double  rx, ry;
   double  *gaussx, *gaussy;
   double  *f_private;
-  int     is_box;
-  int     alloc_bandwidth;
-  int     alloc_weight;
+  size_t  is_box;
+  size_t  alloc_bandwidth;
+  size_t  alloc_weight;
 
-  int     *ix_array;
-  int     *iy_array;
-  int     ix_count;
-  int     iy_count;
+  size_t  *ix_array;
+  size_t  *iy_array;
+  size_t  ix_count;
+  size_t  iy_count;
 
   /* check inputs and outputs */
   if (nrhs < 4) {
@@ -63,9 +63,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   dims[1] = ny;
 
   #ifdef DEBUG
-    mexPrintf("MEX: nstep = %d\n", nstep);
-    mexPrintf("MEX: nx    = %d\n", nx);
-    mexPrintf("MEX: ny    = %d\n", ny);
+    mexPrintf("MEX: nstep = %zu\n", nstep);
+    mexPrintf("MEX: nx    = %zu\n", nx);
+    mexPrintf("MEX: ny    = %zu\n", ny);
   #endif
 
   /* setup: bandwidth */
@@ -141,8 +141,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
       f_private = (double *) malloc(nx*ny*sizeof(double));
       gaussx    = (double *) malloc(nx*sizeof(double));
       gaussy    = (double *) malloc(ny*sizeof(double));
-      ix_array  = (int *) malloc(nx*sizeof(int));
-      iy_array  = (int *) malloc(ny*sizeof(int));
+      ix_array  = (size_t *) malloc(nx*sizeof(size_t));
+      iy_array  = (size_t *) malloc(ny*sizeof(size_t));
 
       for (ix = 0; ix < nx; ix++) {
         for (iy = 0; iy < ny; iy++) {
@@ -252,9 +252,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
       for (istep = 0; istep < nstep; istep++) {
 
         dx = data[istep + nstep*0] - grid_x[0];
-        ix_min = (int) ((dx - rx)/dgrid_x);
+        ix_min = (size_t) ((dx - rx)/dgrid_x);
         ix_min = ix_min > 0 ? ix_min : 0;
-        ix_max = ((int) ((dx + rx)/dgrid_x)) + 1;
+        ix_max = ((size_t) ((dx + rx)/dgrid_x)) + 1;
         ix_max = ix_max < nx ? ix_max : nx;
         for (ix = ix_min; ix < ix_max; ix++) {
           dx = (grid_x[ix] - data[istep + nstep*0])/bandwidth[0];
@@ -262,9 +262,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         }
 
         dy = data[istep + nstep*1] - grid_y[0];
-        iy_min = (int) ((dy - ry)/dgrid_y);
+        iy_min = (size_t) ((dy - ry)/dgrid_y);
         iy_min = iy_min > 0 ? iy_min : 0;
-        iy_max = ((int) ((dy + ry)/dgrid_y)) + 1;
+        iy_max = ((size_t) ((dy + ry)/dgrid_y)) + 1;
         iy_max = iy_max < ny ? iy_max : ny;
         for (iy = iy_min; iy < iy_max; iy++) {
           dy = (grid_y[iy] - data[istep + nstep*1])/bandwidth[1];

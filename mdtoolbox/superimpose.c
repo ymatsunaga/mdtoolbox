@@ -96,10 +96,10 @@
 #endif
 
 static double
-InnerProduct(double *A, double **coords1, double **coords2, const int len, const double *weight)
+InnerProduct(double *A, double **coords1, double **coords2, const size_t len, const double *weight)
 {
     double          x1, x2, y1, y2, z1, z2;
-    int             i;
+    size_t          i;
     const double   *fx1 = coords1[0], *fy1 = coords1[1], *fz1 = coords1[2];
     const double   *fx2 = coords2[0], *fy2 = coords2[1], *fz2 = coords2[2];
     double          G1 = 0.0, G2 = 0.0;
@@ -169,8 +169,8 @@ InnerProduct(double *A, double **coords1, double **coords2, const int len, const
 }
 
 
-int
-FastCalcRMSDAndRotation(double *rot, double *A, double *rmsd, double E0, int len, double wsum, double minScore)
+size_t
+FastCalcRMSDAndRotation(double *rot, double *A, double *rmsd, double E0, size_t len, double wsum, double minScore)
 {
     double Sxx, Sxy, Sxz, Syx, Syy, Syz, Szx, Szy, Szz;
     double Szz2, Syy2, Sxx2, Sxy2, Syz2, Sxz2, Syx2, Szy2, Szx2,
@@ -178,7 +178,7 @@ FastCalcRMSDAndRotation(double *rot, double *A, double *rmsd, double E0, int len
            SxzpSzx, SyzpSzy, SxypSyx, SyzmSzy,
            SxzmSzx, SxymSyx, SxxpSyy, SxxmSyy;
     double C[4];
-    int i;
+    size_t i;
     double mxEigenV; 
     double oldg = 0.0;
     double b, a, delta, rms, qsqr;
@@ -245,7 +245,7 @@ FastCalcRMSDAndRotation(double *rot, double *A, double *rmsd, double E0, int len
     }
 
     if (i == 50) 
-       fprintf(stderr,"\nMore than %d iterations needed!\n", i);
+       fprintf(stderr,"\nMore than %zu iterations needed!\n", i);
 
     /* the fabs() is to guard against extremely small, but *negative* numbers due to floating point error */
     /* rms = sqrt(fabs(2.0 * (E0 - mxEigenV)/len)); */
@@ -349,9 +349,9 @@ FastCalcRMSDAndRotation(double *rot, double *A, double *rmsd, double E0, int len
 
 
 static void
-CenterCoords(double **coords, double *xsum, double *ysum, double *zsum, const int len, const double *weight)
+CenterCoords(double **coords, double *xsum, double *ysum, double *zsum, const size_t len, const double *weight)
 {
-    int            i;
+    size_t         i;
     double         wsum;
     double         *x = coords[0], *y = coords[1], *z = coords[2];
 
@@ -395,9 +395,9 @@ CenterCoords(double **coords, double *xsum, double *ysum, double *zsum, const in
 
 /* Superposition coords2 onto coords1 -- in other words, coords2 is rotated, coords1 is held fixed */
 double
-CalcRMSDRotationalMatrix(double **coords1, double **coords2, const int len, double *rot, const double *weight)
+CalcRMSDRotationalMatrix(double **coords1, double **coords2, const size_t len, double *rot, const double *weight)
 {
-    int i;
+    size_t i;
     double wsum, xsum, ysum, zsum;
     double A[9], rmsd;
 
@@ -423,9 +423,9 @@ CalcRMSDRotationalMatrix(double **coords1, double **coords2, const int len, doub
 }
 
 
-double **MatInit(const int rows, const int cols)
+double **MatInit(const size_t rows, const size_t cols)
 {
-    int             i;
+    size_t          i;
     double        **matrix = NULL;
     double         *matspace = NULL;
 
@@ -433,7 +433,7 @@ double **MatInit(const int rows, const int cols)
     if (matspace == NULL)
     {
         perror("\n ERROR");
-        printf("\n ERROR: Failure to allocate matrix space in MatInit(): (%d x %d)\n", rows, cols);
+        printf("\n ERROR: Failure to allocate matrix space in MatInit(): (%zu x %zu)\n", rows, cols);
         exit(EXIT_FAILURE);
     }
 
@@ -442,7 +442,7 @@ double **MatInit(const int rows, const int cols)
     if (matrix == NULL)
     {
         perror("\n ERROR");
-        printf("\n ERROR: Failure to allocate room for row pointers in MatInit(): (%d)\n", rows);
+        printf("\n ERROR: Failure to allocate room for row pointers in MatInit(): (%zu)\n", rows);
         exit(EXIT_FAILURE);
     }
 
@@ -490,13 +490,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   double  *vel_fitted;
 
   /* working variables */
-  int     i, j, istep;
-  int     mrows;
-  int     ncols;
+  size_t  i, j, istep;
+  size_t  mrows;
+  size_t  ncols;
 
   double  **frag_a, **frag_b;
   double  **frag_a_sub, **frag_b_sub;
-  int     *index;
+  size_t  *index;
   double  *weight_sub;
   double  **frag_v;
   double  rotmat[9];
@@ -505,9 +505,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   mxArray *mxIsLogical;
   bool    *isLogical;
 
-  int     natom, natom3;
-  int     nstep;
-  int     len;
+  size_t  natom, natom3;
+  size_t  nstep;
+  size_t  len;
   double  xsum_a, ysum_a, zsum_a;
   double  xsum_b, ysum_b, zsum_b;
   double  x, y, z;
@@ -530,9 +530,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   #ifdef DEBUG
     mexPrintf("MEX: *** stage 1 ***\n");
-    mexPrintf("MEX: natom3 = %d\n", natom3);
-    mexPrintf("MEX: natom = %d\n", natom);
-    mexPrintf("MEX: nstep = %d\n", nstep);
+    mexPrintf("MEX: natom3 = %zu\n", natom3);
+    mexPrintf("MEX: natom = %zu\n", natom);
+    mexPrintf("MEX: nstep = %zu\n", nstep);
     mexPrintf("\n", len);
   #endif
 
@@ -565,7 +565,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
             len++;
           }
         }
-        index = (int *) malloc(len*sizeof(int));
+        index = (size_t *) malloc(len*sizeof(size_t));
         j = 0;
         for (i = 0; i < mxGetNumberOfElements(prhs[2]); i++) {
           if ( bindex[i] ) {
@@ -577,9 +577,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
         /* integer index */
         dindex = (double *) mxGetData(prhs[2]);
         len = mxGetNumberOfElements(prhs[2]);
-        index = (int *) malloc(len*sizeof(int));
+        index = (size_t *) malloc(len*sizeof(size_t));
         for (i = 0; i < len; i++) {
-          index[i] = (int) (dindex[i] - 0.5);
+          index[i] = (size_t) (dindex[i] - 0.5);
         }
       }
 
@@ -588,8 +588,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   #ifdef DEBUG
     mexPrintf("MEX: *** stage 2 ***\n");
-    mexPrintf("MEX: natom = %d\n", natom);
-    mexPrintf("MEX: len = %d\n", len);
+    mexPrintf("MEX: natom = %zu\n", natom);
+    mexPrintf("MEX: len = %zu\n", len);
     mexPrintf("\n", len);
   #endif
 

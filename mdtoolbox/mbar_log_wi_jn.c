@@ -11,24 +11,24 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
 
   /* inputs */
   double  *N_k_pr;
-  int     *N_k;
+  size_t  *N_k;
   double  *f_k;
   double  *u_kln;
   double  *u_kn;
   double  *K_pr;
-  int      K;
+  size_t   K;
   double  *N_max_pr;
-  int      N_max;
+  size_t   N_max;
 
   /* outputs */
   double  *log_wi_jn;
 
   /* working variables */
-  int     i, j;
-  int     k, l;
-  int     n;
-  int     mrows;
-  int     ncols;
+  size_t  i, j;
+  size_t  k, l;
+  size_t  n;
+  size_t  mrows;
+  size_t  ncols;
 
   double  *FlogN;
   double  *log_term;
@@ -50,17 +50,17 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   K_pr     = mxGetPr(prhs[4]);
   N_max_pr = mxGetPr(prhs[5]);
 
-  K     = (int) (K_pr[0] + 0.5);
-  N_max = (int) (N_max_pr[0] + 0.5);
+  K     = (size_t) (K_pr[0] + 0.5);
+  N_max = (size_t) (N_max_pr[0] + 0.5);
 
-  N_k = (int *) malloc(K*sizeof(int));
+  N_k = (size_t *) malloc(K*sizeof(size_t));
   for (k = 0; k < K; k++) {
-    N_k[k] = (int) (N_k_pr[k] + 0.5);
+    N_k[k] = (size_t) (N_k_pr[k] + 0.5);
   }
 
   #ifdef DEBUG
-    mexPrintf("MEX: K = %d\n", K);
-    mexPrintf("MEX: N_max = %d\n", N_max);
+    mexPrintf("MEX: K = %zu\n", K);
+    mexPrintf("MEX: N_max = %zu\n", N_max);
   #endif
 
   /* setup: working variables */
