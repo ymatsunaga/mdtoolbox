@@ -640,16 +640,16 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
 
   /* allocate output variables */
-  plhs[0] = mxCreateDoubleMatrix(nstep, 1, mxREAL);
+  plhs[0] = mxCreateDoubleMatrix((mwSize) nstep, (mwSize) 1, mxREAL);
   rmsd = mxGetPr(plhs[0]);
 
   if ( nlhs > 1 ) {
-    plhs[1] = mxCreateDoubleMatrix(nstep, natom3, mxREAL);
+    plhs[1] = mxCreateDoubleMatrix((mwSize) nstep, (mwSize) natom3, mxREAL);
     trj_fitted = mxGetPr(plhs[1]);
   }
 
   if ( nlhs > 2 ) {
-    plhs[2] = mxCreateDoubleMatrix(nstep, natom3, mxREAL);
+    plhs[2] = mxCreateDoubleMatrix((mwSize) nstep, (mwSize) natom3, mxREAL);
     vel_fitted = mxGetPr(plhs[2]);
   }
 

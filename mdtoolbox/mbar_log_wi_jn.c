@@ -70,7 +70,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   }
 
   /* allocate output variables */
-  plhs[0] = mxCreateDoubleMatrix(K, N_max, mxREAL);
+  plhs[0] = mxCreateDoubleMatrix((mwSize) K, (mwSize) N_max, mxREAL);
   log_wi_jn = mxGetPr(plhs[0]);
   for (k = 0; k < K; k++) {
     for (n = 0; n < N_max; n++) {

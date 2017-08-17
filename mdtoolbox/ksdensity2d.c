@@ -25,7 +25,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   size_t  nx, ny;
   double  dx, dy;
   double  dgrid_x, dgrid_y;
-  size_t  dims[2];
+  mwSize  dims[2];
   size_t  i, j, istep;
   size_t  ix, iy;
   size_t  ix_min, ix_max;
@@ -59,8 +59,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
   nstep = mxGetM(prhs[0]);
   nx    = mxGetNumberOfElements(prhs[1]);
   ny    = mxGetNumberOfElements(prhs[2]);
-  dims[0] = nx;
-  dims[1] = ny;
+  dims[0] = (mwSize) nx;
+  dims[1] = (mwSize) ny;
 
   #ifdef DEBUG
     mexPrintf("MEX: nstep = %zu\n", nstep);
