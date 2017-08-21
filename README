@@ -21,12 +21,10 @@ In preparation.
 
 Install
 =========
-
 See the documentation http://mdtoolbox.readthedocs.io/en/latest/introduction.html#installation-for-matlab
 
 Docker
 =========
-
 Docker image for MDToolbox is available.
 The following single line command starts Octave ready for use with MDToolbox.
 
