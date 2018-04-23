@@ -19,6 +19,27 @@ Reference
 =========
 In preparation.
 
+Files used in our scientific papers are follows.
+
+"Energetics and conformational pathways of functional rotation in the multidrug transporter AcrB" Y. Matsunaga, T. Yamane, T. Terada, K. Moritsugu, H. Fujisaki, S. Murakami, M. Ikeguchi, A. Kidera, eLife 7:e31715 (2018)
+* mbar.m - multistate Bennett's acceptance ratio method
+* calcpathcv.m - calcultes path Collective Variable (CV)
+* superimpose2d.m - superimposes structues only in 2D(XY) space
+* calcmutinf.m - calculates mutual information
+* calcgse.m - calculates electrostatic potential from trajectories by using k-space Gaussian split Ewald
+
+"Linking time-series of single-molecule experiments with molecular dynamics simulations by machine learning" Y. Matsunaga and Y. Sugita, submitted to eLife:
+* msmbaumwelchdb.m msmforward.m msmbackward.m - Baum-Welch algorithm with a constraint imposed by the detailed-balance condition
+* msmbaumwelchdb_parallel.m msmforward_parallel.m msmbackward_parallel.m - Parallelized version of the above
+* msmgenerate.m - Stochastic simulation according to the constructed Markov State Model (MSM)
+* calcqscore.m - caculates Q-score from atomistic model
+* calcorientationfactor - calculates Orientation factor
+
+"Refining Markov State Models for conformational dynamics using ensemble-averaged data and time-series trajectories" Y. Matsunaga and Y. Sugita, submitted to Journal of Chemical Physics:
+* msmbaumwelchdb.m  msmforward.m msmbackward.m - Baum-Welch algorithm with a constraint imposed by the detailed-balance condition
+* msmensemble.m - estimates population from distribution data
+* calctica.m - time-structure based ICA (tICA)
+
 Install
 =========
 See the documentation http://mdtoolbox.readthedocs.io/en/latest/introduction.html#installation-for-matlab
