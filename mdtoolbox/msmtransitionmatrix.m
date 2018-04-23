@@ -1,10 +1,9 @@
-function [t, pi_i, x] = msmtransitionmatrix(c, maxiteration)
+function [t, pi_i] = msmtransitionmatrix(c, TOLERANCE)
 %% msmtransitionmatrix
 % estimate transition probability matrix from count matrix
 %
 %% Syntax
-%# [t, pi_i] = msmtransitionmatrix(c);
-%# [t, pi_i] = msmtransitionmatrix(c, maxiteration);
+%# t = msmtransitionmatrix(c);
 %
 %% Description
 % this routines uses the reversible maximum likelihood estimator
@@ -15,7 +14,7 @@ function [t, pi_i, x] = msmtransitionmatrix(c, maxiteration)
 %% See also
 %
 %% TODO
-% support of sparse matrix
+% sparse matrix
 % prior
 %
 
@@ -29,53 +28,47 @@ nstate = size(c, 1);
 c_sym  = c + c';
 x      = c_sym;
 
-c_i    = sum(c, 2);
-x_i    = sum(x, 2);
+c_rs   = sum(c, 2);
+x_rs   = sum(x, 2);
 
-if ~exist('maxiteration', 'var')
-  maxiteration = 1000;
+if ~exist('TOLERANCE', 'var')
+  TOLERANCE = 10^(-4);
 end
 
-%% optimization by L-BFGS-B
-fcn = @(x) myfunc_column(x, c, c_i, nstate);
-opts.x0 = x(:);
-opts.maxIts = maxiteration;
-opts.maxTotalIts = 50000;
-%opts.factr = 1e5;
-%opts.pgtol = 1e-7;
+%% optimization by self-consistent iteration
+logL_old = 2*TOLERANCE;
+logL = 0;
+count_iteration = 0;
+x_new = zeros(nstate, nstate);
 
-[x, f, info] = lbfgsb(fcn, zeros(nstate*nstate, 1), Inf(nstate*nstate, 1), opts);
-x = reshape(x, nstate, nstate);
+while abs(logL_old - logL) >= TOLERANCE
+  count_iteration = count_iteration + 1;
+  logL_old = logL;
 
-x_i = sum(x, 2);
-t = bsxfun(@rdivide, x, x_i);
-t(isnan(t)) = 0;
-pi_i = x_i./sum(x_i);
+  % fixed-point method
+  for i = 1:nstate
+    for j = 1:nstate
+      denom = (c_rs(i)./x_rs(i)) + (c_rs(j)./x_rs(j));
+      x_new(i, j) = (c(i, j) + c(j, i)) ./ denom;
+    end
+  end
+  
+  % update
+  x_rs = sum(x_new, 2);
+  x = x_new;
+  logL = 0;
+  for i = 1:nstate
+    for j = 1:nstate
+      logL = logL + c(i,j) * log(x(i,j) / x_rs(i));
+    end
+  end
+  
+  if mod(count_iteration, 10) == 0
+    fprintf('%d iteration  LogLikelihood = %8.5e  delta = %8.5e  tolerance = %8.5e\n', count_iteration, logL, abs(logL_old-logL), TOLERANCE);
+  end
+end
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [f, g] = myfunc_column(x, c, c_i, nstate);
-x = reshape(x, nstate, nstate);
-[f, g] = myfunc_matrix(x, c, c_i);
-g = g(:);
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [f, g] = myfunc_matrix(x, c, c_i)
-x_i = sum(x, 2);
-
-% F
-tmp = c .* log(bsxfun(@rdivide, x, x_i));
-%index = ~(isnan(tmp));
-index = (x > (10*eps));
-f = - sum(tmp(index));
-
-% G
-t = c_i./x_i;
-g = (c./x) + (c'./x') - bsxfun(@plus, t, t');
-g((x_i < (10*eps)), :) = 0;
-index = ((x > (10*eps)) & (x' > (10*eps)));
-g(~index) = 0;
-g(isnan(g)) = 0;
-g = -g;
+pi_i = x_rs./sum(x_rs);
+pi_i = pi_i';
+t = bsxfun(@rdivide, x, x_rs);
 
