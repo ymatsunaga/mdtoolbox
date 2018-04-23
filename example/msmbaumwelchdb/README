@@ -12,6 +12,8 @@ From the time-series data of the distance between two FRET dyes, we try to estim
 >> load data.mat;
 
 % display correct values for transition probabilities 'T_ref', and populations 'p_ref' for four states
+% T_ref(i, j) represents the transition probability from state i to state j
+% p_ref(i) represents the population of state i
 
 >> T_ref
 
