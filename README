@@ -22,6 +22,9 @@ In preparation.
 
 Files used in our scientific papers are follows.
 
+"Sequential data assimilation for single-molecule FRET photon-counting data" Y. Matsunaga, A. Kidera and Y. Sugita, Journal of Chemical Physics Vol. 142, page 214115 (2015):
+* calcfret.m - generates a FRET photon-count sequence from distance time-series data
+
 "Energetics and conformational pathways of functional rotation in the multidrug transporter AcrB" Y. Matsunaga, T. Yamane, T. Terada, K. Moritsugu, H. Fujisaki, S. Murakami, M. Ikeguchi, A. Kidera, eLife Vol. 7, e31715 (2018):
 * mbar.m - multistate Bennett's acceptance ratio method
 * calcpathcv.m - calculates path Collective Variable (CV)
