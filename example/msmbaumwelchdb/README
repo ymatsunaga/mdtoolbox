@@ -31,12 +31,13 @@ p_ref =
 
     0.9089    0.0241    0.0257    0.0414
 
-% plot 'emission' probabilities for four states (distribution of dye-distance in each state)
+% plot 'emission' probabilities for four states (distribution of inter-dye distance in each state)
 % here, 'center' contains the center distance for each bin
 
 >> plot(center, emission)
 >> xlabel('Distance (Angstrom)');
 >> ylabel('Probability');
+>> legend('state 1', 'state 2', 'state 3', 'state 4')
 
 % generate distance time-series data by stochastic simulation according to T_ref
 % Here, 'state' contains state index, and 'observation' contains distance time-series. 
