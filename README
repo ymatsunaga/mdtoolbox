@@ -22,32 +22,44 @@ In preparation.
 
 Files used in our scientific papers are follows.
 
-"Sequential data assimilation for single-molecule FRET photon-counting data" Y. Matsunaga, A. Kidera and Y. Sugita, Journal of Chemical Physics Vol. 142, page 214115 (2015):
+"Minimum Free Energy Path of Ligand-Induced Transition in Adenylate Kinase" PLoS Comput. Biol. (2012) https://doi.org/10.1371/journal.pcbi.1002555 :
+* assignvoronoi.m - assigns Voronoi index to trajectory data
+* mbar.m - multistate Bennett acceptance ratio method
+* calcpca.m  - Principal Component Analysis (PCA)
+
+"Influence of Structural Symmetry on Protein Dynamics" PLoS One (2012) https://doi.org/10.1371/journal.pone.0050011 :
+* anmsym.m - anisotropic network model for proteins with circular symmetries
+* calcpca.m  - Principal Component Analysis (PCA)
+
+"Sequential data assimilation for single-molecule FRET photon-counting data" J. Chem. Phys. (2015) https://doi.org/10.1063/1.4921983 :
 * calcfret.m - generates a FRET photon-count sequence from distance time-series data
 * calccontactvector.m - calculates contact map vectors from trajectory data
-* calcpca.m  - Principal Component Analysys (PCA)
+* calcpca.m  - Principal Component Analysis (PCA)
 
-"Dimensionality of Collective Variables for Describing Conformational Changes of a Multi-Domain Protein" Y. Matsunaga, Y. Komuro, K. Chigusa, J. Jung, T. Mori, and Y. Sugita, Journal of Physical Chemistry Letters Vol. 7, page 1446 (2016):
+"Dimensionality of Collective Variables for Describing Conformational Changes of a Multi-Domain Protein" J. Phys. Chem. Lett. (2016) https://doi.org/10.1021/acs.jpclett.6b00317 :
 * calcpathcv.m - calculates path collective variable (CV)
 * assigntransitionpath.m - detects transition paths from trajectory data
 
-"Energetics and conformational pathways of functional rotation in the multidrug transporter AcrB" Y. Matsunaga, T. Yamane, T. Terada, K. Moritsugu, H. Fujisaki, S. Murakami, M. Ikeguchi, A. Kidera, eLife Vol. 7, e31715 (2018):
-* mbar.m - multistate Bennett's acceptance ratio method
+"Energetics and conformational pathways of functional rotation in the multidrug transporter AcrB" eLife (2018) https://doi.org/10.7554/eLife.31715 :
+* mbar.m - multistate Bennett acceptance ratio method
 * calcpathcv.m - calculates path collective variable (CV)
 * superimpose2d.m - superimposes structures by using only translation in XY-space and rotation around Z-axis
 * calcmutinf.m - estimates mutual information
 * calcgse.m - calculates electrostatic potential from trajectories by using k-space Gaussian split Ewald
 
-"Linking time-series of single-molecule experiments with molecular dynamics simulations by machine learning" Y. Matsunaga and Y. Sugita, submitted to eLife:
-* msmbaumwelchdb.m msmforward.m msmbackward.m - Baum-Welch algorithm with a constraint imposed by the detailed-balance condition
+"Linking time-series of single-molecule experiments with molecular dynamics simulations by machine learning" sumitted :
+* msmbaumwelchdb.m msmforward.m msmbackward.m msmtransitionmatrix.m - Baum-Welch algorithm with a constraint imposed by the detailed-balance condition
 * msmbaumwelchdb_parallel.m msmforward_parallel.m msmbackward_parallel.m - Parallelized version of the above (requires Parallel Computing Toolbox)
 * msmgenerate.m - Stochastic simulation according to the constructed Markov State Model (MSM)
 * calcqscore.m - calculates Q-score for atomistic model
 * calcorientationfactor.m - calculates Orientation factor for FRET dyes
 * example/msmbaumwelchdb - test data set for msmbaumwelchdb.m and msmbaumwelchdb_parallel.m explaining the usage of these functions
 
-"Refining Markov State Models for conformational dynamics using ensemble-averaged data and time-series trajectories" Y. Matsunaga and Y. Sugita, submitted to Journal of Chemical Physics:
-* msmbaumwelchdb.m  msmforward.m msmbackward.m - Baum-Welch algorithm with a constraint imposed by the detailed-balance condition
+"Refining Markov State Models for conformational dynamics using ensemble-averaged data and time-series trajectories" submitted :
+* msmbaumwelchdb.m  msmforward.m msmbackward.m msmtransitionmatrix.m - Baum-Welch algorithm with a constraint imposed by the detailed-balance condition
+* msmtransitionmatrix.m - reverse Maximum-likelihood estimator for transition matrix from counting matrix
+* msmcountmatrix.m - calculates count matrix from indexed trajectory data
+* msmtransitionmatrix.m - reverse Maximum-likelihood estimator for transition matrix from counting matrix
 * msmensemble.m - estimates populations from distribution data
 * calcdistancevector.m - calculate distance-matrix-based vectors from trajectory data
 * calctica.m - time-structure based ICA (tICA)
