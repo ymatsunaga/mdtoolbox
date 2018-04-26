@@ -18,7 +18,7 @@ For more information, see [the documentation](http://mdtoolbox.readthedocs.org/)
 
 ## Install
 
-See the documentation http://mdtoolbox.readthedocs.io/en/latest/introduction.html#installation-for-matlab
+See [the documentation](http://mdtoolbox.readthedocs.io/en/latest/introduction.html#installation-for-matlab).
 
 ## Docker
 
@@ -66,7 +66,7 @@ In preparation.
 * calcmutinf.m - estimates mutual information
 * calcgse.m - calculates electrostatic potential from trajectories by using k-space Gaussian split Ewald
 
-"Linking time-series of single-molecule experiments with molecular dynamics simulations by machine learning" submitted :
+"Linking time-series of single-molecule experiments with molecular dynamics simulations by machine learning" submitted
 * msmbaumwelchdb.m msmforward.m msmbackward.m msmtransitionmatrix.m - Baum-Welch algorithm with a constraint imposed by the detailed-balance condition
 * msmbaumwelchdb_parallel.m msmforward_parallel.m msmbackward_parallel.m - Parallelized version of the above (requires Parallel Computing Toolbox)
 * msmgenerate.m - Stochastic simulation according to the constructed Markov State Model (MSM)
@@ -74,7 +74,7 @@ In preparation.
 * calcorientationfactor.m - calculates Orientation factor for FRET dyes
 * example/msmbaumwelchdb - test data set for msmbaumwelchdb.m and msmbaumwelchdb_parallel.m explaining the usage of these functions
 
-"Refining Markov State Models for conformational dynamics using ensemble-averaged data and time-series trajectories" submitted :
+"Refining Markov State Models for conformational dynamics using ensemble-averaged data and time-series trajectories" submitted
 * msmbaumwelchdb.m  msmforward.m msmbackward.m msmtransitionmatrix.m - Baum-Welch algorithm with a constraint imposed by the detailed-balance condition
 * msmtransitionmatrix.m - reverse Maximum-likelihood estimator for transition matrix from counting matrix
 * msmcountmatrix.m - calculates count matrix from indexed trajectory data
