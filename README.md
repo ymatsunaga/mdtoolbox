@@ -31,10 +31,6 @@ $ docker run -it --rm -v $(pwd):/home/jovyan/work ymatsunaga/octave octave
 
 For details, see [the documentation](http://mdtoolbox.readthedocs.io/en/latest/introduction.html#docker-image-for-mdtoolbox).
 
-## Funding
-
-Development of MDToolbox is supported by Grant-in-Aid for Young Scientists (B) (Grant No. 24770159) from JSPS, Japan.
-
 ## Reference
 
 In preparation.
@@ -76,11 +72,14 @@ In preparation.
 
 "Refining Markov State Models for conformational dynamics using ensemble-averaged data and time-series trajectories" submitted
 * msmbaumwelchdb.m  msmforward.m msmbackward.m msmtransitionmatrix.m - Baum-Welch algorithm with a constraint imposed by the detailed-balance condition
-* msmtransitionmatrix.m - reverse Maximum-likelihood estimator for transition matrix from counting matrix
 * msmcountmatrix.m - calculates count matrix from indexed trajectory data
 * msmtransitionmatrix.m - reverse Maximum-likelihood estimator for transition matrix from counting matrix
 * msmensemble.m - estimates populations from distribution data
 * calcdistancevector.m - calculate distance-matrix-based vectors from trajectory data
 * calctica.m - time-structure based ICA (tICA)
 * example/msmbaumwelchdb - test data set for msmbaumwelchdb.m and msmbaumwelchdb_parallel.m explaining the usage of these functions
+
+## Developer
+
+Yasuhiro Matsunaga ymatsunaga@riken.jp
 
