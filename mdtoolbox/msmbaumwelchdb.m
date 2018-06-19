@@ -50,8 +50,11 @@ logL_old = 1.0;
 logL_history = zeros(max_iteration, 1);
 while (check_convergence > TOLERANCE) && (count_iteration < max_iteration)
   %% E-step
+  disp('msmforward');
   [logL, alpha, factor] = msmforward(data_cell, T0, emission0, pi0_i);
+  disp('msmbackward');
   [~, beta] = msmbackward(data_cell, factor, T0, emission0, pi0_i);
+  disp('others');
 
   log_alpha     = cellfun(@log, alpha, 'UniformOutput', false);
   log_beta      = cellfun(@log, beta,  'UniformOutput', false);
@@ -80,6 +83,7 @@ while (check_convergence > TOLERANCE) && (count_iteration < max_iteration)
   % emission(isnan(emission)) = 0;
 
   % non-reversible T
+  disp('reversible');
   T = zeros(nstate, nstate);
   for idata = 1:ndata
     data = data_cell{idata};
@@ -94,7 +98,7 @@ while (check_convergence > TOLERANCE) && (count_iteration < max_iteration)
   
   % reversible T
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%% X = %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  [T, pi_i] = msmtransitionmatrix(T, 1000);
+  [T, pi_i] = msmtransitionmatrix(T, 10^(-8));
 
   % check convergence
   count_iteration = count_iteration + 1;
