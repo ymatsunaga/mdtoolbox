@@ -1,5 +1,7 @@
 # MDToolbox
 
+Note: Now being ported into Julia https://github.com/ymatsunaga/MDToolbox.jl
+
 MDToolbox is a MATLAB/Octave toolbox for statistical analysis of
 molecular dynamics (MD) simulation data of biomolecules. It consists
 of a collection of functions covering the following types of
