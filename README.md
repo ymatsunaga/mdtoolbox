@@ -1,7 +1,5 @@
 # MDToolbox
 
-Note: Now being ported into Julia https://github.com/ymatsunaga/MDToolbox.jl
-
 MDToolbox is a MATLAB/Octave toolbox for statistical analysis of
 molecular dynamics (MD) simulation data of biomolecules. It consists
 of a collection of functions covering the following types of
@@ -33,9 +31,17 @@ $ docker run -it --rm -v $(pwd):/home/jovyan/work ymatsunaga/octave octave
 
 For details, see [the documentation](http://mdtoolbox.readthedocs.io/en/latest/introduction.html#docker-image-for-mdtoolbox).
 
+## Financial support
+
+JST PRESTO Grant No. JPMJPR1679
+
 ## Reference
 
-In preparation.
+Y. Matsunaga, and Y. Sugita, J. Chem. Phys., 2018, 148, 241731
+
+## Note
+
+This toolbox is now being ported into Julia https://github.com/ymatsunaga/MDToolbox.jl 
 
 ## Files used in our scientific papers
 
