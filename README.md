@@ -37,7 +37,7 @@ JST PRESTO Grant No. JPMJPR1679
 
 ## Reference
 
-Y. Matsunaga, and Y. Sugita, J. Chem. Phys., 2018, 148, 241731
+Y. Matsunaga, and Y. Sugita, J. Chem. Phys. 148, 241731 (2018)
 
 ## Note
 
