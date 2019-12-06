@@ -5,13 +5,14 @@ molecular dynamics (MD) simulation data of biomolecules. It consists
 of a collection of functions covering the following types of
 scientific computations: 
 
+* (NEW) Unsupervised learning for correcting Markov State Models (Baum-Welch algorithm and others) (supported by JST PRESTO Project)
+* (NEW) Utilities for constructing Markov State Models (supported by JST PRESTO Project)
 * I/O for trajectory, coordinate, and topology files used for MD simulation
 * Least-squares fitting of structures
 * Potential mean force (PMF) or free energy profile from scattered data
 * Statistical estimates (WHAM and MBAR methods) from biased data
 * Dimensional reductions (Principal Component Analysis, and others)
 * Elastic network models (Gaussian and Anisotropic network models)
-* Unsupervised learning for refining Markov State Models (Baum-Welch algorithm and others)
 * Utility functions, such as atom selections
 
 For more information, see [the documentation](http://mdtoolbox.readthedocs.org/).
