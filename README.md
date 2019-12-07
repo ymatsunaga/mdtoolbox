@@ -71,7 +71,7 @@ This toolbox is now being ported into Julia https://github.com/ymatsunaga/MDTool
 * calcmutinf.m - estimates mutual information
 * calcgse.m - calculates electrostatic potential from trajectories by using k-space Gaussian split Ewald
 
-"Linking time-series of single-molecule experiments with molecular dynamics simulations by machine learning" submitted
+(NEW) "Linking time-series of single-molecule experiments with molecular dynamics simulations by machine learning" submitted
 * msmbaumwelchdb.m msmforward.m msmbackward.m msmtransitionmatrix.m - Baum-Welch algorithm with a constraint imposed by the detailed-balance condition
 * msmbaumwelchdb_parallel.m msmforward_parallel.m msmbackward_parallel.m - Parallelized version of the above (requires Parallel Computing Toolbox)
 * msmgenerate.m - Stochastic simulation according to the constructed Markov State Model (MSM)
@@ -79,7 +79,7 @@ This toolbox is now being ported into Julia https://github.com/ymatsunaga/MDTool
 * calcorientationfactor.m - calculates Orientation factor for FRET dyes
 * example/msmbaumwelchdb - test data set for msmbaumwelchdb.m and msmbaumwelchdb_parallel.m explaining the usage of these functions
 
-"Refining Markov State Models for conformational dynamics using ensemble-averaged data and time-series trajectories" submitted
+(NEW) "Refining Markov State Models for conformational dynamics using ensemble-averaged data and time-series trajectories" submitted
 * msmbaumwelchdb.m  msmforward.m msmbackward.m msmtransitionmatrix.m - Baum-Welch algorithm with a constraint imposed by the detailed-balance condition
 * msmcountmatrix.m - calculates count matrix from indexed trajectory data
 * msmtransitionmatrix.m - reverse Maximum-likelihood estimator for transition matrix from counting matrix
@@ -90,5 +90,5 @@ This toolbox is now being ported into Julia https://github.com/ymatsunaga/MDTool
 
 ## Developer
 
-Yasuhiro Matsunaga ymatsunaga@riken.jp
+Yasuhiro Matsunaga ymatsunaga@mail.saitama-u.ac.jp
 
